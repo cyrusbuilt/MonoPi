@@ -37,11 +37,17 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// Write a value to the pin.
 		/// </summary>
-		void Write();
+		/// <param name="value">
+		/// The value to write to the pin.
+		/// </param>
+		void Write(Boolean value);
 
 		/// <summary>
 		/// Read a value from the pin.
 		/// </summary>
+		/// <returns>
+		/// The value read from the pin.
+		/// </returns>			
 		Boolean Read();
 	}
 }

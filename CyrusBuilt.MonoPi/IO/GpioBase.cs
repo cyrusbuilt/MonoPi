@@ -32,7 +32,7 @@ namespace CyrusBuilt.MonoPi.IO
 	/// Abstract base class for the GPIO connector on the Pi (P1) (as found
 	/// next to the yellow RCA video socket on the Rpi circuit board).
 	/// </summary>
-	public class GpioBase : IGpio
+	public abstract class GpioBase : IGpio
 	{
 		#region Fields
 		private Boolean _isDisposed = false;
@@ -143,7 +143,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// Gets the board revision.
 		/// </summary>
-		public abstract BoardRevision Revision {
+		public BoardRevision Revision {
 			get { return this._revision; }
 		}
 		#endregion
@@ -204,7 +204,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.GpioBase"/> was occupying.
 		/// </remarks>
-		protected virtual void Dispose() {
+		public virtual void Dispose() {
 			this._isDisposed = true;
 		}
 		#endregion

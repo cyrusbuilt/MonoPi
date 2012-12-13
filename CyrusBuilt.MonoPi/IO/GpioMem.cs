@@ -275,7 +275,7 @@ namespace CyrusBuilt.MonoPi.IO
 			}
 
 			uint val = value ? (uint)1 : (uint)0;
-			ExportPin(pin, value);
+			internal_ExportPin(pin, PinDirection.OUT);
 			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, val);
 			Debug.WriteLine("Output to pin " + pinname + "/gpio" + pin.ToString() + ", value was " + value.ToString());
 		}
@@ -305,7 +305,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public static void Write(GpioPinsRev2 pin, Boolean value) {
 			String name = Enum.GetName(typeof(GpioPinsRev2), pin);
-			internal_Write((Int32)pin, name);
+			internal_Write((Int32)pin, value, name);
 		}
 
 		/// <summary>
@@ -352,7 +352,14 @@ namespace CyrusBuilt.MonoPi.IO
 		#endregion
 
 		#region Instance Methods
+		public override void Write(Boolean value) {
 
+		}
+
+		public override Boolean Read() {
+
+			return false;
+		}
 		#endregion
 	}
 }

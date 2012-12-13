@@ -141,7 +141,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 			if (this.IsOpen) {
 				throw new InvalidOperationException("Port already open.");
 			}
-			this._id = UnsafeNativeMethods.serialOpen(this._device, this._baud);
+			this._id = UnsafeNativeMethods.serialOpen(this._device, (Int32)this._baud);
 		}
 
 		/// <summary>
@@ -216,7 +216,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 				throw new ObjectDisposedException("Rs232SerialPort");
 			}
 
-			if (!this.Open) {
+			if (!this.IsOpen) {
 				throw new InvalidOperationException("Cannot send char to a closed port.");
 			}
 			UnsafeNativeMethods.serialPutChar(this._id, Convert.ToByte(c));
@@ -239,7 +239,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 				throw new ObjectDisposedException("Rs232SerialPort");
 			}
 			
-			if (!this.Open) {
+			if (!this.IsOpen) {
 				throw new InvalidOperationException("Cannot send char to a closed port.");
 			}
 			UnsafeNativeMethods.serialPuts(this._id, s);
@@ -262,7 +262,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 				throw new ObjectDisposedException("Rs232SerialPort");
 			}
 			
-			if (!this.Open) {
+			if (!this.IsOpen) {
 				throw new InvalidOperationException("Cannot send char to a closed port.");
 			}
 			return UnsafeNativeMethods.serialDataAvail(this._id);
@@ -285,10 +285,10 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 				throw new ObjectDisposedException("Rs232SerialPort");
 			}
 			
-			if (!this.Open) {
+			if (!this.IsOpen) {
 				throw new InvalidOperationException("Cannot send char to a closed port.");
 			}
-			return (Int32)UnsafeNativeMethods.serialGetChar(this._id);
+			return (Char)UnsafeNativeMethods.serialGetChar(this._id);
 		}
 		#endregion
 	}

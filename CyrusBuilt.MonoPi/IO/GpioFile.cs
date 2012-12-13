@@ -150,7 +150,7 @@ namespace CyrusBuilt.MonoPi.IO
 			String dir = Enum.GetName(typeof(PinDirection), direction);
 
 			// If the pin is already exported, check it's in the proper direction.
-			if (_exportedPins.ContainsKey(pin, direction)) {
+			if (_exportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
 				if (_exportedPins[pin] == direction) {
@@ -230,7 +230,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The Revision 1.0 GPIO pin to unexport.
 		/// </param>
 		private static void UnexportPin(GpioPinsRev1 pin) {
-			internal_ExportPin((Int32)pin, GetGpioPinNumber(pin));
+			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace CyrusBuilt.MonoPi.IO
 				return;
 			}
 
-			internal_ExportPin(pin, PinDirection.OUT);
+			internal_ExportPin(pin, PinDirection.OUT, gpionum, pinname);
 			String val = value ? "1" : "0";
 			String path = GPIO_PATH + "gpio" + gpionum + "/value";
 
@@ -322,7 +322,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </exception>
 		private static Boolean internal_Read(Int32 pin, String gpionum, String gpioname) {
 			Boolean returnValue = false;
-			internal_ExportPin(pin, PinDirection.IN);
+			internal_ExportPin(pin, PinDirection.IN, gpionum, gpioname);
 			String filename = GPIO_PATH + "gpio" + gpionum + "/value";
 			if (File.Exists(filename)) {
 				String readvalue = File.ReadAllText(filename);
