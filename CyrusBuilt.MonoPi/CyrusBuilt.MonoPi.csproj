@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C4C2C2C6-2835-498D-91F3-BCFCD27F0549}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CyrusBuilt.MonoPi</RootNamespace>
+    <AssemblyName>CyrusBuilt.MonoPi</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="BoardRevision.cs" />
+    <Compile Include="UnsafeNativeMethods.cs" />
+    <Compile Include="IO\GpioBase.cs" />
+    <Compile Include="IO\GpioFile.cs" />
+    <Compile Include="IO\GpioMem.cs" />
+    <Compile Include="IO\GpioPinsRev1.cs" />
+    <Compile Include="IO\GpioPinsRev2.cs" />
+    <Compile Include="IO\IGpio.cs" />
+    <Compile Include="IO\PinDirection.cs" />
+    <Compile Include="IO\Serial\BaudRates.cs" />
+    <Compile Include="IO\Serial\Rs232SerialPort.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="IO\" />
+    <Folder Include="IO\Serial\" />
+  </ItemGroup>
+</Project>
