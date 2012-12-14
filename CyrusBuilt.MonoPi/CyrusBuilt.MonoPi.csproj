@@ -44,10 +44,15 @@
     <Compile Include="IO\PinDirection.cs" />
     <Compile Include="IO\Serial\BaudRates.cs" />
     <Compile Include="IO\Serial\Rs232SerialPort.cs" />
+    <Compile Include="Sensors\DS1620.cs" />
+    <Compile Include="SPI\MCP3008.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="IO\" />
     <Folder Include="IO\Serial\" />
+    <Folder Include="MicroLiquidCrystal\" />
+    <Folder Include="Sensors\" />
+    <Folder Include="SPI\" />
   </ItemGroup>
 </Project>

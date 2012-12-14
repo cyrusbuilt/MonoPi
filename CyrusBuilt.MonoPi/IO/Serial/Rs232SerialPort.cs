@@ -125,13 +125,13 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 
 		#region Methods
 		/// <summary>
-		/// 
+		/// Opens the serial port.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
-		/// 
+		/// The port is already open.
 		/// </exception>
 		public void Open() {
 			if (this._isDisposed) {
@@ -148,13 +148,13 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		/// Open the specified device with the specified BAUD rate.
 		/// </summary>
 		/// <param name="device">
-		/// 
+		/// The path to the serial port device to open.
 		/// </param>
 		/// <param name="baud">
-		/// 
+		/// The BAUD rate to negotiate.
 		/// </param>
 		/// <exception cref="ObjectDisposedException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
 		/// 
@@ -200,16 +200,16 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		}
 
 		/// <summary>
-		/// 
+		/// Sends a single character to the port.
 		/// </summary>
 		/// <param name="c">
-		/// 
+		/// The character to send to the port.
 		/// </param>
 		/// <exception cref="ObjectDisposedException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
-		/// 
+		/// The port is closed.
 		/// </exception>
 		public void PutChar(Char c) {
 			if (this._isDisposed) {
@@ -223,16 +223,16 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		}
 
 		/// <summary>
-		/// 
+		/// Sends a string to the port.
 		/// </summary>
 		/// <param name="s">
-		/// 
+		/// The string to send to the port.
 		/// </param>
 		/// <exception cref="ObjectDisposedException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
-		/// 
+		/// The port is closed.
 		/// </exception>
 		public void PutString(String s) {
 			if (this._isDisposed) {
@@ -246,16 +246,13 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		}
 
 		/// <summary>
-		/// Gets the bytes available.
+		/// Gets the bytes available to be read.
 		/// </summary>
 		/// <returns>
 		/// The bytes available.
 		/// </returns>
 		/// <exception cref="ObjectDisposedException">
-		/// 
-		/// </exception>
-		/// <exception cref="InvalidOperationException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		public Int32 GetBytesAvailable() {
 			if (this._isDisposed) {
@@ -263,22 +260,22 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 			}
 			
 			if (!this.IsOpen) {
-				throw new InvalidOperationException("Cannot send char to a closed port.");
+				return 0;
 			}
 			return UnsafeNativeMethods.serialDataAvail(this._id);
 		}
 
 		/// <summary>
-		/// Gets the character.
+		/// Gets a single character from the serial device.
 		/// </summary>
 		/// <returns>
 		/// The character.
 		/// </returns>
 		/// <exception cref="ObjectDisposedException">
-		/// 
+		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
-		/// 
+		/// The port is not open.
 		/// </exception>
 		public Char GetCharacter() {
 			if (this._isDisposed) {
@@ -286,7 +283,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 			}
 			
 			if (!this.IsOpen) {
-				throw new InvalidOperationException("Cannot send char to a closed port.");
+				throw new InvalidOperationException("Port not open.");
 			}
 			return (Char)UnsafeNativeMethods.serialGetChar(this._id);
 		}

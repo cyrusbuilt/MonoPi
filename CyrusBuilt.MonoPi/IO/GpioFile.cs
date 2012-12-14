@@ -143,7 +143,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The I/O direction.
 		/// </param>
 		/// <param name="pinnum">
-		/// 
+		/// The pin number.
 		/// </param>
 		private static void internal_ExportPin(Int32 pin, PinDirection direction, String pinnum, String pinname) {
 			String pinpath = GPIO_PATH + "gpio" + pinnum;
@@ -401,6 +401,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// Read a value from the pin.
 		/// </summary>
+		/// <returns>
+		/// The value read from the pin.
+		/// </returns>			
 		/// <exception cref="IOException">
 		/// Cannot read the value from the pin. The path does not exist.
 		/// </exception>

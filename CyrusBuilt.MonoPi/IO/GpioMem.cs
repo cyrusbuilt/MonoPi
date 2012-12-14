@@ -68,6 +68,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </remarks>			
 		public GpioMem(GpioPinsRev1 pin, PinDirection direction, Boolean initialValue)
 			: base(pin, direction, initialValue) {
+			ExportPin(pin, direction);
+			Write(pin, initialValue);
 		}
 
 		/// <summary>
@@ -90,6 +92,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </remarks>
 		public GpioMem(GpioPinsRev2 pin, PinDirection direction, Boolean initialValue)
 			: base(pin, direction, initialValue) {
+			ExportPin(pin, direction);
+			Write(pin, initialValue);
 		}
 
 		/// <summary>
@@ -143,7 +147,6 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </remarks>			
 		public GpioMem(GpioPinsRev1 pin)
 			: base(pin, PinDirection.OUT, false) {
-
 		}
 
 		/// <summary>
@@ -159,7 +162,6 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </remarks>			
 		public GpioMem(GpioPinsRev2 pin)
 			: base(pin, PinDirection.OUT, false) {
-
 		}
 		#endregion
 
@@ -258,6 +260,42 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+		/// Unexports an exported pin.
+		/// </summary>
+		/// <param name="pin">
+		/// The pin to unexport.
+		/// </param>
+		/// <param name="gpionum">
+		/// The GPIO number.
+		/// </param>
+		private static void internal_UnexportPin(Int32 pin, String gpionum) {
+			Debug.WriteLine("Unexporting pin " + pin.ToString());
+			// TODO Somehow reverse what we did in internal_ExportPin? Is there
+			// a way to "free" the pin in the libbcm2835 library?
+			_exportedPins.Remove(pin);
+		}
+
+		/// <summary>
+		/// Unexport the GPIO.
+		/// </summary>
+		/// <param name="pin">
+		/// The Revision 1.0 pin to unexport.
+		/// </param>
+		private static void UnexportPin(GpioPinsRev1 pin) {
+			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
+		}
+
+		/// <summary>
+		/// Unexport the GPIO.
+		/// </summary>
+		/// <param name="pin">
+		/// The Revision 2.0 pin to unexport.
+		/// </param>
+		private static void UnexportPin(GpioPinsRev2 pin) {
+			internal_ExportPin((Int32)pin, GetGpioPinNumber(pin));
+		}
+
+		/// <summary>
 		/// Write the value to the specified pin.
 		/// </summary>
 		/// <param name="pin">
@@ -332,8 +370,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Read the specified Revision 1.0 pin.
 		/// </summary>
 		/// <param name="pin">
-		/// The value read from the pin.
+		/// The Revision 1.0 pin to read.
 		/// </param>
+		/// <returns>
+		/// The value read from the pin.
+		/// </returns>			
 		public static Boolean Read(GpioPinsRev1 pin) {
 			String name = Enum.GetName(typeof(GpioPinsRev1), pin);
 			return internal_Read((Int32)pin, name);
@@ -343,22 +384,80 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Read the specified Revision 2.0 pin.
 		/// </summary>
 		/// <param name="pin">
-		/// Pin.
+		/// The Revision 2.0 pin to read.
 		/// </param>
+		/// <returns>
+		/// The value read from the pin.
+		/// </returns>			
 		public static Boolean Read(GpioPinsRev2 pin) {
 			String name = Enum.GetName(typeof(GpioPinsRev2), pin);
 			return internal_Read((Int32)pin, name);
 		}
+
+		/// <summary>
+		/// Destroy this GPIO factory.
+		/// </summary>
+		public static void Destroy() {
+			if (_exportedPins != null) {
+				if (_exportedPins.Count > 0) {
+					foreach (Int32 pin in _exportedPins.Keys) {
+						internal_UnexportPin(pin, pin.ToString());
+					}
+					_exportedPins.Clear();
+					_exportedPins = null;
+				}
+			}
+			UnsafeNativeMethods.bcm2835_close();
+		}
 		#endregion
 
 		#region Instance Methods
+		/// <summary>
+		/// Write the specified value to the pin.
+		/// </summary>
+		/// <param name="value">
+		/// The value to write to the pin.
+		/// </param>
 		public override void Write(Boolean value) {
-
+			if (_revision == BoardRevision.Rev1) {
+				Write(_rev1pin, value);
+			}
+			else {
+				Write(_rev2pin, value);
+			}
 		}
 
+		/// <summary>
+		/// Read a value from the pin.
+		/// </summary>
+		/// <returns>
+		/// The value read from the pin.
+		/// </returns>
 		public override Boolean Read() {
+			if (_revision == BoardRevision.Rev1) {
+				return Read(_rev1pin);
+			}
+			return Read(_rev2pin);
+		}
 
-			return false;
+		/// <summary>
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> object.
+		/// </summary>
+		/// <remarks>
+		/// Call <see cref="Dispose"/> when you are finished using the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
+		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> was occupying.
+		/// </remarks>
+		public override void Dispose() {
+			if (_revision == BoardRevision.Rev1) {
+				UnexportPin(_rev1pin);
+			}
+			else {
+				UnexportPin(_rev2pin);
+			}
+			Destroy();
+			base.Dispose();
 		}
 		#endregion
 	}
