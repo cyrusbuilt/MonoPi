@@ -46,6 +46,7 @@
     <Compile Include="IO\Serial\Rs232SerialPort.cs" />
     <Compile Include="Sensors\DS1620.cs" />
     <Compile Include="SPI\MCP3008.cs" />
+    <Compile Include="SPI\AdcChannels.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
