@@ -20,21 +20,28 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
+//  Derived from https://github.com/cypherkey/RaspberryPi.Net
+//  by Aaron Anderson <aanderson@netopia.ca>
+//
 using System;
+using System.Collections.Generic;
 using CyrusBuilt.MonoPi.IO;
 
 namespace CyrusBuilt.MonoPi.LED
 {
 	/// <summary>
-	/// 
+	/// This class is the base class for the TM1638/TM1640 board.
+	/// It is a port of the TM1638 library by Ricardo Batista
+	/// URL: http://code.google.com/p/tm1638-library/
 	/// </summary>
-	public class TM16XXBase : IDisposable
+	public abstract class TM16XXBase : IDisposable
 	{
 		#region Fields
 		protected GpioBase _data = null;
 		protected GpioBase _clock = null;
 		protected GpioBase _strobe = null;
 		protected Int32 _displays = 0;
+		private Boolean _isActive = false;
 		#endregion
 
 		#region LED Character Map
@@ -151,25 +158,26 @@ namespace CyrusBuilt.MonoPi.LED
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/>
-		/// class
+		/// class with the data pin, clock pin, strobe pin, the number of
+		/// supported characters, activation flag, and intensity level.
 		/// </summary>
 		/// <param name="data">
-		/// 
+		/// The data pin.
 		/// </param>
 		/// <param name="clock">
-		/// 
+		/// The clock pin.
 		/// </param>
 		/// <param name="strobe">
-		/// 
+		/// The strobe pin.
 		/// </param>
 		/// <param name="displays">
-		/// 
+		/// The number of characters to display.
 		/// </param>
 		/// <param name="activate">
-		/// 
+		/// Set true to activate the display.
 		/// </param>
 		/// <param name="intensity">
-		/// 
+		/// The display intensity (brightness) level.
 		/// </param>
 		public TM16XXBase(GpioBase data, GpioBase clock, GpioBase strobe, Int32 displays, Boolean activate, Int32 intensity) {
 			this._data = data;
@@ -183,11 +191,26 @@ namespace CyrusBuilt.MonoPi.LED
 			this._clock.Write(true);
 
 			// TODO What is the acceptable range of "intensity"?
+			this.SendCommand(0x40);
+			this.SendCommand((Byte)(0x80 | (activate ? 0x08 : 0x00) | Math.Min(7, intensity)));
+
+			this._strobe.Write(false);
+			this.Send(0xC0);
+			for (Int32 i = 0; i < 16; i++) {
+				this.Send(0x00);
+			}
+
+			this._strobe.Write(true);
 		}
 		#endregion
 
 		#region Properties
-
+		/// <summary>
+		/// Gets a value indicating whether or not the display is active.
+		/// </summary>
+		public Boolean IsActive {
+			get { return this._isActive; }
+		}
 		#endregion
 
 		#region Methods
@@ -297,8 +320,8 @@ namespace CyrusBuilt.MonoPi.LED
 				return;
 			}
 
-			Byte lpos = null;
-			Byte ldata = null;
+			Byte lpos = Byte.MinValue;
+			Byte ldata = Byte.MinValue;
 			Boolean ldot = false;
 			Int32 len = s.Length;
 			for (Int32 i = 0; i < this._displays; i++) {
@@ -372,9 +395,91 @@ namespace CyrusBuilt.MonoPi.LED
 			Array.Clear(error, 0, error.Length);
 		}
 
+		/// <summary>
+		/// Sets the specified digit in the display.
+		/// </summary>
+		/// <param name="digit">
+		/// The digit to set.
+		/// </param>
+		/// <param name="pos">
+		/// The position to set the digit at.
+		/// </param>
+		/// <param name="dot">
+		/// Set true to turn on the dot.
+		/// </param>
 		public void SetDisplayDigit(Byte digit, Byte pos, Boolean dot) {
 			Char chr = Char.Parse(digit.ToString());
+			if (CharMap.ContainsKey(chr)) {
+				this.SendChar(pos, CharMap[digit.ToString()[0]], dot);
+			}
+		}
 
+		/// <summary>
+		/// Sets up the display.
+		/// </summary>
+		/// <param name="active">
+		/// Set true to activate.
+		/// </param>
+		/// <param name="intensity">
+		/// The display intensity level (brightness).
+		/// </param>
+		public void SetupDisplay(Boolean active, Int32 intensity) {
+			this.SendCommand((Byte)(0x80 | (active ? 8 : 0) | Math.Min(7, intensity)));
+
+			// Necessary for the TM1640.
+			this._strobe.Write(false);
+			this._clock.Write(false);
+			this._clock.Write(true);
+			this._strobe.Write(true);
+		}
+
+		/// <summary>
+		/// Activates or deactivates the display.
+		/// </summary>
+		/// <param name="active">
+		/// Set true to activate; false to deactivate.
+		/// </param>
+		public void ActivateDisplay(Boolean active) {
+			if (active) {
+				if (!this._isActive) {
+					this.SendCommand(0x80);
+					this._isActive = true;
+				}
+			}
+			else {
+				if (this._isActive) {
+					this.SendCommand(0x80);
+					this._isActive = false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/> object.
+		/// </summary>
+		/// <remarks>
+		/// Call <see cref="Dispose"/> when you are finished using the <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the
+		/// <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/> so the garbage collector can reclaim the memory that the
+		/// <see cref="CyrusBuilt.MonoPi.LED.TM16XXBase"/> was occupying.
+		/// </remarks>
+		public void Dispose() {
+			this.ActivateDisplay(false);
+			if (this._clock != null) {
+				this._clock.Dispose();
+				this._clock = null;
+			}
+
+			if (this._data != null) {
+				this._data.Dispose();
+				this._data = null;
+			}
+
+			if (this._strobe != null) {
+				this._strobe.Dispose();
+				this._strobe = null;
+			}
 		}
 		#endregion
 	}

@@ -70,7 +70,7 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// Chip Select pin.
 		/// </param>
 		public MCP3008(AdcChannels channel, GpioBase spiclk, GpioBase mosi, GpioBase miso, GpioBase cs) {
-			this._adcChannel = channel;
+			this._channel = channel;
 			this._clock = spiclk;
 			this._masterOutSlaveIn = mosi;
 			this._masterInSlaveOut = miso;

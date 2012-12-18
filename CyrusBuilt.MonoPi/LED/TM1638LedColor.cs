@@ -22,10 +22,22 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi
+namespace CyrusBuilt.MonoPi.LED
 {
-	public enum TM1638LedColor
+	/// <summary>
+	/// TM1638 LED segment colors.
+	/// </summary>
+	public enum TM1638LedColor : byte
 	{
+		/// <summary>
+		/// LED segments will be red.
+		/// </summary>
+		Red = 1,
+
+		/// <summary>
+		/// LED segments will be green.
+		/// </summary>
+		Green = 2
 	}
 }
 

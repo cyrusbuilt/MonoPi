@@ -36,6 +36,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// No pin (null).
 		/// </summary>
 		GPIO_NONE = -1
+
+		// TODO define the rest of the pins.
 	}
 }
 

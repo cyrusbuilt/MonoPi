@@ -120,7 +120,7 @@ namespace CyrusBuilt.MonoPi.Sensors
 				this._clock.Write(true);
 				raw_data = raw_data | (bit << n);
 			}
-			Debug.WriteLine("bin=" + Convert.ToInt32(raw_data,2));
+			Debug.WriteLine("bin=" + Convert.ToInt32(raw_data.ToString(), 2));
 			return raw_data;
 		}
 

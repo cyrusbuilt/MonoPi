@@ -47,13 +47,17 @@
     <Compile Include="Sensors\DS1620.cs" />
     <Compile Include="SPI\MCP3008.cs" />
     <Compile Include="SPI\AdcChannels.cs" />
+    <Compile Include="LED\TM1638LedColor.cs" />
+    <Compile Include="LED\TM16XXBase.cs" />
+    <Compile Include="LED\TM1638.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="IO\" />
     <Folder Include="IO\Serial\" />
-    <Folder Include="MicroLiquidCrystal\" />
     <Folder Include="Sensors\" />
     <Folder Include="SPI\" />
+    <Folder Include="LED\" />
+    <Folder Include="LCD\" />
   </ItemGroup>
 </Project>

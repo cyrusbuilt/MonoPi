@@ -20,8 +20,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-// Derived from https://github.com/cypherkey/RaspberryPi.Net
-// by Aaron Anderson <aanderson@netopia.ca>
+//  Derived from https://github.com/cypherkey/RaspberryPi.Net
+//  by Aaron Anderson <aanderson@netopia.ca>
 //
 using System;
 using System.Diagnostics;
@@ -292,7 +292,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The Revision 2.0 pin to unexport.
 		/// </param>
 		private static void UnexportPin(GpioPinsRev2 pin) {
-			internal_ExportPin((Int32)pin, GetGpioPinNumber(pin));
+			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
 		/// <summary>
