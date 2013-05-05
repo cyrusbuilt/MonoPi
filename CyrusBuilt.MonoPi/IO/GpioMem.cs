@@ -54,7 +54,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// value to write to the pin.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the Revision 1.0 board to access.
+		/// The pin on the board to access.
 		/// </param>
 		/// <param name="direction">
 		/// The I/0 direction of the pin.
@@ -66,31 +66,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Access to the specified GPIO setup with the specified direction
 		/// with the specified initial value.
 		/// </remarks>			
-		public GpioMem(GpioPinsRev1 pin, PinDirection direction, Boolean initialValue)
-			: base(pin, direction, initialValue) {
-			ExportPin(pin, direction);
-			Write(pin, initialValue);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
-		/// class with the pin to initialize, the I/O direction, and the initial
-		/// value to write to the pin.
-		/// </summary>
-		/// <param name="pin">
-		/// The pin on the Revision 2.0 board to access.
-		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
-		/// </param>
-		/// <param name="initialValue">
-		/// The pin's initial value.
-		/// </param>
-		/// <remarks>
-		/// Access to the specified GPIO setup with the specified direction
-		/// with the specified initial value.
-		/// </remarks>
-		public GpioMem(GpioPinsRev2 pin, PinDirection direction, Boolean initialValue)
+		public GpioMem(GpioPins pin, PinDirection direction, Boolean initialValue)
 			: base(pin, direction, initialValue) {
 			ExportPin(pin, direction);
 			Write(pin, initialValue);
@@ -101,7 +77,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// class with the pin to initialize and the I/O direction.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the Revision 1.0 board to access.
+		/// The pin on the board to access.
 		/// </param>
 		/// <param name="direction">
 		/// The I/0 direction of the pin.
@@ -110,26 +86,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Access to the specified GPIO setup with the specified direction
 		/// with an initial value of false (0).
 		/// </remarks>			
-		public GpioMem(GpioPinsRev1 pin, PinDirection direction)
-			: base(pin, direction, false) {
-			ExportPin(pin, direction);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
-		/// class with the pin to initialize and the I/O direction.
-		/// </summary>
-		/// <param name="pin">
-		/// The pin on the Revision 2.0 board to access.
-		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
-		/// </param>
-		/// <remarks>
-		/// Access to the specified GPIO setup with the specified direction
-		/// with an initial value of false (0).
-		/// </remarks>			
-		public GpioMem(GpioPinsRev2 pin, PinDirection direction)
+		public GpioMem(GpioPins pin, PinDirection direction)
 			: base(pin, direction, false) {
 			ExportPin(pin, direction);
 		}
@@ -139,28 +96,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// class with the pin to initialize.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the Revision 1.0 board to access.
+		/// The pin on the board to access.
 		/// </param>
 		/// <remarks>
 		/// Access to the specified GPIO setup as an output port with an initial
 		/// value of false (0).
 		/// </remarks>			
-		public GpioMem(GpioPinsRev1 pin)
-			: base(pin, PinDirection.OUT, false) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
-		/// class with the pin to initialize.
-		/// </summary>
-		/// <param name="pin">
-		/// The pin on the Revision 2.0 board to access.
-		/// </param>
-		/// <remarks>
-		/// Access to the specified GPIO setup as an output port with an initial
-		/// value of false (0).
-		/// </remarks>			
-		public GpioMem(GpioPinsRev2 pin)
+		public GpioMem(GpioPins pin)
 			: base(pin, PinDirection.OUT, false) {
 		}
 		#endregion
@@ -237,25 +179,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Exports the pin setting the direction.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the Revision 1.0 board to export.
+		/// The pin on the board to export.
 		/// </param>
 		/// <param name="direction">
 		/// The I/0 direction of the pin.
 		/// </param>
-		private static void ExportPin(GpioPinsRev1 pin, PinDirection direction) {
-			internal_ExportPin((Int32)pin, direction);
-		}
-
-		/// <summary>
-		/// Exports the pin setting the direction.
-		/// </summary>
-		/// <param name="pin">
-		/// The pin on the Revision 2.0 board to export.
-		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
-		/// </param>
-		private static void ExportPin(GpioPinsRev2 pin, PinDirection direction) {
+		private static void ExportPin(GpioPins pin, PinDirection direction) {
 			internal_ExportPin((Int32)pin, direction);
 		}
 
@@ -279,19 +208,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Unexport the GPIO.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 pin to unexport.
+		/// The pin to unexport.
 		/// </param>
-		private static void UnexportPin(GpioPinsRev1 pin) {
-			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
-		}
-
-		/// <summary>
-		/// Unexport the GPIO.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 pin to unexport.
-		/// </param>
-		private static void UnexportPin(GpioPinsRev2 pin) {
+		private static void UnexportPin(GpioPins pin) {
 			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
@@ -308,7 +227,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The name of the GPIO associated with the pin.
 		/// </param>
 		private static void internal_Write(Int32 pin, Boolean value, String pinname) {
-			if (pin == (Int32)GpioPinsRev1.GPIO_NONE) {
+			if (pin == (Int32)GpioPins.GPIO_NONE) {
 				return;
 			}
 
@@ -322,27 +241,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Write the specified pin and value.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 pin to write to.
+		/// The pin to write to.
 		/// </param>
 		/// <param name="value">
 		/// The value to write.
 		/// </param>
-		public static void Write(GpioPinsRev1 pin, Boolean value) {
-			String name = Enum.GetName(typeof(GpioPinsRev1), pin);
-			internal_Write((Int32)pin, value, name);
-		}
-
-		/// <summary>
-		/// Write the specified pin and value.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 pin to write to.
-		/// </param>
-		/// <param name="value">
-		/// The value to write.
-		/// </param>
-		public static void Write(GpioPinsRev2 pin, Boolean value) {
-			String name = Enum.GetName(typeof(GpioPinsRev2), pin);
+		public static void Write(GpioPins pin, Boolean value) {
+			String name = Enum.GetName(typeof(GpioPins), pin);
 			internal_Write((Int32)pin, value, name);
 		}
 
@@ -370,27 +275,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Read the specified Revision 1.0 pin.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 pin to read.
+		/// The pin to read.
 		/// </param>
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>			
-		public static Boolean Read(GpioPinsRev1 pin) {
-			String name = Enum.GetName(typeof(GpioPinsRev1), pin);
-			return internal_Read((Int32)pin, name);
-		}
-
-		/// <summary>
-		/// Read the specified Revision 2.0 pin.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 pin to read.
-		/// </param>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		public static Boolean Read(GpioPinsRev2 pin) {
-			String name = Enum.GetName(typeof(GpioPinsRev2), pin);
+		public static Boolean Read(GpioPins pin) {
+			String name = Enum.GetName(typeof(GpioPins), pin);
 			return internal_Read((Int32)pin, name);
 		}
 
@@ -420,10 +311,10 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public override void Write(Boolean value) {
 			if (_revision == BoardRevision.Rev1) {
-				Write(_rev1pin, value);
+				Write(_pin, value);
 			}
 			else {
-				Write(_rev2pin, value);
+				Write(_pin, value);
 			}
 		}
 
@@ -434,10 +325,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value read from the pin.
 		/// </returns>
 		public override Boolean Read() {
-			if (_revision == BoardRevision.Rev1) {
-				return Read(_rev1pin);
-			}
-			return Read(_rev2pin);
+			return Read(_pin);
 		}
 
 		/// <summary>
@@ -450,12 +338,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> was occupying.
 		/// </remarks>
 		public override void Dispose() {
-			if (_revision == BoardRevision.Rev1) {
-				UnexportPin(_rev1pin);
-			}
-			else {
-				UnexportPin(_rev2pin);
-			}
+			UnexportPin(_pin);
 			Destroy();
 			base.Dispose();
 		}

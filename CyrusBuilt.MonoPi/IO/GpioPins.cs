@@ -28,7 +28,7 @@ using System;
 namespace CyrusBuilt.MonoPi.IO
 {
 	/// <summary>
-	/// The various GPIO pins on the Raspberry Pi Revision 1.0 board.
+	/// The various GPIO pins on the Raspberry Pi Revision 1.0 and 2.0 boards.
 	/// </summary>
 	/// <remarks>
 	/// Refer to http://elinux.org/Rpi_Low-level_peripherals for diagram.
@@ -51,10 +51,10 @@ namespace CyrusBuilt.MonoPi.IO
 	///                  P1-23 = GPIO11
 	///                  P1-24 = GPIO8
 	///                  P1-26 = GPIO7
-	/// So to turn on Pin7 on the GPIO connector, pass in enum GpioPinsRev1.GPIO04 as
+	/// So to turn on Pin7 on the GPIO connector, pass in enum GpioPins.GPIO04 as
 	/// the pin parameter.
 	/// </remarks>
-	public enum GpioPinsRev1 : int
+	public enum GpioPins : int
 	{
 		/// <summary>
 		/// No pin (null).
@@ -234,7 +234,93 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// LED driver pin.
 		/// </summary>
-		LED = 16
+		LED = 16,
+
+		#region Board Revision 2 pins
+		V2_GPIO00 = 0,
+
+		V2_GPIO01 = 1,
+
+		V2_GPIO02 = 2,
+
+		V2_GPIO03 = 3,
+
+		V2_GPIO04 = 4,
+
+		V2_GPIO07 = 7,
+
+		V2_GPIO08 = 8,
+
+		V2_GPIO09 = 9,
+
+		V2_GPIO10 = 10,
+
+		V2_GPIO11 = 11,
+
+		V2_GPIO14 = 14,
+
+		V2_GPIO15 = 15,
+
+		V2_GPIO17 = 17,
+
+		V2_GPIO18 = 18,
+
+		V2_GPIO21 = 21,
+
+		V2_GPIO22 = 22,
+
+		V2_GPIO23 = 23,
+
+		V2_GPIO24 = 24,
+
+		V2_GPIO25 = 25,
+
+		V2_GPIO27 = 27,
+
+		V2_Pin03 = 2,
+
+		V2_Pin05 = 3,
+
+		V2_Pin07 = 4,
+
+		V2_Pin08 = 14,
+
+		V2_Pin10 = 15,
+
+		V2_Pin11 = 17,
+
+		V2_Pin12 = 18,
+
+		V2_Pin13 = 27,
+
+		V2_Pin15 = 22,
+
+		V2_Pin16 = 23,
+
+		V2_Pin18 = 24,
+
+		V2_Pin19 = 10,
+
+		V2_Pin21 = 9,
+
+		V2_Pin22 = 25,
+
+		V2_Pin23 = 11,
+
+		V2_Pin24 = 8,
+
+		V2_Pin26 = 7,
+		#endregion
+
+		#region Board Revision 2 New Plug P5
+		V2_P5_Pin03 = 28,
+
+		V2_P5_Pin04 = 29,
+
+		V2_P5_Pin05 = 30,
+
+		V2_P5_Pin06 = 31
+		#endregion
 	}
 }
 

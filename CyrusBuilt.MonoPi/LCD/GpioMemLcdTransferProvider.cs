@@ -1,10 +1,10 @@
 //
-//  GpioPinsRev2.cs
+//  GpioMemLcdTransferProvider.cs
 //
 //  Author:
-//       Chris Brunner <cyrusbuilt at gmail dot com>
+//       chris brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,23 +21,23 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 using System;
+using CyrusBuilt.MonoPi.IO;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.LCD
 {
-	/// <summary>
-	/// The various GPIO pins on the Raspberry Pi Revision 2.0 board.
-	/// </summary>
-	/// <remarks>
-	/// Refer to http://elinux.org/Rpi_Low-level_peripherals for diagram.
-	/// </remarks>		
-	public enum GpioPinsRev2 : int
+	public class GpioMemLcdTransferProvider : ILcdTransferProvider
 	{
-		/// <summary>
-		/// No pin (null).
-		/// </summary>
-		GPIO_NONE = -1
+		#region Fields
+		private readonly GpioMem _registerSelectPort = null;
+		private readonly GpioMem _readWritePort = null;
+		private readonly GpioMem _enablePort = null;
+		private readonly GpioMem[] _dataPorts = { };
+		private readonly Boolean _fourBitMode = false;
+		private Boolean _isDisposed = false;
+		#endregion
 
-		// TODO define the rest of the pins.
+		public GpioMemLcdTransferProvider() {
+		}
 	}
 }
 

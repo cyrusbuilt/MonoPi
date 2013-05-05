@@ -36,9 +36,8 @@ namespace CyrusBuilt.MonoPi.IO
 	{
 		#region Fields
 		private Boolean _isDisposed = false;
-		protected BoardRevision _revision = BoardRevision.Rev1;
-		protected GpioPinsRev1 _rev1pin = GpioPinsRev1.GPIO_NONE;
-		protected GpioPinsRev2 _rev2pin = GpioPinsRev2.GPIO_NONE;
+		protected BoardRevision _revision = BoardRevision.Rev2;
+		protected GpioPins _pin = GpioPins.GPIO_NONE;
 		protected static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
 		#endregion
 
@@ -49,7 +48,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// the initial pin value.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 GPIO pin.
+		/// The GPIO pin.
 		/// </param>
 		/// <param name="direction">
 		/// The I/O pin direction.
@@ -57,27 +56,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The initial pin value.
 		/// </param>
-		public GpioBase(GpioPinsRev1 pin, PinDirection direction, Boolean value) {
-			this._rev1pin = pin;
-			this._revision = BoardRevision.Rev1;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
-		/// class with a board Revision 2.0 GPIO pin, the pin direction, and
-		/// the initial pin value.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 GPIO pin.
-		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
-		/// </param>
-		/// <param name="value">
-		/// The initial pin value.
-		/// </param>
-		public GpioBase(GpioPinsRev2 pin, PinDirection direction, Boolean value) {
-			this._rev2pin = pin;
+		public GpioBase(GpioPins pin, PinDirection direction, Boolean value) {
+			this._pin = pin;
 			this._revision = BoardRevision.Rev2;
 		}
 
@@ -86,26 +66,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// class with a board Revision 1.0 pin and the pin direction.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 GPIO pin.
+		/// The GPIO pin.
 		/// </param>
 		/// <param name="direction">
 		/// The I/O pin direction.
 		/// </param>
-		public GpioBase(GpioPinsRev1 pin, PinDirection direction)
-			: this(pin, direction, false) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
-		/// class with a board Revision 2.0 pin and the pin direction.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 GPIO pin.
-		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
-		/// </param>
-		public GpioBase(GpioPinsRev2 pin, PinDirection direction)
+		public GpioBase(GpioPins pin, PinDirection direction)
 			: this(pin, direction, false) {
 		}
 
@@ -114,20 +80,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// class with a board Revision 1.0 pin.
 		/// </summary>
 		/// <param name="pin">
-		/// The Revision 1.0 GPIO pin.
+		/// The GPIO pin.
 		/// </param>
-		public GpioBase(GpioPinsRev1 pin)
-			: this(pin, PinDirection.OUT, false) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
-		/// class with a board Revision 2.0 pin.
-		/// </summary>
-		/// <param name="pin">
-		/// The Revision 2.0 GPIO pin.
-		/// </param>
-		public GpioBase(GpioPinsRev2 pin)
+		public GpioBase(GpioPins pin)
 			: this(pin, PinDirection.OUT, false) {
 		}
 		#endregion
@@ -150,28 +105,25 @@ namespace CyrusBuilt.MonoPi.IO
 
 		#region Methods
 		/// <summary>
-		/// Gets the GPIO pin number.
+		/// Changes the board revision.
 		/// </summary>
-		/// <param name="pin">
-		/// Revision 1.0 GPIO pin.
+		/// <param name="revision">
+		/// The board revision. Default is <see cref="BoardRevision.Rev2"/>.
 		/// </param>
-		/// <returns>
-		/// The GPIO pin number.
-		/// </returns>
-		protected static String GetGpioPinNumber(GpioPinsRev1 pin) {
-			return ((Int32)pin).ToString();
+		public void ChangeBoardRevision(BoardRevision revision) {
+			this._revision = revision;
 		}
 
 		/// <summary>
 		/// Gets the GPIO pin number.
 		/// </summary>
 		/// <param name="pin">
-		/// Revision 2.0 GPIO pin.
+		/// The GPIO pin.
 		/// </param>
 		/// <returns>
 		/// The GPIO pin number.
 		/// </returns>
-		protected static String GetGpioPinNumber(GpioPinsRev2 pin) {
+		protected static String GetGpioPinNumber(GpioPins pin) {
 			return ((Int32)pin).ToString();
 		}
 

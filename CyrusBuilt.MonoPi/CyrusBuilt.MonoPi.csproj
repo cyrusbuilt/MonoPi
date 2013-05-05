@@ -38,8 +38,6 @@
     <Compile Include="IO\GpioBase.cs" />
     <Compile Include="IO\GpioFile.cs" />
     <Compile Include="IO\GpioMem.cs" />
-    <Compile Include="IO\GpioPinsRev1.cs" />
-    <Compile Include="IO\GpioPinsRev2.cs" />
     <Compile Include="IO\IGpio.cs" />
     <Compile Include="IO\PinDirection.cs" />
     <Compile Include="IO\Serial\BaudRates.cs" />
@@ -50,6 +48,10 @@
     <Compile Include="LED\TM1638LedColor.cs" />
     <Compile Include="LED\TM16XXBase.cs" />
     <Compile Include="LED\TM1638.cs" />
+    <Compile Include="LCD\ILcdTransferProvider.cs" />
+    <Compile Include="LCD\GpioFileLcdTransferProvider.cs" />
+    <Compile Include="IO\GpioPins.cs" />
+    <Compile Include="LCD\GpioMemLcdTransferProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
