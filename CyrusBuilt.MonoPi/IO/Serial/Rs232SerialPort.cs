@@ -157,7 +157,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		/// This instance has been disposed and is no longer usable.
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
-		/// 
+		/// The serial port is already open.
 		/// </exception>
 		public void Open(String device, BaudRates baud) {
 			this._device = device;

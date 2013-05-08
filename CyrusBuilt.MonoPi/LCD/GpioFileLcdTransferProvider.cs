@@ -274,7 +274,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// <see cref="GpionPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioFileLcdTransferProvider(GpioPins rs, GpioPins rw, GpioPins enable, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
-			: this(true, rs, rw, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,
+			: this(false, rs, rw, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,
 			       d4, d5, d6, d7) {
 		}
 
@@ -317,7 +317,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// <see cref="GpionPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioFileLcdTransferProvider(GpioPins rs, GpioPins enable, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
-			: this(true, rs, GpioPins.GPIO_NONE, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,
+			: this(false, rs, GpioPins.GPIO_NONE, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,
 			       GpioPins.GPIO_NONE, d4, d5, d6, d7) {
 		}
 		#endregion
@@ -441,7 +441,6 @@ namespace CyrusBuilt.MonoPi.LCD
 					}
 				}
 				Array.Clear(this._dataPorts, 0, this._dataPorts.Length);
-				this._dataPorts = null;
 			}
 
 			if (disposing) {

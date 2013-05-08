@@ -52,6 +52,11 @@
     <Compile Include="LCD\GpioFileLcdTransferProvider.cs" />
     <Compile Include="IO\GpioPins.cs" />
     <Compile Include="LCD\GpioMemLcdTransferProvider.cs" />
+    <Compile Include="LCD\LcdModule.cs" />
+    <Compile Include="LCD\LcdCommands.cs" />
+    <Compile Include="LCD\DisplayEntryModes.cs" />
+    <Compile Include="LCD\DisplayOnOffControl.cs" />
+    <Compile Include="LCD\FunctionSetFlags.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
