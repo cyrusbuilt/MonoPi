@@ -271,7 +271,7 @@ namespace CyrusBuilt.MonoPi.I2C
 		public void WriteByte(Int32 address, Byte b) {
 			Byte[] bytes = new Byte[1];
 			bytes[0] = b;
-			this.WriteBytes(bytes);
+			this.WriteBytes(address, bytes);
 		}
 
 		/// <summary>
