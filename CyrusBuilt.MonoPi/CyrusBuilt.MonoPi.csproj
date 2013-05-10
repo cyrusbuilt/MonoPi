@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -57,6 +58,10 @@
     <Compile Include="LCD\DisplayEntryModes.cs" />
     <Compile Include="LCD\DisplayOnOffControl.cs" />
     <Compile Include="LCD\FunctionSetFlags.cs" />
+    <Compile Include="Gertboard\GertboardAdcChannels.cs" />
+    <Compile Include="Gertboard\GertboardDevice.cs" />
+    <Compile Include="I2C\II2CBus.cs" />
+    <Compile Include="I2C\I2CBus.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -66,5 +71,7 @@
     <Folder Include="SPI\" />
     <Folder Include="LED\" />
     <Folder Include="LCD\" />
+    <Folder Include="Gertboard\" />
+    <Folder Include="I2C\" />
   </ItemGroup>
 </Project>

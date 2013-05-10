@@ -28,7 +28,7 @@ namespace CyrusBuilt.MonoPi
 	/// <summary>
 	/// Unmanaged methods providing DMA to bcm2835 GPIOs.
 	/// </summary>
-	public static class UnsafeNativeMethods
+	internal static class UnsafeNativeMethods
 	{
 		#region Imported libbcm2835 Methods
 		/// <summary>
@@ -44,7 +44,7 @@ namespace CyrusBuilt.MonoPi
 		/// 1 if successful; Otherwise, 0;
 		/// </returns>			
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_init")]
-		internal static extern Int32 bcm2835_init();
+		public static extern Int32 bcm2835_init();
 
 		/// <summary>
 		/// Close the library, deallocating any allocated memory and closing
@@ -54,7 +54,7 @@ namespace CyrusBuilt.MonoPi
 		/// 1 if successful; Otherwise, 0;
 		/// </returns>			
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_close")]
-		internal static extern Int32 bcm2835_close();
+		public static extern Int32 bcm2835_close();
 
 		/// <summary>
 		/// Sets the Function Select register for the given pin, which configures
@@ -67,7 +67,7 @@ namespace CyrusBuilt.MonoPi
 		/// The mode to set the pin to.
 		/// </param>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_fsel")]
-		internal static extern void bcm2835_gpio_fsel(uint pin, uint mode);
+		public static extern void bcm2835_gpio_fsel(uint pin, uint mode);
 
 		/// <summary>
 		/// Sets the output state of the specified pin.
@@ -79,7 +79,7 @@ namespace CyrusBuilt.MonoPi
 		/// On HIGH sets the output to HIGH and LOW to LOW.
 		/// </param>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_write")]
-		internal static extern void bcm2835_gpio_write(uint pin, uint value);
+		public static extern void bcm2835_gpio_write(uint pin, uint value);
 
 		/// <summary>
 		/// Reads the current level on the specified pin and returns either HIGH
@@ -92,7 +92,7 @@ namespace CyrusBuilt.MonoPi
 		/// the current level either HIGH or LOW.
 		/// </returns>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_lev")]
-		internal static extern uint bcm2835_gpio_lev(uint pin);
+		public static extern uint bcm2835_gpio_lev(uint pin);
 
 		/// <summary>
 		/// Sets the Pull-up/down mode for the specified pin.
@@ -104,7 +104,7 @@ namespace CyrusBuilt.MonoPi
 		/// The desired Pull-up/down mode.
 		/// </param>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_set_pud")]
-		internal static extern void bcm2835_gpio_set_pud(uint pin, uint pud);
+		public static extern void bcm2835_gpio_set_pud(uint pin, uint pud);
 		#endregion
 
 		#region Imported wiringPi Methods
@@ -122,7 +122,7 @@ namespace CyrusBuilt.MonoPi
 		/// is invalid. Returns -1 if the port is already open.
 		/// </returns>
 		[DllImport("libwiringPi.so", EntryPoint = "serialOpen")]
-		internal static extern Int32 serialOpen(String device, Int32 baud);
+		public static extern Int32 serialOpen(String device, Int32 baud);
 
 		/// <summary>
 		/// Flush the transmit and receive buffers.
@@ -140,7 +140,7 @@ namespace CyrusBuilt.MonoPi
 		/// The handle ID to the open serial port.
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "serialClose")]
-		internal static extern void serialClose(Int32 fd);
+		public static extern void serialClose(Int32 fd);
 
 		/// <summary>
 		/// Sends a single character to the serial port.
@@ -152,7 +152,7 @@ namespace CyrusBuilt.MonoPi
 		/// The character to send.
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "serialPutchar")]
-		internal static extern void serialPutChar(Int32 fd, byte c);
+		public static extern void serialPutChar(Int32 fd, byte c);
 
 		/// <summary>
 		/// Sends a string to the serial port.
@@ -164,7 +164,7 @@ namespace CyrusBuilt.MonoPi
 		/// The string to send.
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "serialPuts")]
-		internal static extern void serialPuts(Int32 fd, String s);
+		public static extern void serialPuts(Int32 fd, String s);
 
 		/// <summary>
 		/// Gets the number of bytes available to be read (if any).
@@ -177,7 +177,7 @@ namespace CyrusBuilt.MonoPi
 		/// Returns -1, if there is no data available.
 		/// </returns>
 		[DllImport("libwiringPi.so", EntryPoint = "serialDataAvail")]
-		internal static extern Int32 serialDataAvail(Int32 fd);
+		public static extern Int32 serialDataAvail(Int32 fd);
 
 		/// <summary>
 		/// Gets a single character from the serial device.
@@ -193,7 +193,111 @@ namespace CyrusBuilt.MonoPi
 		/// seconds if no data could be read.
 		/// </remarks>
 		[DllImport("libwiringPi.so", EntryPoint = "setGetchar")]
-		internal static extern Int32 serialGetChar(Int32 fd);
+		public static extern Int32 serialGetChar(Int32 fd);
+
+		/// <summary>
+		/// Initializes the SPI bus for communication with the SPI devices on
+		/// the gertboard.
+		/// </summary>
+		/// <returns>
+		/// If successful, 0; Otherwise, -1.
+		/// </returns>
+		[DllImport("libwiringPi.so", EntryPoint = "gertboardSPISetup")]
+		public static extern Int32 gertboardSPISetup();
+
+		/// <summary>
+		/// Writes an 8-bit data value to the MCP4802 ADC.
+		/// </summary>
+		/// <param name="chan">
+		/// The channel to write to 0 or 1.
+		/// </param>
+		/// <param name="value">
+		/// The value to write.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "gertboardAnalogWrite")]
+		public static extern void gertboardAnalogWrite(Int32 chan, Int32 value);
+
+		/// <summary>
+		/// Reads the analog value of the specified channel.
+		/// </summary>
+		/// <returns>
+		/// The value read.
+		/// </returns>
+		/// <param name="chan">
+		/// The channel to read from (0 or 1).
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "gertboardAnalogRead")]
+		public static extern Int32 gertboardAnalogRead(Int32 chan);
+		#endregion
+
+		#region I2CNativeLib Imported Methods
+		/// <summary>
+		/// Opens the I2C bus connection.
+		/// </summary>
+		/// <returns>
+		/// A handle ID to the open connection stream.
+		/// </returns>
+		/// <param name="busFileName">
+		/// The I2C bus file (device) name.
+		/// </param>
+		[DllImport("libnativei2c.so", EntryPoint = "openBus", SetLastError = true)]
+		public static extern Int32 I2COpenBus(String busFileName);
+
+		/// <summary>
+		/// Closes the specified I2C bus connection.
+		/// </summary>
+		/// <returns>
+		/// Always returns 0.
+		/// </returns>
+		/// <param name="busHandle">
+		/// The handle ID to an open I2C bus connection.
+		/// </param>
+		[DllImport("libnativei2c.so", EntryPoint = "closeBus", SetLastError = true)]
+		public static extern Int32 I2CCloseBus(Int32 busHandle);
+
+		/// <summary>
+		/// Reads bytes from the I2C bus.
+		/// </summary>
+		/// <returns>
+		/// 0 if successful; Otherwise, -1 if <paramref name="address"/> is
+		/// inacessible or 0 (or less than 0) if the I2C transaction failed. 
+		/// </returns>
+		/// <param name="busHandle">
+		/// The connection handle ID of an open bus connection.
+		/// </param>
+		/// <param name="address">
+		/// The address of the device on the bus to read from.
+		/// </param>
+		/// <param name="buffer">
+		/// The buffer to receive the bytes read.
+		/// </param>
+		/// <param name="length">
+		/// The number of bytes to read from the bus.
+		/// </param>
+		[DllImport("libnativei2c.so", EntryPoint = "readBytes", SetLastError = true)]
+		public static extern Int32 I2CReadBytes(Int32 busHandle, Int32 address, Byte[] buffer, Int32 length);
+
+		/// <summary>
+		/// Writes bytes to the I2C bus.
+		/// </summary>
+		/// <returns>
+		/// 0 if successful; Otherwise -1 if <paramref name="address"/> is
+		/// inacessible or -2 if the i2c transaction failed.
+		/// </returns>
+		/// <param name="busHandle">
+		/// The connection handle ID of an open bus connection.
+		/// </param>
+		/// <param name="address">
+		/// The address of the target device on the bus.
+		/// </param>
+		/// <param name="buffer">
+		/// The buffer containing the bytes to write.
+		/// </param>
+		/// <param name="length">
+		/// The number of bytes in the buffer to write.
+		/// </param>
+		[DllImport("libnativei2c.so", EntryPoint = "writeBytes", SetLastError = true)]
+		public static extern Int32 I2CWriteBytes(Int32 busHandle, Int32 address, Byte[] buffer, Int32 length);
 		#endregion
 	}
 }

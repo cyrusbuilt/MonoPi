@@ -22,7 +22,7 @@
 //
 //  Derived from https://github.com/cypherkey/RaspberryPi.Net
 //  by Aaron Anderson <aanderson@netopia.ca>, which is derived from
-//  Derived based on work done by AdamS at 
+//  work done by AdamS at 
 //  http://forums.netduino.com/index.php?/topic/3335-netduino-plus-and-ds1620-anyone/page__view__findpost__p__22972
 //
 using System;
