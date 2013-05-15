@@ -228,6 +228,132 @@ namespace CyrusBuilt.MonoPi
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "gertboardAnalogRead")]
 		public static extern Int32 gertboardAnalogRead(Int32 chan);
+
+		/// <summary>
+		/// Read a value from an RTC register or RAM location on the chip.
+		/// </summary>
+		/// <returns>
+		/// The value read.
+		/// </returns>
+		/// <param name="reg">
+		/// The register or RAM location to read.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302rtcRead")]
+		public static extern UInt32 ds1302rtcRead(Int32 reg);
+
+		/// <summary>
+		/// Writes a value to an RTC register or RAM location on the chip.
+		/// </summary>
+		/// <param name="reg">
+		/// The register or RAM location to write to.
+		/// </param>
+		/// <param name="data">
+		/// The data to write.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302rtcWrite")]
+		public static extern void ds1302rtcWrite(Int32 reg, UInt32 data);
+
+		/// <summary>
+		/// Reads data from the RTC register.
+		/// </summary>
+		/// <returns>
+		/// The value read.
+		/// </returns>
+		/// <param name="addr">
+		/// The address of the register to read.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302ramRead")]
+		public static extern UInt32 ds1302ramRead(Int32 addr);
+
+		/// <summary>
+		/// Writes data to the RTC register.
+		/// </summary>
+		/// <param name="addr">
+		/// The address to read.
+		/// </param>
+		/// <param name="data">
+		/// The data to write.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302ramWrite")]
+		public static extern void ds1302ramWrite(Int32 addr, UInt32 data);
+
+		/// <summary>
+		/// Reads all 8 bytes from the clock in a single operation.
+		/// </summary>
+		/// <param name="clockData">
+		/// The 8 byte buffer to receive the clock data read.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302clockRead")]
+		public static extern void ds1302clockRead(Int32[] clockData);
+
+		/// <summary>
+		/// Writes all 8 bytes of the clock in a single operation.
+		/// </summary>
+		/// <param name="clockData">
+		/// The 8 bytes of clock data to write.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302clockWrite")]
+		public static extern void ds1302clockWrite(Int32[] clockData);
+
+		/// <summary>
+		/// Initializes the chip and remembers the pins being used.
+		/// </summary>
+		/// <param name="clockPin">
+		/// The GPIO pin to use for the clock.
+		/// </param>
+		/// <param name="dataPin">
+		/// The GPIO pin to use for data access.
+		/// </param>
+		/// <param name="csPin">
+		/// The GPIO pin to use for chip select.
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "ds1302setup")]
+		public static extern void ds1302setup(Int32 clockPin, Int32 dataPin, Int32 csPin);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>
+		/// 
+		/// </returns>
+		/// <param name="channel">
+		/// 
+		/// </param>
+		/// <param name="speed">
+		/// 
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPISetup")]
+		public static extern Int32 wiringPiSPISetup(Int32 channel, Int32 speed);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>
+		/// 
+		/// </returns>
+		/// <param name="channel">
+		/// 
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPISetup")]
+		public static extern Int32 wiringPiSPIGetFd(Int32 channel);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>
+		/// 
+		/// </returns>
+		/// <param name="channel">
+		/// 
+		/// </param>
+		/// <param name="data">
+		/// 
+		/// </param>
+		/// <param name="len">
+		/// 
+		/// </param>
+		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPIDataRW")]
+		public static extern Int32 wiringPiSPIDataRW(Int32 channel, Char[] data, Int32 len);
 		#endregion
 
 		#region I2CNativeLib Imported Methods

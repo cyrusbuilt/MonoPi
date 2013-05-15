@@ -62,6 +62,8 @@
     <Compile Include="Gertboard\GertboardDevice.cs" />
     <Compile Include="I2C\II2CBus.cs" />
     <Compile Include="I2C\I2CBus.cs" />
+    <Compile Include="RTC\DS1302.cs" />
+    <Compile Include="SPI\SimpleSPI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -73,5 +75,6 @@
     <Folder Include="LCD\" />
     <Folder Include="Gertboard\" />
     <Folder Include="I2C\" />
+    <Folder Include="RTC\" />
   </ItemGroup>
 </Project>
