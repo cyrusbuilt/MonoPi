@@ -25,7 +25,8 @@ using System;
 namespace CyrusBuilt.MonoPi.SPI
 {
 	/// <summary>
-	/// A simplified SPI data access mechanism.
+	/// A simplified SPI data access mechanism. This wraps the wiringPiSPI module in
+	/// wiringPi, thus relies on wiringPi.so lib.
 	/// </summary>
 	public static class SimpleSPI
 	{

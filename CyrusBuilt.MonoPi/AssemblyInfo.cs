@@ -27,10 +27,10 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle("CyrusBuilt.MonoPi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A Mono library for interfacing with the GPIOs, sensors, etc on the Raspberry Pi.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CyrusBuilt")]
-[assembly: AssemblyProduct("")]
+[assembly: AssemblyProduct("2012-2013 CyrusBuilt.MonoPi")]
 [assembly: AssemblyCopyright("CyrusBuilt")]
 [assembly: AssemblyTrademark("All rights reserved.")]
 [assembly: AssemblyCulture("")]
