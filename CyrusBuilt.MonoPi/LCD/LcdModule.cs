@@ -162,7 +162,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// <param name="data">
 		/// The byte command to send.
 		/// </param>
-		/// <exception cref="IllegalArgumentException">
+		/// <exception cref="InvalidOperationException">
 		/// <see cref="Provider"/> is not specified.
 		/// </exception>
 		public void SendCommand(Byte data) {
@@ -178,7 +178,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// <param name="data">
 		/// Data.
 		/// </param>
-		/// <exception cref="IllegalArgumentException">
+		/// <exception cref="InvalidOperationException">
 		/// <see cref="Provider"/> is not specified.
 		/// </exception>
 		public void WriteByte(Byte data) {

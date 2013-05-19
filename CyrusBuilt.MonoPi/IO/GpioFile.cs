@@ -41,7 +41,7 @@ namespace CyrusBuilt.MonoPi.IO
 
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioFile"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/>
 		/// class with the Rev1 pin to access, the I/O direction, and the initial value.
 		/// </summary>
 		/// <param name="pin">
@@ -60,7 +60,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioFile"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/>
 		/// class with the Rev1 pin to access and the I/O direction.
 		/// </summary>
 		/// <param name="pin">
@@ -75,7 +75,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioFile"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/>
 		/// class with the Rev1 pin to access.
 		/// </summary>
 		/// <param name="pin">
@@ -100,21 +100,24 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pinnum">
 		/// The pin number.
 		/// </param>
+		/// <param name="pinname">
+		/// The name of the pin.
+		/// </param>
 		private static void internal_ExportPin(Int32 pin, PinDirection direction, String pinnum, String pinname) {
 			String pinpath = GPIO_PATH + "gpio" + pinnum;
 			String dir = Enum.GetName(typeof(PinDirection), direction);
 
 			// If the pin is already exported, check it's in the proper direction.
-			if (_exportedPins.ContainsKey(pin)) {
+			if (ExportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
-				if (_exportedPins[pin] == direction) {
+				if (ExportedPins[pin] == direction) {
 					return;
 				}
 				else {
 					// Set the direction on the pin and update the exported list.
 					File.WriteAllText(pinpath + "/direction", dir);
-					_exportedPins[pin] = direction;
+					ExportedPins[pin] = direction;
 					return;
 				}
 			}
@@ -130,7 +133,7 @@ namespace CyrusBuilt.MonoPi.IO
 			File.WriteAllText(pinpath + "/direction", dir);
 
 			// Update the pin.
-			_exportedPins[pin] = direction;
+			ExportedPins[pin] = direction;
 		}
 
 		/// <summary>
@@ -160,7 +163,7 @@ namespace CyrusBuilt.MonoPi.IO
 		private static void internal_UnexportPin(Int32 pin, String gpioNum) {
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			File.WriteAllText(GPIO_PATH + "unexport", gpioNum);
-			_exportedPins.Remove(pin);
+			ExportedPins.Remove(pin);
 		}
 
 		/// <summary>
@@ -272,9 +275,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Unexports all pins in the registry.
 		/// </summary>
 		public static void Cleanup() {
-			if (_exportedPins != null) {
-				if (_exportedPins.Count > 0) {
-					foreach (Int32 pin in _exportedPins.Keys) {
+			if (ExportedPins != null) {
+				if (ExportedPins.Count > 0) {
+					foreach (Int32 pin in ExportedPins.Keys) {
 						internal_UnexportPin(pin, pin.ToString());
 					}
 				}
@@ -290,7 +293,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value to write to the pin.
 		/// </param>
 		public override void Write(Boolean value) {
-			Write(_pin, value);
+			Write(base.InnerPin, value);
 		}
 
 		/// <summary>
@@ -303,20 +306,20 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Cannot read the value from the pin. The path does not exist.
 		/// </exception>
 		public override Boolean Read() {
-			return Read(_pin);
+			return Read(base.InnerPin);
 		}
 
 		/// <summary>
-		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.GpioFile"/> object.
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> object.
 		/// </summary>
 		/// <remarks>
-		/// Call <see cref="Dispose"/> when you are finished using the <see cref="CyrusBuilt.MonoPi.GpioFile"/>. The
-		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.GpioFile"/> in an unusable state. After
-		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="CyrusBuilt.MonoPi.GpioFile"/> so
-		/// the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.GpioFile"/> was occupying.
+		/// Call <see cref="Dispose"/> when you are finished using the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> so
+		/// the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> was occupying.
 		/// </remarks>
 		public override void Dispose() {
-			UnexportPin(_pin);
+			UnexportPin(base.InnerPin);
 			Cleanup();
 			base.Dispose();
 		}

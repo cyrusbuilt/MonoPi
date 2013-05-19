@@ -37,10 +37,10 @@ namespace CyrusBuilt.MonoPi.LED
 	public abstract class TM16XXBase : IDisposable
 	{
 		#region Fields
-		protected GpioBase _data = null;
-		protected GpioBase _clock = null;
-		protected GpioBase _strobe = null;
-		protected Int32 _displays = 0;
+		private GpioBase _data = null;
+		private GpioBase _clock = null;
+		private GpioBase _strobe = null;
+		private Int32 _displays = 0;
 		private Boolean _isActive = false;
 		#endregion
 
@@ -210,6 +210,20 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </summary>
 		public Boolean IsActive {
 			get { return this._isActive; }
+		}
+
+		/// <summary>
+		/// Gets the number of displays.
+		/// </summary>
+		protected Int32 Displays {
+			get { return this._displays; }
+		}
+
+		/// <summary>
+		/// Gets the strobe pin.
+		/// </summary>
+		protected GpioBase Strobe {
+			get { return this._strobe; }
 		}
 		#endregion
 

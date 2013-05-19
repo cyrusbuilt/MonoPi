@@ -26,7 +26,9 @@ using CyrusBuilt.MonoPi.IO;
 namespace CyrusBuilt.MonoPi.RTC
 {
 	/// <summary>
-	/// 
+	/// A Real-Time Clock (RTC) component for interfacing with a Dallas Semiconductor
+	/// DS1302 RTC. This wraps the ds1302 module in wiringPi, and thus requires
+	/// the wiringPi.so lib.
 	/// </summary>
 	public class DS1302 : IDisposable
 	{
@@ -55,7 +57,9 @@ namespace CyrusBuilt.MonoPi.RTC
 			this._clockPin = clockPin;
 			this._dataPin = dataPin;
 			this._csPin = csPin;
-			UnsafeNativeMethods.ds1302setup(this._clockPin, this._dataPin, this._csPin);
+			UnsafeNativeMethods.ds1302setup((Int32)this._clockPin.InnerPin,
+			                                (Int32)this._dataPin.InnerPin,
+			                                (Int32)this._csPin.InnerPin);
 		}
 		#endregion
 
@@ -175,12 +179,13 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <exception cref="ObjectDisposedException">
 		/// This instance has been disposed.
 		/// </exception>
-		public Byte[] ReadClock() {
+		public Int32[] ReadClock() {
 			if (this._isDisposed) {
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.RTC.DS1302");
 			}
-			Byte[] buffer = new Byte[8];
+			Int32[] buffer = new Int32[8];
 			UnsafeNativeMethods.ds1302clockRead(buffer);
+			return buffer;
 		}
 
 		/// <summary>
@@ -195,7 +200,7 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <exception cref="ArgumentException">
 		/// <paramref name="data"/> is not 8 bytes in length.
 		/// </exception>
-		public void WriteClock(Byte[] data) {
+		public void WriteClock(Int32[] data) {
 			if (this._isDisposed) {
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.RTC.DS1302");
 			}
