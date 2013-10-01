@@ -26,7 +26,9 @@ using CyrusBuilt.MonoPi.IO;
 namespace CyrusBuilt.MonoPi.RTC
 {
 	/// <summary>
-	/// 
+	/// A Real-Time Clock (RTC) component for interfacing with a Dallas Semiconductor
+	/// DS1302 RTC. This wraps the ds1302 module in wiringPi, and thus requires
+	/// the wiringPi.so lib.
 	/// </summary>
 	public class DS1302 : IDisposable
 	{
@@ -55,7 +57,13 @@ namespace CyrusBuilt.MonoPi.RTC
 			this._clockPin = clockPin;
 			this._dataPin = dataPin;
 			this._csPin = csPin;
+<<<<<<< HEAD
 			UnsafeNativeMethods.ds1302setup((Int32)this._clockPin.Pin, (Int32)this._dataPin.Pin, (Int32)this._csPin.Pin);
+=======
+			UnsafeNativeMethods.ds1302setup((Int32)this._clockPin.InnerPin,
+			                                (Int32)this._dataPin.InnerPin,
+			                                (Int32)this._csPin.InnerPin);
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 		#endregion
 
@@ -175,14 +183,20 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <exception cref="ObjectDisposedException">
 		/// This instance has been disposed.
 		/// </exception>
-		public Byte[] ReadClock() {
+		public Int32[] ReadClock() {
 			if (this._isDisposed) {
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.RTC.DS1302");
 			}
+<<<<<<< HEAD
 			Byte[] buffer = new Byte[8];
 			Int32[] bytesAsInts = Array.ConvertAll(buffer, c => (Int32)c);
 			UnsafeNativeMethods.ds1302clockRead(bytesAsInts);
 			return Array.ConvertAll(bytesAsInts, c => (Byte)c);
+=======
+			Int32[] buffer = new Int32[8];
+			UnsafeNativeMethods.ds1302clockRead(buffer);
+			return buffer;
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 
 		/// <summary>
@@ -197,7 +211,7 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <exception cref="ArgumentException">
 		/// <paramref name="data"/> is not 8 bytes in length.
 		/// </exception>
-		public void WriteClock(Byte[] data) {
+		public void WriteClock(Int32[] data) {
 			if (this._isDisposed) {
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.RTC.DS1302");
 			}

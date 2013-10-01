@@ -92,7 +92,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </remarks>
 		/// <exception cref="ArgumentException">
 		/// <paramref name="rs"/> and <paramref name="enable"/> cannot be set to
-		/// <see cref="GpionPins.GPIO_NONE"/>.
+		/// <see cref="GpioPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioMemLcdTransferProvider(Boolean fourBitMode, GpioPins rs, GpioPins rw, GpioPins enable,
 		                                  GpioPins d0, GpioPins d1, GpioPins d2, GpioPins d3, GpioPins d4,
@@ -173,7 +173,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </remarks>
 		/// <exception cref="ArgumentException">
 		/// <paramref name="rs"/> and <paramref name="enable"/> cannot be set to
-		/// <see cref="GpionPins.GPIO_NONE"/>.
+		/// <see cref="GpioPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioMemLcdTransferProvider(GpioPins rs, GpioPins rw, GpioPins enable, GpioPins d0, GpioPins d1,
 		                                  GpioPins d2, GpioPins d3, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
@@ -225,7 +225,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </remarks>
 		/// <exception cref="ArgumentException">
 		/// <paramref name="rs"/> and <paramref name="enable"/> cannot be set to
-		/// <see cref="GpionPins.GPIO_NONE"/>.
+		/// <see cref="GpioPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioMemLcdTransferProvider(GpioPins rs, GpioPins enable, GpioPins d0, GpioPins d1, GpioPins d2,
 		                                  GpioPins d3, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
@@ -237,9 +237,6 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// class with the mode flag, register select pin, read/write pin,
 		/// enable pin, and data pins.
 		/// </summary>
-		/// <param name="fourBitMode">
-		/// If set to true, switch to four bit mode instead of 8 bit mode.
-		/// </param>
 		/// <param name="rs">
 		/// The number of the CPU pin that is connected to the RS (Register Select)
 		/// pin on the LCD.
@@ -272,7 +269,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </remarks>
 		/// <exception cref="ArgumentException">
 		/// <paramref name="rs"/> and <paramref name="enable"/> cannot be set to
-		/// <see cref="GpionPins.GPIO_NONE"/>.
+		/// <see cref="GpioPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioMemLcdTransferProvider(GpioPins rs, GpioPins rw, GpioPins enable, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
 			: this(true, rs, rw, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,
@@ -315,7 +312,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </remarks>
 		/// <exception cref="ArgumentException">
 		/// <paramref name="rs"/> and <paramref name="enable"/> cannot be set to
-		/// <see cref="GpionPins.GPIO_NONE"/>.
+		/// <see cref="GpioPins.GPIO_NONE"/>.
 		/// </exception>
 		public GpioMemLcdTransferProvider(GpioPins rs, GpioPins enable, GpioPins d4, GpioPins d5, GpioPins d6, GpioPins d7)
 			: this(true, rs, GpioPins.GPIO_NONE, enable, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE, GpioPins.GPIO_NONE,

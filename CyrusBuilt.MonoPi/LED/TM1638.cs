@@ -97,8 +97,8 @@ namespace CyrusBuilt.MonoPi.LED
 				Byte digit = Byte.MinValue;
 				Byte pos = Byte.MinValue;
 				Boolean ldot = false;
-				for (Int32 i = 0; i < (base._displays - startPos); i++) {
-					pos = (Byte)(base._displays - i - 1);
+				for (Int32 i = 0; i < (base.Displays - startPos); i++) {
+					pos = (Byte)(base.Displays - i - 1);
 					ldot = ((dots  & (1 << i)) != 0);
 					if (number != 0) {
 						digit = (Byte)(number % 10);
@@ -193,9 +193,9 @@ namespace CyrusBuilt.MonoPi.LED
 			Byte digit = Byte.MinValue;
 			Byte pos = Byte.MinValue;
 			Boolean ldot = false;
-			for (Int32 i = 0; i < base._displays; i++) {
+			for (Int32 i = 0; i < base.Displays; i++) {
 				digit = (Byte)((number & (1 << i)) == 0 ? 0 : 1);
-				pos = (Byte)(_displays - i - 1);
+				pos = (Byte)(base.Displays - i - 1);
 				ldot = ((dots & (1 << i)) != 0);
 				base.SetDisplayDigit(digit, pos, ldot);
 			}
@@ -223,13 +223,13 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </returns>
 		public Byte GetPushButtons() {
 			Byte keys = Byte.MinValue;
-			base._strobe.Write(false);
+			base.Strobe.Write(false);
 			base.Send(0x42);
 			for (Byte i = 0; i < 4; i++) {
 				keys |= (Byte)(base.Receive() << i);
 			}
 
-			base._strobe.Write(true);
+			base.Strobe.Write(true);
 			return keys;
 		}
 		#endregion

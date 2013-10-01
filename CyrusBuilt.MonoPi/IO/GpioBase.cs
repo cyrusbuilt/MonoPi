@@ -36,15 +36,21 @@ namespace CyrusBuilt.MonoPi.IO
 	{
 		#region Fields
 		private Boolean _isDisposed = false;
+<<<<<<< HEAD
 		protected BoardRevision _revision = BoardRevision.Rev2;
 		protected GpioPins _pin = GpioPins.GPIO_NONE;
 		protected PinState _state = PinState.Low;
 		protected static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
+=======
+		private BoardRevision _revision = BoardRevision.Rev2;
+		private GpioPins _pin = GpioPins.GPIO_NONE;
+		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		#endregion
 
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
 		/// class with a board Revision 1.0 GPIO pin, the pin direction, and
 		/// the initial pin value.
 		/// </summary>
@@ -63,7 +69,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
 		/// class with a board Revision 1.0 pin and the pin direction.
 		/// </summary>
 		/// <param name="pin">
@@ -77,7 +83,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
 		/// class with a board Revision 1.0 pin.
 		/// </summary>
 		/// <param name="pin">
@@ -104,6 +110,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+<<<<<<< HEAD
 		/// Gets the state of the pin.
 		/// </summary>
 		public PinState State {
@@ -115,6 +122,19 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public GpioPins Pin {
 			get { return this._pin; }
+=======
+		/// Gets the physical pin being represented by this class.
+		/// </summary>
+		public GpioPins InnerPin {
+			get { return this._pin; }
+		}
+
+		/// <summary>
+		/// Gets the exported pins.
+		/// </summary>
+		protected static Dictionary<Int32, PinDirection> ExportedPins {
+			get { return _exportedPins; }
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 		#endregion
 
@@ -161,17 +181,17 @@ namespace CyrusBuilt.MonoPi.IO
 		public abstract Boolean Read();
 
 		/// <summary>
-		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.GpioBase"/>
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
 		/// object.
 		/// </summary>
 		/// <remarks>
 		/// Call <see cref="Dispose"/> when you are finished using the
-		/// <see cref="CyrusBuilt.MonoPi.GpioBase"/>.The <see cref="Dispose"/>
-		/// method leaves the <see cref="CyrusBuilt.MonoPi.GpioBase"/> in an
+		/// <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>.The <see cref="Dispose"/>
+		/// method leaves the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> in an
 		/// unusable state. After calling <see cref="Dispose"/>, you must release
-		/// all references to the <see cref="CyrusBuilt.MonoPi.GpioBase"/> so
+		/// all references to the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> so
 		/// the garbage collector can reclaim the memory that the
-		/// <see cref="CyrusBuilt.MonoPi.GpioBase"/> was occupying.
+		/// <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> was occupying.
 		/// </remarks>
 		public virtual void Dispose() {
 			this._isDisposed = true;

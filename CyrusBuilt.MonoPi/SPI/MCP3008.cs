@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.SPI
 {
 	/// <summary>
 	/// Raspberry Pi using MCP3008 A/D Converters with SPI Serial Interface
-	/// <seealso cref="http://ww1.microchip.com/downloads/en/DeviceDoc/21295d.pdf"/>
+	/// See also http://ww1.microchip.com/downloads/en/DeviceDoc/21295d.pdf
 	/// </summary>
 	public class MCP3008 : IDisposable
 	{

@@ -49,7 +49,7 @@ namespace CyrusBuilt.MonoPi.IO
 
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
 		/// class with the pin to initialize, the I/O direction, and the initial
 		/// value to write to the pin.
 		/// </summary>
@@ -73,7 +73,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
 		/// class with the pin to initialize and the I/O direction.
 		/// </summary>
 		/// <param name="pin">
@@ -92,7 +92,7 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.GpioMem"/>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
 		/// class with the pin to initialize.
 		/// </summary>
 		/// <param name="pin">
@@ -153,10 +153,10 @@ namespace CyrusBuilt.MonoPi.IO
 			Initialize();
 
 			// If the pin is already exported, check it's in the proper direction.
-			if (_exportedPins.ContainsKey(pin)) {
+			if (ExportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
-				if (_exportedPins[pin] == direction) {
+				if (ExportedPins[pin] == direction) {
 					return;
 				}
 			}
@@ -172,7 +172,7 @@ namespace CyrusBuilt.MonoPi.IO
 				// BCM2835_GPIO_PUD_UP = 0b10 = 2
 				UnsafeNativeMethods.bcm2835_gpio_set_pud((uint)pin, 0);
 			}
-			_exportedPins[pin] = direction;
+			ExportedPins[pin] = direction;
 		}
 
 		/// <summary>
@@ -201,8 +201,12 @@ namespace CyrusBuilt.MonoPi.IO
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
+<<<<<<< HEAD
 			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, 0);
 			_exportedPins.Remove(pin);
+=======
+			ExportedPins.Remove(pin);
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 
 		/// <summary>
@@ -290,13 +294,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Destroy this GPIO factory.
 		/// </summary>
 		public static void Destroy() {
-			if (_exportedPins != null) {
-				if (_exportedPins.Count > 0) {
-					foreach (Int32 pin in _exportedPins.Keys) {
+			if (ExportedPins != null) {
+				if (ExportedPins.Count > 0) {
+					foreach (Int32 pin in ExportedPins.Keys) {
 						internal_UnexportPin(pin, pin.ToString());
 					}
-					_exportedPins.Clear();
-					_exportedPins = null;
+					ExportedPins.Clear();
 				}
 			}
 			UnsafeNativeMethods.bcm2835_close();
@@ -311,8 +314,17 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value to write to the pin.
 		/// </param>
 		public override void Write(Boolean value) {
+<<<<<<< HEAD
 			Write(_pin, value);
 			base.Write(value);
+=======
+			if (base.Revision == BoardRevision.Rev1) {
+				Write(base.InnerPin, value);
+			}
+			else {
+				Write(base.InnerPin, value);
+			}
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 
 		/// <summary>
@@ -322,7 +334,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value read from the pin.
 		/// </returns>
 		public override Boolean Read() {
-			return Read(_pin);
+			return Read(base.InnerPin);
 		}
 
 		/// <summary>
@@ -335,7 +347,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> was occupying.
 		/// </remarks>
 		public override void Dispose() {
-			UnexportPin(_pin);
+			UnexportPin(base.InnerPin);
 			Destroy();
 			base.Write(false);
 			base.Dispose();

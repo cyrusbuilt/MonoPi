@@ -9,7 +9,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>CyrusBuilt.MonoPi</RootNamespace>
     <AssemblyName>CyrusBuilt.MonoPi</AssemblyName>
+<<<<<<< HEAD
     <ReleaseVersion>1.0.0.0</ReleaseVersion>
+=======
+    <Description>Mono library for interfacing with the GPIOs, sensors, etc on the Raspberry Pi.</Description>
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -20,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -89,4 +94,19 @@
     <Folder Include="Components\" />
     <Folder Include="Components\Motors\" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
+          <BuildFilesVar Sync="True" Name="FILES" />
+          <DeployFilesVar />
+          <ResourcesVar Sync="True" Name="RESOURCES" />
+          <OthersVar />
+          <GacRefVar Sync="True" Name="REFERENCES" />
+          <AsmRefVar Sync="True" Name="REFERENCES" />
+          <ProjectRefVar Sync="True" Name="REFERENCES" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

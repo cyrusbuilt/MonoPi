@@ -311,6 +311,7 @@ namespace CyrusBuilt.MonoPi
 		public static extern void ds1302setup(Int32 clockPin, Int32 dataPin, Int32 csPin);
 
 		/// <summary>
+<<<<<<< HEAD
 		/// Initialize the SPI interface.
 		/// </summary>
 		/// <returns>
@@ -321,11 +322,24 @@ namespace CyrusBuilt.MonoPi
 		/// </param>
 		/// <param name="speed">
 		/// The transfer speed to negotiate.
+=======
+		/// Opens the SPI device, sets it up, etc.
+		/// </summary>
+		/// <returns>
+		/// 0 if successful; Otherwise, -1.
+		/// </returns>
+		/// <param name="channel">
+		/// The channel to open.
+		/// </param>
+		/// <param name="speed">
+		/// The transfer rate to negotiate.
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPISetup")]
 		public static extern Int32 wiringPiSPISetup(Int32 channel, Int32 speed);
 
 		/// <summary>
+<<<<<<< HEAD
 		/// Get file descripter.
 		/// </summary>
 		/// <returns>
@@ -333,11 +347,21 @@ namespace CyrusBuilt.MonoPi
 		/// </returns>
 		/// <param name="channel">
 		/// The channel to communicate on.
+=======
+		/// Get the file-descriptor for the given channel.
+		/// </summary>
+		/// <returns>
+		/// The file descriptor associated with the specified channel.
+		/// </returns>
+		/// <param name="channel">
+		/// The channel to get the file descriptor of.
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPIGetFd")]
 		public static extern Int32 wiringPiSPIGetFd(Int32 channel);
 
 		/// <summary>
+<<<<<<< HEAD
 		/// Read and Write data on the specified channel.
 		/// </summary>
 		/// <returns>
@@ -349,10 +373,26 @@ namespace CyrusBuilt.MonoPi
 		/// <param name="data">
 		/// The data buffer used to transfer to the data to be written,
 		/// and is also used to recieve the data read.
+=======
+		/// Read and write a block of data over the SPI bus.
+		/// </summary>
+		/// <returns>
+		/// 0 if successful; Otherwise, -1.
+		/// </returns>
+		/// <param name="channel">
+		/// The channel to read from and write to.
+		/// </param>
+		/// <param name="data">
+		/// The buffer to transmit, which is then used to receive into.
+>>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		/// </param>
 		/// <param name="len">
 		/// The buffer length.
 		/// </param>
+		/// <remarks>
+		/// The data is being read into the transmit buffer, so will overwrite it!
+		/// This is a full duplex operation.
+		/// </remarks>
 		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPIDataRW")]
 		public static extern Int32 wiringPiSPIDataRW(Int32 channel, Char[] data, Int32 len);
 		#endregion
