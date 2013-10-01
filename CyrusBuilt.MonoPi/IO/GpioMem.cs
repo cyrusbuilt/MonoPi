@@ -201,6 +201,7 @@ namespace CyrusBuilt.MonoPi.IO
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
+			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, 0);
 			_exportedPins.Remove(pin);
 		}
 
@@ -310,12 +311,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value to write to the pin.
 		/// </param>
 		public override void Write(Boolean value) {
-			if (_revision == BoardRevision.Rev1) {
-				Write(_pin, value);
-			}
-			else {
-				Write(_pin, value);
-			}
+			Write(_pin, value);
+			base.Write(value);
 		}
 
 		/// <summary>
@@ -340,6 +337,7 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Dispose() {
 			UnexportPin(_pin);
 			Destroy();
+			base.Write(false);
 			base.Dispose();
 		}
 		#endregion

@@ -55,7 +55,7 @@ namespace CyrusBuilt.MonoPi.RTC
 			this._clockPin = clockPin;
 			this._dataPin = dataPin;
 			this._csPin = csPin;
-			UnsafeNativeMethods.ds1302setup(this._clockPin, this._dataPin, this._csPin);
+			UnsafeNativeMethods.ds1302setup((Int32)this._clockPin.Pin, (Int32)this._dataPin.Pin, (Int32)this._csPin.Pin);
 		}
 		#endregion
 
@@ -180,7 +180,9 @@ namespace CyrusBuilt.MonoPi.RTC
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.RTC.DS1302");
 			}
 			Byte[] buffer = new Byte[8];
-			UnsafeNativeMethods.ds1302clockRead(buffer);
+			Int32[] bytesAsInts = Array.ConvertAll(buffer, c => (Int32)c);
+			UnsafeNativeMethods.ds1302clockRead(bytesAsInts);
+			return Array.ConvertAll(bytesAsInts, c => (Byte)c);
 		}
 
 		/// <summary>
@@ -203,7 +205,9 @@ namespace CyrusBuilt.MonoPi.RTC
 			if (data.Length != 8) {
 				throw new ArgumentException("Byte array must 8 bytes in length.");
 			}
-			UnsafeNativeMethods.ds1302clockWrite(data);
+			Int32[] bytesAsInts = Array.ConvertAll(data, c => (Int32)c);
+			UnsafeNativeMethods.ds1302clockWrite(bytesAsInts);
+			Array.Clear(bytesAsInts, 0, bytesAsInts.Length);
 		}
 
 		/// <summary>

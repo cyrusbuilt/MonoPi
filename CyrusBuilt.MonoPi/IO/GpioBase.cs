@@ -38,6 +38,7 @@ namespace CyrusBuilt.MonoPi.IO
 		private Boolean _isDisposed = false;
 		protected BoardRevision _revision = BoardRevision.Rev2;
 		protected GpioPins _pin = GpioPins.GPIO_NONE;
+		protected PinState _state = PinState.Low;
 		protected static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
 		#endregion
 
@@ -101,6 +102,20 @@ namespace CyrusBuilt.MonoPi.IO
 		public BoardRevision Revision {
 			get { return this._revision; }
 		}
+
+		/// <summary>
+		/// Gets the state of the pin.
+		/// </summary>
+		public PinState State {
+			get { return this._state; }
+		}
+
+		/// <summary>
+		/// Gets the pin for this GPIO.
+		/// </summary>
+		public GpioPins Pin {
+			get { return this._pin; }
+		}
 		#endregion
 
 		#region Methods
@@ -133,7 +148,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// If set to <c>true</c> value.
 		/// </param>
-		public abstract void Write(Boolean value);
+		public virtual void Write(Boolean value) {
+			this._state = value ? PinState.High : PinState.Low;
+		}
 
 		/// <summary>
 		/// Read a value from the pin.

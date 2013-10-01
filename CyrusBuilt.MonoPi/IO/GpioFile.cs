@@ -170,6 +170,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The GPIO pin to unexport.
 		/// </param>
 		private static void UnexportPin(GpioPins pin) {
+			Write(pin, false);
 			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
@@ -291,6 +292,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public override void Write(Boolean value) {
 			Write(_pin, value);
+			base.Write(value);
 		}
 
 		/// <summary>
@@ -318,6 +320,7 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Dispose() {
 			UnexportPin(_pin);
 			Cleanup();
+			base.Write(false);
 			base.Dispose();
 		}
 		#endregion

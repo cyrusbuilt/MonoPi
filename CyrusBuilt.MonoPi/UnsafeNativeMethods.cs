@@ -311,46 +311,47 @@ namespace CyrusBuilt.MonoPi
 		public static extern void ds1302setup(Int32 clockPin, Int32 dataPin, Int32 csPin);
 
 		/// <summary>
-		/// 
+		/// Initialize the SPI interface.
 		/// </summary>
 		/// <returns>
-		/// 
+		/// 0 if successful.
 		/// </returns>
 		/// <param name="channel">
-		/// 
+		/// The channel to communicate on.
 		/// </param>
 		/// <param name="speed">
-		/// 
+		/// The transfer speed to negotiate.
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPISetup")]
 		public static extern Int32 wiringPiSPISetup(Int32 channel, Int32 speed);
 
 		/// <summary>
-		/// 
+		/// Get file descripter.
 		/// </summary>
 		/// <returns>
-		/// 
+		/// The descripter value.
 		/// </returns>
 		/// <param name="channel">
-		/// 
+		/// The channel to communicate on.
 		/// </param>
-		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPISetup")]
+		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPIGetFd")]
 		public static extern Int32 wiringPiSPIGetFd(Int32 channel);
 
 		/// <summary>
-		/// 
+		/// Read and Write data on the specified channel.
 		/// </summary>
 		/// <returns>
-		/// 
+		/// 0 on success; -1 on failure.
 		/// </returns>
 		/// <param name="channel">
-		/// 
+		/// The channel to transfer on.
 		/// </param>
 		/// <param name="data">
-		/// 
+		/// The data buffer used to transfer to the data to be written,
+		/// and is also used to recieve the data read.
 		/// </param>
 		/// <param name="len">
-		/// 
+		/// The buffer length.
 		/// </param>
 		[DllImport("libwiringPi.so", EntryPoint = "wiringPiSPIDataRW")]
 		public static extern Int32 wiringPiSPIDataRW(Int32 channel, Char[] data, Int32 len);

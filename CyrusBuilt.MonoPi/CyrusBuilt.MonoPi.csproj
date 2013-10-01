@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>CyrusBuilt.MonoPi</RootNamespace>
     <AssemblyName>CyrusBuilt.MonoPi</AssemblyName>
+    <ReleaseVersion>1.0.0.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -64,6 +65,15 @@
     <Compile Include="I2C\I2CBus.cs" />
     <Compile Include="RTC\DS1302.cs" />
     <Compile Include="SPI\SimpleSPI.cs" />
+    <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\ComponentBase.cs" />
+    <Compile Include="Components\Motors\MotorState.cs" />
+    <Compile Include="Components\Motors\IMotor.cs" />
+    <Compile Include="Components\Motors\MotorBase.cs" />
+    <Compile Include="Components\Motors\IStepperMotor.cs" />
+    <Compile Include="Components\Motors\StepperMotorBase.cs" />
+    <Compile Include="Components\Motors\StepperMotorComponent.cs" />
+    <Compile Include="IO\PinState.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -76,5 +86,7 @@
     <Folder Include="Gertboard\" />
     <Folder Include="I2C\" />
     <Folder Include="RTC\" />
+    <Folder Include="Components\" />
+    <Folder Include="Components\Motors\" />
   </ItemGroup>
 </Project>
