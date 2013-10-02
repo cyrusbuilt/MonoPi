@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  RelayUtils.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,41 +22,28 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Relays
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// Relay utility methods.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public static class RelayUtils
 	{
 		/// <summary>
-		/// Gets the board revision.
-		/// </summary>
-		BoardRevision Revision { get; }
-
-		/// <summary>
-		/// Write a value to the pin.
-		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
-		/// </param>
-		void Write(Boolean value);
-
-		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
-		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
+		/// Gets the inverse of the specified state.
 		/// </summary>
 		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
+		/// The inverse of the specified state.
+		/// </returns>
+		/// <param name="state">
+		/// The relay state to invert.
+		/// </param>
+		public static RelayState GetInverseState(RelayState state) {
+			if (state == RelayState.Open) {
+				return RelayState.Closed;
+			}
+			return RelayState.Open;
+		}
 	}
 }
 

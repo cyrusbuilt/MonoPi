@@ -25,6 +25,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace CyrusBuilt.MonoPi.IO
 {
@@ -36,16 +37,11 @@ namespace CyrusBuilt.MonoPi.IO
 	{
 		#region Fields
 		private Boolean _isDisposed = false;
-<<<<<<< HEAD
-		protected BoardRevision _revision = BoardRevision.Rev2;
-		protected GpioPins _pin = GpioPins.GPIO_NONE;
-		protected PinState _state = PinState.Low;
-		protected static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
-=======
 		private BoardRevision _revision = BoardRevision.Rev2;
 		private GpioPins _pin = GpioPins.GPIO_NONE;
+		private PinState _state = PinState.Low;
+		private PinDirection _direction = PinDirection.OUT;
 		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
->>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		#endregion
 
 		#region Constructors
@@ -65,6 +61,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public GpioBase(GpioPins pin, PinDirection direction, Boolean value) {
 			this._pin = pin;
+			this._direction = direction;
 			this._revision = BoardRevision.Rev2;
 		}
 
@@ -103,26 +100,20 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Gets the board revision.
+		/// Gets the board revision. Default is <see cref="CyrusBuilt.MonoPi.IO.PinDirection.OUT"/>.
 		/// </summary>
 		public BoardRevision Revision {
 			get { return this._revision; }
 		}
 
 		/// <summary>
-<<<<<<< HEAD
-		/// Gets the state of the pin.
+		/// Gets the state of the pin. Default is <see cref="CyrusBuilt.MonoPi.IO.PinState.Low"/>.
 		/// </summary>
 		public PinState State {
 			get { return this._state; }
 		}
 
 		/// <summary>
-		/// Gets the pin for this GPIO.
-		/// </summary>
-		public GpioPins Pin {
-			get { return this._pin; }
-=======
 		/// Gets the physical pin being represented by this class.
 		/// </summary>
 		public GpioPins InnerPin {
@@ -130,11 +121,17 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+		/// Gets the direction (mode) for the pin (Input or Output).
+		/// </summary>
+		public PinDirection Direction {
+			get { return this._direction; }
+		}
+
+		/// <summary>
 		/// Gets the exported pins.
 		/// </summary>
 		protected static Dictionary<Int32, PinDirection> ExportedPins {
 			get { return _exportedPins; }
->>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 		#endregion
 
@@ -170,6 +167,18 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public virtual void Write(Boolean value) {
 			this._state = value ? PinState.High : PinState.Low;
+		}
+
+		/// <summary>
+		/// Pulse the pin output for the specified number of milliseconds.
+		/// </summary>
+		/// <param name="millis">
+		/// The number of milliseconds to wait between states.
+		/// </param>
+		public virtual void Pulse(Int32 millis) {
+			this.Write(true);
+			Thread.Sleep(millis);
+			this.Write(false);
 		}
 
 		/// <summary>

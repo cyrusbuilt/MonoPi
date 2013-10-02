@@ -201,12 +201,8 @@ namespace CyrusBuilt.MonoPi.IO
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
-<<<<<<< HEAD
 			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, 0);
-			_exportedPins.Remove(pin);
-=======
 			ExportedPins.Remove(pin);
->>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
 		}
 
 		/// <summary>
@@ -314,17 +310,33 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value to write to the pin.
 		/// </param>
 		public override void Write(Boolean value) {
-<<<<<<< HEAD
-			Write(_pin, value);
+			Write(base.InnerPin, value);
 			base.Write(value);
-=======
-			if (base.Revision == BoardRevision.Rev1) {
-				Write(base.InnerPin, value);
+		}
+
+		/// <summary>
+		/// Pulse the pin output for the specified number of milliseconds.
+		/// </summary>
+		/// <param name="millis">
+		/// The number of milliseconds to wait between states.
+		/// </param>
+		/// <exception cref="InvalidOperationException">
+		/// An attempt was made to pulse an input pin.
+		/// </exception>
+		public override void Pulse(Int32 millis) {
+			if (base.Direction == PinDirection.IN) {
+				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
-			else {
-				Write(base.InnerPin, value);
-			}
->>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
+			Write(base.InnerPin, true);
+			base.Pulse(millis);
+			Write(base.InnerPin, false);
+		}
+
+		/// <summary>
+		/// Pulses the pin for 500ms.
+		/// </summary>
+		public void Pulse() {
+			this.Pulse(500);
 		}
 
 		/// <summary>

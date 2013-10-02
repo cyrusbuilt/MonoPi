@@ -118,10 +118,12 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 					throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Motors.StepperMotorComponent");
 				}
 
+				MotorState oldState = this._state;
  				if (this._state != value) {
  					lock (this) {
 						this._state = value;
 					}
+					base.OnMotorStateChanged(new MotorStateChangeEventArgs(oldState, this._state));
 					this.ExecuteMovement();
 				}
 			}
@@ -227,6 +229,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 			}
 
 			// Perform step in positive or negative direction from current position.
+			base.OnMotorRotationStarted(new MotorRotateEventArgs(steps));
 			if (steps > 0) {
 				for (Int32 i = 1; i <= steps; i++) {
 					this.DoStep(true);
@@ -240,6 +243,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 
 			// Stop movement.
 			base.Stop();
+			base.OnMotorRotationStopped(EventArgs.Empty);
 		}
 		#endregion
 	}

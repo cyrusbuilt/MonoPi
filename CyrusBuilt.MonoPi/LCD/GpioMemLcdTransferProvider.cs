@@ -281,9 +281,6 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// class with the mode flag, register select pin, read/write pin,
 		/// enable pin, and data pins.
 		/// </summary>
-		/// <param name="fourBitMode">
-		/// If set to true, switch to four bit mode instead of 8 bit mode.
-		/// </param>
 		/// <param name="rs">
 		/// The number of the CPU pin that is connected to the RS (Register Select)
 		/// pin on the LCD.

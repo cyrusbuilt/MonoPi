@@ -35,9 +35,16 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Motors.MotorBase"/>
 		/// class. This is the default constructor.
 		/// </summary>
-		public MotorBase()
+		protected MotorBase()
 			: base() {
 		}
+		#endregion
+
+		#region Events
+		/// <summary>
+		/// Occurs when motor state changes.
+		/// </summary>
+		public event MotorStateChangeEventHandler StateChanged;
 		#endregion
 
 		#region Properties
@@ -59,17 +66,41 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 
 		#region Methods
 		/// <summary>
+		/// Raises the motor state changed event.
+		/// </summary>
+		/// <param name="e">
+		/// The event arguments.
+		/// </param>
+		protected virtual void OnMotorStateChanged(MotorStateChangeEventArgs e) {
+			if (this.StateChanged != null) {
+				this.StateChanged(this, e);
+			}
+		}
+
+		/// <summary>
 		/// Stops the motor's movement.
 		/// </summary>
 		public void Stop() {
+			if (this.State == MotorState.Stop) {
+				return;
+			}
+
+			MotorState oldState = this.State;
 			this.State = MotorState.Stop;
+			this.OnMotorStateChanged(new MotorStateChangeEventArgs(oldState, this.State));
 		}
 
 		/// <summary>
 		/// Tells the motor to move forward.
 		/// </summary>
 		public void Forward() {
-			this.State = MotorState.Stop;
+			if (this.State == MotorState.Forward) {
+				return;
+			}
+
+			MotorState oldState = this.State;
+			this.State = MotorState.Forward;
+			this.OnMotorStateChanged(new MotorStateChangeEventArgs(oldState, this.State));
 		}
 
 		/// <summary>
@@ -79,16 +110,22 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// The number of milliseconds to continue moving forward for.
 		/// </param>
 		public void Forward(Int32 millis) {
-			this.State = MotorState.Forward;
+			this.Forward();
 			Thread.Sleep(millis);
-			this.State = MotorState.Stop;
+			this.Stop();
 		}
 
 		/// <summary>
 		/// Tells the motor to reverse direction.
 		/// </summary>
 		public void Reverse() {
+			if (this.State == MotorState.Reverse) {
+				return;
+			}
+
+			MotorState oldState = this.State;
 			this.State = MotorState.Reverse;
+			this.OnMotorStateChanged(new MotorStateChangeEventArgs(oldState, this.State));
 		}
 
 		/// <summary>
@@ -98,9 +135,9 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// The number of milliseconds to continue moving in reverse for.
 		/// </param>
 		public void Reverse(Int32 millis) {
-			this.State = MotorState.Reverse;
+			this.Reverse();
 			Thread.Sleep(millis);
-			this.State = MotorState.Stop;
+			this.Stop();
 		}
 
 		/// <summary>

@@ -36,12 +36,24 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		protected Int32 _stepsPerRevolution = 0;
 		#endregion
 
+		#region Events
+		/// <summary>
+		/// Occurs when rotation starts.
+		/// </summary>
+		public event MotorRotationStartEventHandler RotationStarted;
+
+		/// <summary>
+		/// Occurs when rotation stops.
+		/// </summary>
+		public event MotorRotationStopEventHandler RotationStopped;
+		#endregion
+
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Motors.StepperMotorBase"/>
 		/// class. This is the default constructor.
 		/// </summary>
-		public StepperMotorBase()
+		protected StepperMotorBase()
 			: base() {
 		}
 		#endregion
@@ -65,6 +77,30 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		#endregion
 
 		#region Methods
+		/// <summary>
+		/// Raises the motor rotation started event.
+		/// </summary>
+		/// <param name="e">
+		/// The event arguments.
+		/// </param>
+		protected virtual void OnMotorRotationStarted(MotorRotateEventArgs e) {
+			if (this.RotationStarted != null) {
+				this.RotationStarted(this, e);
+			}
+		}
+
+		/// <summary>
+		/// Raises the motor rotation stopped event.
+		/// </summary>
+		/// <param name="e">
+		/// The event arguments.
+		/// </param>
+		protected virtual void OnMotorRotationStopped(EventArgs e) {
+			if (this.RotationStopped != null) {
+				this.RotationStopped(this, e);
+			}
+		}
+
 		/// <summary>
 		/// Sets the step interval.
 		/// </summary>
@@ -106,7 +142,10 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// </param>
 		public void Rotate(Double revolutions) {
 			Double steps = Math.Round(this._stepsPerRevolution * revolutions);
-			this.Step(Convert.ToInt32(steps));
+			Int32 stepsActual = Convert.ToInt32(steps);
+			this.OnMotorRotationStarted(new MotorRotateEventArgs(stepsActual));
+			this.Step(stepsActual);
+			this.OnMotorRotationStopped(EventArgs.Empty);
 		}
 		#endregion
 	}

@@ -42,7 +42,7 @@ namespace CyrusBuilt.MonoPi.Components
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.ComponentBase"/>
 		/// class. This is the default contructor.
 		/// </summary>
-		public ComponentBase() {
+		protected ComponentBase() {
 			this._properties = new Dictionary<String, String>();
 		}
 

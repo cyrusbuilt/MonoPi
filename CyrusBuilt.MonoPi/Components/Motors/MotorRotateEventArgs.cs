@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  MotorRotateEventArgs.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,41 +22,34 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Motors
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// Motor rotate event arguments class.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public class MotorRotateEventArgs : EventArgs
 	{
-		/// <summary>
-		/// Gets the board revision.
-		/// </summary>
-		BoardRevision Revision { get; }
+		private Int32 _steps = 0;
 
 		/// <summary>
-		/// Write a value to the pin.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Motors.MotorRotateEventArgs"/>
+		/// class with the steps being taken.
 		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
+		/// <param name="steps">
+		/// The steps being taken. 0 steps = stopped. Greater than 0 = the number
+		/// of steps forward. Less than 0 = the number of steps moving backward.
 		/// </param>
-		void Write(Boolean value);
+		public MotorRotateEventArgs(Int32 steps)
+			: base() {
+			this._steps = steps;
+		}
 
 		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
+		/// Gets the steps.
 		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
-		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
+		public Int32 Steps {
+			get { return this._steps; }
+		}
 	}
 }
 

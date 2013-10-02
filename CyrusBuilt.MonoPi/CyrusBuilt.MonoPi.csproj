@@ -9,11 +9,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>CyrusBuilt.MonoPi</RootNamespace>
     <AssemblyName>CyrusBuilt.MonoPi</AssemblyName>
-<<<<<<< HEAD
     <ReleaseVersion>1.0.0.0</ReleaseVersion>
-=======
     <Description>Mono library for interfacing with the GPIOs, sensors, etc on the Raspberry Pi.</Description>
->>>>>>> aab190be0089803bcb76e6d25884c14980d215f7
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -79,6 +76,16 @@
     <Compile Include="Components\Motors\StepperMotorBase.cs" />
     <Compile Include="Components\Motors\StepperMotorComponent.cs" />
     <Compile Include="IO\PinState.cs" />
+    <Compile Include="Components\Motors\MotorEventDelegates.cs" />
+    <Compile Include="Components\Motors\MotorStateChangeEventArgs.cs" />
+    <Compile Include="Components\Motors\MotorRotateEventArgs.cs" />
+    <Compile Include="Components\Relays\RelayState.cs" />
+    <Compile Include="Components\Relays\RelayUtils.cs" />
+    <Compile Include="Components\Relays\IRelay.cs" />
+    <Compile Include="Components\Relays\RelayBase.cs" />
+    <Compile Include="Components\Relays\RelayEventHandlerDelegates.cs" />
+    <Compile Include="Components\Relays\RelayStateChangedEventArgs.cs" />
+    <Compile Include="Components\Relays\RelayComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -93,6 +100,7 @@
     <Folder Include="RTC\" />
     <Folder Include="Components\" />
     <Folder Include="Components\Motors\" />
+    <Folder Include="Components\Relays\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

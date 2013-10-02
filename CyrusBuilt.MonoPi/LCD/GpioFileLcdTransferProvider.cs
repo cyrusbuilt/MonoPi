@@ -457,11 +457,11 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// object.
 		/// </summary>
 		/// <remarks>
-		/// Call <see cref="Dispose"/> when you are finished using the
+		/// Call <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider.Dispose"/> when you are finished using the
 		/// <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider"/>.
-		/// The <see cref="Dispose"/> method leaves the
+		/// The <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider.Dispose"/> method leaves the
 		/// <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider"/> in
-		/// an unusable state. After calling <see cref="Dispose"/>, you must
+		/// an unusable state. After calling <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider.Dispose"/>, you must
 		/// release all references to the <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider"/>
 		/// so the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider"/> was occupying.
