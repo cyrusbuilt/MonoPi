@@ -110,7 +110,10 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Gets the state of the pin. Default is <see cref="CyrusBuilt.MonoPi.IO.PinState.Low"/>.
 		/// </summary>
 		public PinState State {
-			get { return this._state; }
+			get {
+				this._state = this.Read() ? PinState.High : PinState.Low;
+				return this._state;
+			}
 		}
 
 		/// <summary>

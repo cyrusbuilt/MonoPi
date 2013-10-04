@@ -67,6 +67,9 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <param name="pin">
 		/// The output pin being used to control the relay.
 		/// </param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="pin"/> cannot null.
+		/// </exception>
 		protected RelayBase(GpioBase pin) {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");

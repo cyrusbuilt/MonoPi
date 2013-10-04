@@ -46,6 +46,9 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <param name="pin">
 		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> I/O pin to use.
 		/// </param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="pin"/> cannot null.
+		/// </exception>
 		public RelayComponent(GpioMem pin)
 			: base(pin) {
 		}
@@ -57,6 +60,9 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <param name="pin">
 		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
 		/// </param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="pin"/> cannot null.
+		/// </exception>
 		public RelayComponent(GpioFile pin)
 			: base(pin) {
 		}
@@ -66,6 +72,9 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <summary>
 		/// Gets or sets the state of the relay.
 		/// </summary>
+		/// <exception cref="ArgumentNullException">
+		/// value cannot be null.
+		/// </exception>
 		public override RelayState State {
 			get {
 				if (base.Pin.State == RelayBase.OPEN_STATE) {
@@ -74,6 +83,10 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 				return RelayState.Closed;
 			}
 			set {
+				if (value == null) {
+					throw new ArgumentNullException("RelayComponent.State");
+				}
+
  				RelayState oldState = this.State;
 				if (this.State != value) {
 					lock (this) {

@@ -86,6 +86,16 @@
     <Compile Include="Components\Relays\RelayEventHandlerDelegates.cs" />
     <Compile Include="Components\Relays\RelayStateChangedEventArgs.cs" />
     <Compile Include="Components\Relays\RelayComponent.cs" />
+    <Compile Include="Components\Sensors\ISensor.cs" />
+    <Compile Include="Components\Sensors\SensorState.cs" />
+    <Compile Include="Components\Sensors\IMotionSensor.cs" />
+    <Compile Include="Components\Sensors\SensorStateChangedEventArgs.cs" />
+    <Compile Include="Components\Sensors\SensorEventHandlerDelegates.cs" />
+    <Compile Include="Components\Sensors\SensorBase.cs" />
+    <Compile Include="Components\Sensors\SensorComponent.cs" />
+    <Compile Include="Components\Sensors\MotionSensorComponent.cs" />
+    <Compile Include="Components\Sensors\MotionSensorBase.cs" />
+    <Compile Include="Components\Sensors\MotionDetectedEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -101,6 +111,7 @@
     <Folder Include="Components\" />
     <Folder Include="Components\Motors\" />
     <Folder Include="Components\Relays\" />
+    <Folder Include="Components\Sensors\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
