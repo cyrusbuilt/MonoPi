@@ -96,6 +96,14 @@
     <Compile Include="Components\Sensors\MotionSensorComponent.cs" />
     <Compile Include="Components\Sensors\MotionSensorBase.cs" />
     <Compile Include="Components\Sensors\MotionDetectedEventArgs.cs" />
+    <Compile Include="Components\Temperature\TemperatureScale.cs" />
+    <Compile Include="Components\Temperature\TempScaleUtils.cs" />
+    <Compile Include="Components\Temperature\TemperatureConversion.cs" />
+    <Compile Include="Components\Temperature\TemperatureChangeEventArgs.cs" />
+    <Compile Include="Components\Temperature\TemperatureSensorEventDelegates.cs" />
+    <Compile Include="Components\Temperature\ITemperatureSensor.cs" />
+    <Compile Include="Components\Temperature\TemperatureSensorBase.cs" />
+    <Compile Include="Components\Temperature\TemperatureSensorComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -112,6 +120,7 @@
     <Folder Include="Components\Motors\" />
     <Folder Include="Components\Relays\" />
     <Folder Include="Components\Sensors\" />
+    <Folder Include="Components\Temperature\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

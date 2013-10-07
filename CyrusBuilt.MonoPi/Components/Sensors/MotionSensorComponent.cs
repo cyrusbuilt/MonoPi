@@ -92,6 +92,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 					}
 					finally {
 						this._pollThread = null;
+						this._isPolling = false;
 					}
 				}
 			}
@@ -130,7 +131,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <value>
 		/// <c>true</c> if motion detected; otherwise, <c>false</c>.
 		/// </value>
-		public override bool MotionDetected {
+		public override Boolean MotionDetected {
 			get { return (base.Pin.State == MOTION_DETECTED); }
 		}
 		#endregion

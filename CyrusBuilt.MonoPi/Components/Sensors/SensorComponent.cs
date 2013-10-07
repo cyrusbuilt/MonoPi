@@ -92,6 +92,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 					}
 					finally {
 						this._pollThread = null;
+						this._isPolling = false;
 					}
 				}
 			}
