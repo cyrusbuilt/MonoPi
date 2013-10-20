@@ -30,10 +30,10 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 	public abstract class StepperMotorBase : MotorBase, IStepperMotor
 	{
 		#region Fields
-		protected Int32 _stepIntervalMillis = 100;
-		protected Int32 _stepIntervalNanos = 0;
-		protected Byte[] _stepSequence = null;
-		protected Int32 _stepsPerRevolution = 0;
+		private Int32 _stepIntervalMillis = 100;
+		private Int32 _stepIntervalNanos = 0;
+		private Byte[] _stepSequence = null;
+		private Int32 _stepsPerRevolution = 0;
 		#endregion
 
 		#region Events
@@ -73,6 +73,20 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		public Byte[] StepSequence {
 			get { return this._stepSequence; }
 			set { this._stepSequence = value; }
+		}
+
+		/// <summary>
+		/// Gets the step interval in milliseconds.
+		/// </summary>
+		public Int32 StepIntervalMillis {
+			get { return this._stepIntervalMillis; }
+		}
+
+		/// <summary>
+		/// Gets the step interval in nanoseconds.
+		/// </summary>
+		public Int32 StepIntervalNanos {
+			get { return this._stepIntervalNanos; }
 		}
 		#endregion
 

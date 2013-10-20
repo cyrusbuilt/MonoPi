@@ -27,7 +27,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 	/// <summary>
 	/// A motion sensor abstraction component interface.
 	/// </summary>
-	public interface IMotionSensor : IDisposable
+	public interface IMotionSensor : IComponent
 	{
 		/// <summary>
 		/// Gets the timestamp of the last time motion was detected.
@@ -46,16 +46,6 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <c>true</c> if motion detected; otherwise, <c>false</c>.
 		/// </value>
 		Boolean MotionDetected { get; }
-
-		/// <summary>
-		/// Gets or sets the name of the motion sensor.
-		/// </summary>
-		String Name { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		Object Tag { get; set; }
 	}
 }
 

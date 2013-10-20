@@ -80,6 +80,20 @@ namespace CyrusBuilt.MonoPi.LCD
 
 		#region Properties
 		/// <summary>
+		/// Gets the number of rows.
+		/// </summary>
+		public Int32 Rows {
+			get { return Convert.ToInt32(this._numLines); }
+		}
+
+		/// <summary>
+		/// Gets the number of columns.
+		/// </summary>
+		public Int32 Columns {
+			get { return Convert.ToInt32(this._numColumns); }
+		}
+
+		/// <summary>
 		/// Gets the LCD transfer provider.
 		/// </summary>
 		public ILcdTransferProvider Provider {
@@ -361,14 +375,14 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// If set true and only one line set, then the font size will
 		/// be set 10px high.
 		/// </param>
-		public void Begin(Byte columns, Byte lines, Boolean leftToRight, Boolean dotSize) {
+		public void Begin(Int32 columns, Int32 lines, Boolean leftToRight, Boolean dotSize) {
 			if (lines > 1) {
 				this._displayFunction |= (Byte)FunctionSetFlags.TwoLine;
 			}
 
 			this._currLine = 0;
-			this._numLines = lines;
-			this._numColumns = columns;
+			this._numLines = Convert.ToByte(lines);
+			this._numColumns = Convert.ToByte(columns);
 
 			// For some 1 line displays you can select 10 pixel high font.
 			if ((dotSize) && (lines == 1)) {
@@ -441,7 +455,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// <param name="lines">
 		/// The number of rows the display has.
 		/// </param>
-		public void Begin(Byte columns, Byte lines) {
+		public void Begin(Int32 columns, Int32 lines) {
 			this.Begin(columns, lines, true, false);
 		}
 		#endregion

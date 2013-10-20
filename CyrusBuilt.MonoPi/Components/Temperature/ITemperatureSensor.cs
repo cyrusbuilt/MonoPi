@@ -28,16 +28,8 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 	/// <summary>
 	/// An abstract temperature sensor interface.
 	/// </summary>
-	public interface ITemperatureSensor : IDisposable
+	public interface ITemperatureSensor : IComponent
 	{
-		/// <summary>
-		/// Gets a value indicating whether this instance is disposed.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
-		/// </value>
-		Boolean IsDisposed { get; }
-
 		/// <summary>
 		/// Gets the temperature.
 		/// </summary>
@@ -64,16 +56,6 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// This instance has been disposed.
 		/// </exception>
 		Double GetTemperature(TemperatureScale scale);
-
-		/// <summary>
-		/// Gets or sets the name of the sensor.
-		/// </summary>
-		String Name { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		Object Tag { get; set; }
 
 		/// <summary>
 		/// Gets or sets the temperature sensor.

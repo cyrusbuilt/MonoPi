@@ -1,5 +1,5 @@
 //
-//  ISensor.cs
+//  LcdTextAlignment.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -22,44 +22,27 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.Components.Sensors
+namespace CyrusBuilt.MonoPi.Components.LcdDisplay
 {
 	/// <summary>
-	/// A sensor abstraction component interface.
+	/// LCD text alignment.
 	/// </summary>
-	public interface ISensor : IComponent
+	public enum LcdTextAlignment
 	{
 		/// <summary>
-		/// Gets a value indicating whether this sensor is open.
+		/// Align the text to the center of the current line.
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this sensor is open; otherwise, <c>false</c>.
-		/// </value>
-		Boolean IsOpen { get; }
+		Center,
 
 		/// <summary>
-		/// Gets a value indicating whether this sensor is closed.
+		/// Align the text to the left-hand side of the current line.
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this sensor is closed; otherwise, <c>false</c>.
-		/// </value>
-		Boolean IsClosed { get; }
+		Left,
 
 		/// <summary>
-		/// Gets the sensor state.
+		/// Align the text to the right-hand side of the current line.
 		/// </summary>
-		SensorState State { get; }
-
-		/// <summary>
-		/// Determines whether this sensor's state is the specified state.
-		/// </summary>
-		/// <returns>
-		/// <c>true</c> if this sensor's state is the specified state; otherwise, <c>false</c>.
-		/// </returns>
-		/// <param name="state">
-		/// The state to check.
-		/// </param>
-		Boolean IsState(SensorState state);
+		Right
 	}
 }
 

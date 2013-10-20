@@ -78,7 +78,7 @@ namespace CyrusBuilt.MonoPi.Components
 		/// <see cref="Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Components.ComponentBase"/> so the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.Components.ComponentBase"/> was occupying.</remarks>
-		public void Dispose() {
+		public virtual void Dispose() {
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}

@@ -26,7 +26,7 @@ using CyrusBuilt.MonoPi.IO;
 namespace CyrusBuilt.MonoPi.LCD
 {
 	/// <summary>
-	/// 
+	/// Raspberry Pi GPIO (via memory) provider for the Micro Liquid Crystal library.
 	/// </summary>
 	public class GpioMemLcdTransferProvider : ILcdTransferProvider
 	{

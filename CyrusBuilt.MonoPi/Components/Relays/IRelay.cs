@@ -27,7 +27,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 	/// <summary>
 	/// A relay component abstraction interface.
 	/// </summary>
-	public interface IRelay : IDisposable
+	public interface IRelay : IComponent
 	{
 		/// <summary>
 		/// Gets or sets the state of the relay.
@@ -43,16 +43,6 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// Checks to see if the dry contacts are closed.
 		/// </summary>
 		Boolean IsClosed { get; }
-
-		/// <summary>
-		/// Gets or sets the name of this relay.
-		/// </summary>
-		String Name { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		Object Tag { get; set; }
 
 		/// <summary>
 		/// Opens the dry contacts on the relay.

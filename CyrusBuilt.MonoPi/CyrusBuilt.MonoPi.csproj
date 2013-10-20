@@ -104,6 +104,11 @@
     <Compile Include="Components\Temperature\ITemperatureSensor.cs" />
     <Compile Include="Components\Temperature\TemperatureSensorBase.cs" />
     <Compile Include="Components\Temperature\TemperatureSensorComponent.cs" />
+    <Compile Include="Components\LcdDisplay\LcdTextAlignment.cs" />
+    <Compile Include="Components\LcdDisplay\ILcd.cs" />
+    <Compile Include="Components\LcdDisplay\LcdBase.cs" />
+    <Compile Include="StringUtils.cs" />
+    <Compile Include="Components\LcdDisplay\LcdComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -121,6 +126,7 @@
     <Folder Include="Components\Relays\" />
     <Folder Include="Components\Sensors\" />
     <Folder Include="Components\Temperature\" />
+    <Folder Include="Components\LcdDisplay\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

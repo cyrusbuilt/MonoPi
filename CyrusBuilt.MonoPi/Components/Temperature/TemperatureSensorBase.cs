@@ -29,21 +29,17 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 	/// <summary>
 	/// Base class for temperature sensor abstraction components.
 	/// </summary>
-	public abstract class TemperatureSensorBase : ITemperatureSensor
+	public abstract class TemperatureSensorBase : ComponentBase, ITemperatureSensor
 	{
-		#region Fields
 		private DS1620 _tempSensor = null;
-		private Boolean _isDisposed = false;
-		private String _name = String.Empty;
-		private Object _tag = null;
-		#endregion
 
 		#region Constructors and Destructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase"/>
 		/// class. This is the default constructor.
 		/// </summary>
-		protected TemperatureSensorBase() {
+		protected TemperatureSensorBase()
+			: base() {
 		}
 
 		/// <summary>
@@ -62,7 +58,8 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		protected TemperatureSensorBase(GpioBase clock, GpioBase data, GpioBase reset) {
+		protected TemperatureSensorBase(GpioBase clock, GpioBase data, GpioBase reset)
+			: base() {
 			if (clock == null) {
 				throw new ArgumentNullException("clock");
 			}
@@ -85,7 +82,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// Set true if disposing managed resources in addition to unmanaged.
 		/// </param>
 		protected virtual void Dispose(Boolean disposing) {
-			if (this._isDisposed) {
+			if (base.IsDisposed) {
 				return;
 			}
 
@@ -94,12 +91,10 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 					this._tempSensor.Dispose();
 					this._tempSensor = null;
 				}
-				this._tag = null;
-				this._name = null;
 			}
 
 			this.TemperatureChanged = null;
-			this._isDisposed = true;
+			base.Dispose(true);
 		}
 
 		/// <summary>
@@ -126,16 +121,6 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 
 		#region Properties
 		/// <summary>
-		/// Gets a value indicating whether this instance is disposed.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
-		/// </value>
-		public Boolean IsDisposed {
-			get { return this._isDisposed; }
-		}
-
-		/// <summary>
 		/// Gets or sets the temperature sensor.
 		/// </summary>
 		public DS1620 Sensor {
@@ -160,22 +145,6 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// Gets the temperature scale.
 		/// </summary>
 		public abstract TemperatureScale Scale { get; }
-
-		/// <summary>
-		/// Gets or sets the name of the sensor.
-		/// </summary>
-		public String Name {
-			get { return this._name; }
-			set { this._name = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		public Object Tag {
-			get { return this._tag; }
-			set { this._tag = value; }
-		}
 		#endregion
 
 		#region Methods
@@ -213,7 +182,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase"/>.
 		/// </returns>
 		public override string ToString() {
-			return this._name;
+			return base.Name;
 		}
 		#endregion
 	}

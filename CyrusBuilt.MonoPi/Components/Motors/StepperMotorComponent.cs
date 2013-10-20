@@ -166,7 +166,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 				}
 			}
 
-			Thread.Sleep(this._stepIntervalMillis + (this._stepIntervalNanos * 1000000));
+			Thread.Sleep(base.StepIntervalMillis + (base.StepIntervalNanos * 1000000));
 		}
 
 		/// <summary>
@@ -244,6 +244,18 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 			// Stop movement.
 			base.Stop();
 			base.OnMotorRotationStopped(EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.Components.Motors.StepperMotorComponent"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.Components.Motors.StepperMotorComponent"/>.
+		/// </returns>
+		public override String ToString() {
+			return base.Name;
 		}
 		#endregion
 	}

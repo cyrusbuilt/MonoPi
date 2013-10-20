@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 using System;
+using System.Collections.Generic;
 using CyrusBuilt.MonoPi.IO;
 
 namespace CyrusBuilt.MonoPi.Components.Sensors
@@ -35,6 +36,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		private String _name = String.Empty;
 		private Object _tag = null;
 		private GpioBase _pin = null;
+		private Dictionary<String, String> _props = null;
 		#endregion
 
 		#region Constructors and Destructors
@@ -43,6 +45,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// class. This is the default constructor.
 		/// </summary>
 		protected SensorBase() {
+			this._props = new Dictionary<String, String>();
 		}
 
 		/// <summary>
@@ -60,6 +63,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._props = new Dictionary<String, String>();
 		}
 
 		/// <summary>
@@ -79,6 +83,11 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 				if (this._pin != null) {
 					this._pin.Dispose();
 					this._pin = null;
+				}
+
+				if (this._props != null) {
+					this._props.Clear();
+					this._props = null;
 				}
 			}
 
@@ -175,6 +184,16 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 				this._pin = value; 
 			}
 		}
+
+		/// <summary>
+		/// Gets the property collection.
+		/// </summary>
+		/// <value>
+		/// The property collection.
+		/// </value>
+		public Dictionary<String, String> PropertyCollection {
+			get { return this._props; }
+		}
 		#endregion
 
 		#region Methods
@@ -202,6 +221,20 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		public Boolean IsState(SensorState state) {
 			return (this.State == state);
 		}
+
+		/// <summary>
+		/// Determines whether this instance has property the specified key.
+		/// </summary>
+		/// <returns>
+		/// <c>true</c> if this instance has property the specified by key; otherwise, <c>false</c>.
+		/// </returns>
+		/// <param name="key">
+		/// The key name of the property to check for.
+		/// </param>
+		public Boolean HasProperty(String key) {
+			return this._props.ContainsKey(key);
+		}
+
 
 		/// <summary>
 		/// Returns a <see cref="System.String"/> that represents the current
