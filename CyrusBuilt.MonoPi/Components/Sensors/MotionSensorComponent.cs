@@ -146,7 +146,6 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			while (this._isPolling) {
 				if (this.MotionDetected != _lastCheckDetected) {
 					DateTime occurred = DateTime.Now;
-					Boolean oldState = _lastCheckDetected;
 					_lastCheckDetected = this.MotionDetected;
 					base.OnMotionDetectionStateChanged(new MotionDetectedEventArgs(this.MotionDetected, occurred));
 				}

@@ -91,6 +91,13 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 		#endregion
 
+		#region Events
+		/// <summary>
+		/// Occurs when state changed.
+		/// </summary>
+		public event PinStateChangeEventHandler StateChanged;
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets a value indicating whether this instance is disposed.
@@ -139,6 +146,18 @@ namespace CyrusBuilt.MonoPi.IO
 		#endregion
 
 		#region Methods
+		/// <summary>
+		/// Raises the state changed event.
+		/// </summary>
+		/// <param name="e">
+		/// The event arguments.
+		/// </param>
+		protected virtual void OnStateChanged(PinStateChangeEventArgs e) {
+			if (this.StateChanged != null) {
+				this.StateChanged(this, e);
+			}
+		}
+
 		/// <summary>
 		/// Changes the board revision.
 		/// </summary>
@@ -206,6 +225,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> was occupying.
 		/// </remarks>
 		public virtual void Dispose() {
+			if (this._isDisposed) {
+				return;
+			}
+			_exportedPins.Clear();
+			_exportedPins = null;
+			this.StateChanged = null;
+			this._pin = GpioPins.GPIO_NONE;
 			this._isDisposed = true;
 		}
 		#endregion

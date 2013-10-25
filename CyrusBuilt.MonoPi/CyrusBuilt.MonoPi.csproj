@@ -109,6 +109,20 @@
     <Compile Include="Components\LcdDisplay\LcdBase.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="Components\LcdDisplay\LcdComponent.cs" />
+    <Compile Include="Components\Switches\SwitchState.cs" />
+    <Compile Include="Components\Switches\SwitchStateChangeEventArgs.cs" />
+    <Compile Include="Components\Switches\SwitchStateChangeEventDelegates.cs" />
+    <Compile Include="Components\Switches\ISwitch.cs" />
+    <Compile Include="Components\Switches\IMomentarySwitch.cs" />
+    <Compile Include="Components\Switches\IToggleSwitch.cs" />
+    <Compile Include="Components\Switches\SwitchBase.cs" />
+    <Compile Include="Components\Switches\MomentarySwitchBase.cs" />
+    <Compile Include="Components\Switches\ToggleSwitchBase.cs" />
+    <Compile Include="Components\Switches\SwitchComponent.cs" />
+    <Compile Include="IO\PinStateChangeEventArgs.cs" />
+    <Compile Include="IO\PinStateChangeEventHandlerDelegates.cs" />
+    <Compile Include="Components\Switches\MomentarySwitchComponent.cs" />
+    <Compile Include="Components\Switches\ToggleSwitchComponent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -127,6 +141,7 @@
     <Folder Include="Components\Sensors\" />
     <Folder Include="Components\Temperature\" />
     <Folder Include="Components\LcdDisplay\" />
+    <Folder Include="Components\Switches\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

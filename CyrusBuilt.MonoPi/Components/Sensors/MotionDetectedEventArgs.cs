@@ -59,7 +59,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// detected motion.
 		/// </summary>
 		/// <value><
-		/// c>true</c> if motion detected; otherwise, <c>false</c>.
+		/// <c>true</c> if motion detected; otherwise, <c>false</c>.
 		/// </value>
 		public Boolean MotionDetected {
 			get { return this._motionDetected; }

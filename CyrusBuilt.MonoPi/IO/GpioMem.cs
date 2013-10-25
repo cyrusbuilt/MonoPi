@@ -45,6 +45,7 @@ namespace CyrusBuilt.MonoPi.IO
 	/// </summary>
 	public class GpioMem : GpioBase
 	{
+		private PinState _lastState = PinState.Low;
 		private static Boolean _initialized = false;
 
 		#region Constructors
@@ -312,6 +313,10 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Write(Boolean value) {
 			Write(base.InnerPin, value);
 			base.Write(value);
+			PinState val = value ? PinState.High : PinState.Low;
+			if (this._lastState != val) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+			}
 		}
 
 		/// <summary>
@@ -328,8 +333,10 @@ namespace CyrusBuilt.MonoPi.IO
 				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
 			Write(base.InnerPin, true);
+			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.High));
 			base.Pulse(millis);
 			Write(base.InnerPin, false);
+			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.Low));
 		}
 
 		/// <summary>
@@ -346,7 +353,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The value read from the pin.
 		/// </returns>
 		public override Boolean Read() {
-			return Read(base.InnerPin);
+			Boolean newState = Read(base.InnerPin);
+			PinState val = newState ? PinState.High : PinState.Low;
+			if (this._lastState != val) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+			}
+			return newState;
 		}
 
 		/// <summary>

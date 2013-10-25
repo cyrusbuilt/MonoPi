@@ -34,6 +34,8 @@ namespace CyrusBuilt.MonoPi.IO
 	/// </summary>
 	public class GpioFile : GpioBase
 	{
+		private PinState _lastState = PinState.Low;
+
 		/// <summary>
 		/// The path on the Raspberry Pi for the GPIO interface.
 		/// </summary>
@@ -296,6 +298,9 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Write(Boolean value) {
 			base.Write(value);
 			Write(base.InnerPin, value);
+			if (this._lastState != base.State) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, base.State));
+			}
 		}
 
 		/// <summary>
@@ -307,13 +312,15 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <exception cref="InvalidOperationException">
 		/// An attempt was made to pulse an input pin.
 		/// </exception>
-		public override void Pulse(int millis) {
+		public override void Pulse(Int32 millis) {
 			if (base.Direction == PinDirection.IN) {
 				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
 			Write(base.InnerPin, true);
+			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.High));
 			base.Pulse(millis);
 			Write(base.InnerPin, false);
+			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.Low));
 		}
 
 		/// <summary>
@@ -333,7 +340,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Cannot read the value from the pin. The path does not exist.
 		/// </exception>
 		public override Boolean Read() {
-			return Read(base.InnerPin);
+			Boolean val = Read(base.InnerPin);
+			PinState state = val ? PinState.High : PinState.Low;
+			if (this._lastState != state) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, state));
+			}
+			return val;
 		}
 
 		/// <summary>
