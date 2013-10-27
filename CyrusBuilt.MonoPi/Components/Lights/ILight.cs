@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  ILight.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,49 +22,32 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Lights
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// An interface for light abstraction components.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public interface ILight : IComponent
 	{
 		/// <summary>
-		/// Gets the board revision.
+		/// Gets a value indicating whether this light is on.
 		/// </summary>
-		BoardRevision Revision { get; }
+		Boolean IsOn { get; }
 
 		/// <summary>
-		/// Write a value to the pin.
+		/// Gets a value indicating whether this light is off.
 		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
-		/// </param>
-		void Write(Boolean value);
+		Boolean IsOff { get; }
 
 		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
+		/// Switches the light on.
 		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
+		void On();
 
 		/// <summary>
-		/// Read a value from the pin.
+		/// Switches the light off.
 		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
-		/// </summary>
-		/// <value>
-		/// The PWM value.
-		/// </value>
-		Int32 PWM { get; set; }
+		void Off();
 	}
 }
 

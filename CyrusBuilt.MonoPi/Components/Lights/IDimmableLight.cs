@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  IDimmableLight.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,49 +22,49 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Lights
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// An interface for dimmable light component abstractions.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public interface IDimmableLight : ILight
 	{
 		/// <summary>
-		/// Gets the board revision.
-		/// </summary>
-		BoardRevision Revision { get; }
-
-		/// <summary>
-		/// Write a value to the pin.
-		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
-		/// </param>
-		void Write(Boolean value);
-
-		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
-		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
-		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// Gets or sets the brightness level.
 		/// </summary>
 		/// <value>
-		/// The PWM value.
+		/// The brightness level.
 		/// </value>
-		Int32 PWM { get; set; }
+		Int32 Level { get; set; }
+
+		/// <summary>
+		/// Gets the minimum brightness level.
+		/// </summary>
+		Int32 MinLevel { get; }
+
+		/// <summary>
+		/// Gets the maximum brightness level.
+		/// </summary>
+		Int32 MaxLevel { get; }
+
+		/// <summary>
+		/// Gets the current brightness level percentage.
+		/// </summary>
+		/// <returns>
+		/// The brightness percentage level.
+		/// </returns>
+		float GetLevelPercentage();
+
+		/// <summary>
+		/// Gets the current brightness level percentage.
+		/// </summary>
+		/// <returns>
+		/// The brightness percentage level.
+		/// </returns>
+		/// <param name="level">
+		/// The brightness level.
+		/// </param>
+		float GetLevelPercentage(Int32 level);
 	}
 }
 

@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  LightStateChangeEventArgs.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,49 +22,36 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Lights
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// Light state change event arguments class.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public class LightStateChangeEventArgs : EventArgs
 	{
-		/// <summary>
-		/// Gets the board revision.
-		/// </summary>
-		BoardRevision Revision { get; }
+		private Boolean _isOn = false;
 
 		/// <summary>
-		/// Write a value to the pin.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Lights.LightStateChangeEventArgs"/>
+		/// class with a flag indicating whether or not the light is on.
 		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
+		/// <param name="isOn">
+		/// If set to <c>true</c> is on.
 		/// </param>
-		void Write(Boolean value);
+		public LightStateChangeEventArgs(Boolean isOn)
+			: base() {
+			this._isOn = isOn;
+		}
 
 		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
-		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
-		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// Gets a value indicating whether this light is on.
 		/// </summary>
 		/// <value>
-		/// The PWM value.
+		/// <c>true</c> if this light is on; otherwise, <c>false</c>.
 		/// </value>
-		Int32 PWM { get; set; }
+		public Boolean IsOn {
+			get { return this._isOn; }
+		}
 	}
 }
 

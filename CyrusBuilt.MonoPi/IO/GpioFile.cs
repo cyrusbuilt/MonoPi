@@ -34,12 +34,16 @@ namespace CyrusBuilt.MonoPi.IO
 	/// </summary>
 	public class GpioFile : GpioBase
 	{
+		#region Fields
 		private PinState _lastState = PinState.Low;
+		private Int32 _pwm = 0;
+		private Boolean _isPWM = false;
 
 		/// <summary>
 		/// The path on the Raspberry Pi for the GPIO interface.
 		/// </summary>
 		private const String GPIO_PATH = "/sys/class/gpio/";
+		#endregion
 
 		#region Constructors
 		/// <summary>
@@ -85,6 +89,38 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public GpioFile(GpioPins pin)
 			: base(pin, PinDirection.OUT, false) {
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>
+		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// </summary>
+		/// <value>
+		/// The PWM value.
+		/// </value>
+		/// <exception cref="InvalidOperationException">
+		/// The pin is configured as in input pin instead of output.
+		/// </exception>
+		public override Int32 PWM {
+			get { return this._pwm; }
+			set {
+				if (base.Direction == PinDirection.IN) {
+					throw new InvalidOperationException("Cannot set PWM value on an input pin.");
+				}
+
+				if (this._pwm != value) {
+					this._pwm = value;
+					String cmd = String.Empty;
+					if (!this._isPWM) {
+						cmd = "gpio mode " + GetGpioPinNumber(base.InnerPin) + " pwm";
+						Process.Start(cmd);
+						this._isPWM = true;
+					}
+					cmd = "gpio pwm " + GetGpioPinNumber(base.InnerPin) + " " + this._pwm.ToString();
+					Process.Start(cmd);
+				}
+			}
 		}
 		#endregion
 
@@ -360,6 +396,10 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Dispose() {
 			UnexportPin(base.InnerPin);
 			Cleanup();
+			if (this._isPWM) {
+				String cmd = "gpio unexport " + GetGpioPinNumber(base.InnerPin);
+				Process.Start(cmd);
+			}
 			base.Write(false);
 			base.Dispose();
 		}

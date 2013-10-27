@@ -45,8 +45,12 @@ namespace CyrusBuilt.MonoPi.IO
 	/// </summary>
 	public class GpioMem : GpioBase
 	{
+		#region Fields
+		private Boolean _isPWM = false;
+		private Int32 _pwm = 0;
 		private PinState _lastState = PinState.Low;
 		private static Boolean _initialized = false;
+		#endregion
 
 		#region Constructors
 		/// <summary>
@@ -121,6 +125,32 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public Boolean IsInitialized {
 			get { return _initialized; }
+		}
+
+		/// <summary>
+		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// </summary>
+		/// <value>
+		/// The PWM value.
+		/// </value>
+		/// <exception cref="InvalidOperationException">
+		/// The pin is configured as in input pin instead of output.
+		/// </exception>
+		public override int PWM {
+			get { return this._pwm; }
+			set {
+				if (base.Direction == PinDirection.IN) {
+					throw new InvalidOperationException("Cannot set PWM value on an input pin.");
+				}
+
+				if (this._pwm != value) {
+					this._pwm = value;
+					if (!this._isPWM) {
+						//UnsafeNativeMethods.bcm2835_gpio_fsel((uint)base.InnerPin, )
+						// TODO Finish this out.
+					}
+				}
+			}
 		}
 		#endregion
 
@@ -373,6 +403,10 @@ namespace CyrusBuilt.MonoPi.IO
 		public override void Dispose() {
 			UnexportPin(base.InnerPin);
 			Destroy();
+			if (this._isPWM) {
+				String cmd = "gpio unexport " + GetGpioPinNumber(base.InnerPin);
+				Process.Start(cmd);
+			}
 			base.Write(false);
 			base.Dispose();
 		}

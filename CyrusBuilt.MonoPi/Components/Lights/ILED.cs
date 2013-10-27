@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  ILED.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,49 +22,55 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Lights
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// An interface for LED abstraction components.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public interface ILED : ILight
 	{
 		/// <summary>
-		/// Gets the board revision.
+		/// Toggles the state of the LED.
 		/// </summary>
-		BoardRevision Revision { get; }
+		void Toggle();
 
 		/// <summary>
-		/// Write a value to the pin.
+		/// Blinks the LED.
 		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
+		/// <param name="delay">
+		/// The delay between state change.
 		/// </param>
-		void Write(Boolean value);
+		void Blink(Int32 delay);
 
 		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
+		/// Blinks the LED.
 		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
+		/// <param name="delay">
+		/// The delay between state change.
 		/// </param>
-		void Pulse(Int32 millis);
+		/// <param name="duration">
+		/// The amount of time to blink the LED (in milliseconds).
+		/// </param>
+		void Blink(Int32 delay, Int32 duration);
 
 		/// <summary>
-		/// Read a value from the pin.
+		/// Pulses the state of the LED.
 		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
+		/// <param name="duration">
+		/// The amount of time to pulse the LED.
+		/// </param>
+		void Pulse(Int32 duration);
 
 		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// Pulses the state of the LED.
 		/// </summary>
-		/// <value>
-		/// The PWM value.
-		/// </value>
-		Int32 PWM { get; set; }
+		/// <param name="duration">
+		/// The amount of time to pulse the LED.
+		/// </param>
+		/// <param name="blocking">
+		/// Blocks the current thread while pulsing.
+		/// </param>
+		void Pulse(Int32 duration, Boolean blocking);
 	}
 }
 

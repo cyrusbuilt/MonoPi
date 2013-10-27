@@ -105,6 +105,56 @@ namespace CyrusBuilt.MonoPi
 		/// </param>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_set_pud")]
 		public static extern void bcm2835_gpio_set_pud(uint pin, uint pud);
+
+		/// <summary>
+		/// Sets the PWM clock divisor, to control the basic PWM pulse widths.
+		/// </summary>
+		/// <param name="divisor">
+		/// Divides the basic 19.2MHz PWM clock.
+		/// </param>
+		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_pwm_set_clock")]
+		public static extern void bcm2835_pwm_set_clock(uint divisor);
+
+		/// <summary>
+		/// Sets the mode of the given PWM channel, allowing you to control the PWM mode and enable/disable
+		/// that channel.
+		/// </summary>
+		/// <param name="channel">
+		/// The PWM channel. 0 or 1.
+		/// </param>
+		/// <param name="markspace">
+		/// Set true if you want Mark-Space mode. 0 for Balanced mode.
+		/// </param>
+		/// <param name="enabled">
+		/// Set true to enable this channel and produce PWM pulses.
+		/// </param>
+		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_pwm_set_mode")]
+		public static extern void bcm2835_pwm_set_mode(uint channel, uint markspace, uint enabled);
+
+		/// <summary>
+		/// Sets the maximum range of the PWM output. The data value can vary between 0 and this
+		/// range to control PWM output.
+		/// </summary>
+		/// <param name="channel">
+		/// The PWM channel. 0 or 1.
+		/// </param>
+		/// <param name="range">
+		/// The maximum value permitted for DATA.
+		/// </param>
+		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_pwm_set_range")]
+		public static extern void bcm2835_pwm_set_range(uint channel, uint range);
+
+		/// <summary>
+		/// Sets the PWM pulse ratio to emit to DATA/RANGE, where RANGE is set by <see cref="bcm2835_pwm_set_range"/>.
+		/// </summary>
+		/// <param name="channel">
+		/// The PWM channel. 0 or 1.
+		/// </param>
+		/// <param name="data">
+		/// Controls the PWM output ratio as a fraction of the range. Can vary from 0 to RANGE.
+		/// </param>
+		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_pwm_set_data")]
+		public static extern void bcm2835_pwm_set_data(uint channel, uint data);
 		#endregion
 
 		#region Imported wiringPi Methods

@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  LightLevelChangeEventArgs.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,49 +22,33 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.Components.Lights
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// Light level change event arguments class.
 	/// </summary>
-	public interface IGpio : IDisposable
+	public class LightLevelChangeEventArgs : EventArgs
 	{
-		/// <summary>
-		/// Gets the board revision.
-		/// </summary>
-		BoardRevision Revision { get; }
+		private Int32 _level = 0;
 
 		/// <summary>
-		/// Write a value to the pin.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Lights.LightLevelChangeEventArgs"/>
+		/// class with the brightness level of the light.
 		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
+		/// <param name="level">
+		/// The brightness level.
 		/// </param>
-		void Write(Boolean value);
+		public LightLevelChangeEventArgs(Int32 level)
+			: base() {
+			this._level = level;
+		}
 
 		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
+		/// Gets the brightness level.
 		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
-		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
-		/// </summary>
-		/// <value>
-		/// The PWM value.
-		/// </value>
-		Int32 PWM { get; set; }
+		public Int32 Level {
+			get { return this._level; }
+		}
 	}
 }
 

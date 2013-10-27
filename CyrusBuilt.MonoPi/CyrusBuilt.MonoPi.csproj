@@ -123,6 +123,19 @@
     <Compile Include="IO\PinStateChangeEventHandlerDelegates.cs" />
     <Compile Include="Components\Switches\MomentarySwitchComponent.cs" />
     <Compile Include="Components\Switches\ToggleSwitchComponent.cs" />
+    <Compile Include="Components\Lights\ILight.cs" />
+    <Compile Include="Components\Lights\ILED.cs" />
+    <Compile Include="Components\Lights\IDimmableLight.cs" />
+    <Compile Include="Components\Lights\LightStateChangeEventArgs.cs" />
+    <Compile Include="Components\Lights\LightStateChangeEventHandlerDelegates.cs" />
+    <Compile Include="Components\Lights\LightLevelChangeEventArgs.cs" />
+    <Compile Include="Components\Lights\LightBase.cs" />
+    <Compile Include="Components\Lights\LEDBase.cs" />
+    <Compile Include="Components\Lights\DimmableLightBase.cs" />
+    <Compile Include="Components\Lights\LightComponent.cs" />
+    <Compile Include="Components\Lights\LEDComponent.cs" />
+    <Compile Include="Components\Lights\DimmableLightComponent.cs" />
+    <Compile Include="BCM2835PwmClockDivider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -142,6 +155,7 @@
     <Folder Include="Components\Temperature\" />
     <Folder Include="Components\LcdDisplay\" />
     <Folder Include="Components\Switches\" />
+    <Folder Include="Components\Lights\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

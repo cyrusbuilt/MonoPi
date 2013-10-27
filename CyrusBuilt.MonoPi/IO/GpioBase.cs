@@ -143,6 +143,14 @@ namespace CyrusBuilt.MonoPi.IO
 		protected static Dictionary<Int32, PinDirection> ExportedPins {
 			get { return _exportedPins; }
 		}
+
+		/// <summary>
+		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// </summary>
+		/// <value>
+		/// The PWM value.
+		/// </value>
+		public abstract Int32 PWM { get; set; }
 		#endregion
 
 		#region Methods
