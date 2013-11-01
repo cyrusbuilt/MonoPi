@@ -1,5 +1,5 @@
 //
-//  IComponent.cs
+//  IDevice.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -23,12 +23,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace CyrusBuilt.MonoPi.Components
+namespace CyrusBuilt.MonoPi.Devices
 {
 	/// <summary>
-	/// A hardware abstraction component interface.
+	/// A hardware abstraction device interface.
 	/// </summary>
-	public interface IComponent : IDisposable
+	public interface IDevice : IDisposable
 	{
 		/// <summary>
 		/// Gets or sets the name.
@@ -41,17 +41,17 @@ namespace CyrusBuilt.MonoPi.Components
 		Object Tag { get; set; }
 
 		/// <summary>
-		/// Gets the property collection.
-		/// </summary>
-		Dictionary<String, String> PropertyCollection { get; }
-
-		/// <summary>
 		/// Gets a value indicating whether this instance is disposed.
 		/// </summary>
 		/// <value>
 		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
 		/// </value>
 		Boolean IsDisposed { get; }
+
+		/// <summary>
+		/// Gets the property collection.
+		/// </summary>
+		Dictionary<String, String> PropertyCollection { get; }
 
 		/// <summary>
 		/// Determines whether this instance has property the specified key.

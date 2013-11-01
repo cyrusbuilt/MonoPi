@@ -136,6 +136,14 @@
     <Compile Include="Components\Lights\LEDComponent.cs" />
     <Compile Include="Components\Lights\DimmableLightComponent.cs" />
     <Compile Include="BCM2835PwmClockDivider.cs" />
+    <Compile Include="Devices\IDevice.cs" />
+    <Compile Include="Devices\DeviceBase.cs" />
+    <Compile Include="Devices\Sprinkler\ISprinklerZone.cs" />
+    <Compile Include="Devices\Sprinkler\SprinklerZoneBase.cs" />
+    <Compile Include="Devices\Sprinkler\ISprinklerController.cs" />
+    <Compile Include="Devices\Sprinkler\SprinklerControllerBase.cs" />
+    <Compile Include="Devices\Sprinkler\ZoneStateChangeEventArgs.cs" />
+    <Compile Include="Devices\Sprinkler\SprinklerControllerEventDelegates.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -156,6 +164,8 @@
     <Folder Include="Components\LcdDisplay\" />
     <Folder Include="Components\Switches\" />
     <Folder Include="Components\Lights\" />
+    <Folder Include="Devices\" />
+    <Folder Include="Devices\Sprinkler\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

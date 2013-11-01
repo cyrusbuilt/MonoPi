@@ -1,5 +1,5 @@
 //
-//  IComponent.cs
+//  ISprinklerZone.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -21,14 +21,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 using System;
-using System.Collections.Generic;
 
-namespace CyrusBuilt.MonoPi.Components
+namespace CyrusBuilt.MonoPi.Devices.Sprinkler
 {
 	/// <summary>
-	/// A hardware abstraction component interface.
+	/// A sprinkler zone interface.
 	/// </summary>
-	public interface IComponent : IDisposable
+	public interface ISprinklerZone
 	{
 		/// <summary>
 		/// Gets or sets the name.
@@ -36,33 +35,32 @@ namespace CyrusBuilt.MonoPi.Components
 		String Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets the tag.
+		/// Gets whether or not this zone is on.
 		/// </summary>
-		Object Tag { get; set; }
+		Boolean IsOn { get; }
 
 		/// <summary>
-		/// Gets the property collection.
+		/// Gets whether or not this zone is off.
 		/// </summary>
-		Dictionary<String, String> PropertyCollection { get; }
+		Boolean IsOff { get; }
 
 		/// <summary>
-		/// Gets a value indicating whether this instance is disposed.
+		/// Turns this zone on.
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
-		/// </value>
-		Boolean IsDisposed { get; }
+		void On();
 
 		/// <summary>
-		/// Determines whether this instance has property the specified key.
+		/// Turns this zone off.
 		/// </summary>
-		/// <returns>
-		/// <c>true</c> if this instance has property the by specified key; otherwise, <c>false</c>.
-		/// </returns>
-		/// <param name="key">
-		/// The key name of the property to check for.
+		void Off();
+
+		/// <summary>
+		/// Sets the state of this zone..
+		/// </summary>
+		/// <param name="on">
+		/// Set true to turn the zone on or false to turn it off.
 		/// </param>
-		Boolean HasProperty(String key);
+		void SetState(Boolean on);
 	}
 }
 
