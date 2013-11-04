@@ -95,7 +95,6 @@ namespace CyrusBuilt.MonoPi.Devices.Sprinkler
 		/// <summary>
 		/// Gets a value indicating whether this controller is on.
 		/// </summary>
-		/// <value>
 		public Boolean IsOn {
 			get {
 				Boolean isOn = false;

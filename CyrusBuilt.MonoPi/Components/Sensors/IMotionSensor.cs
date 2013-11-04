@@ -30,6 +30,11 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 	public interface IMotionSensor : IComponent
 	{
 		/// <summary>
+		/// Occurs when motion is detected.
+		/// </summary>
+		event MotionDetectionEventHandler MotionDetectionStateChanged;
+
+		/// <summary>
 		/// Gets the timestamp of the last time motion was detected.
 		/// </summary>
 		DateTime LastMotionTimestamp { get; }

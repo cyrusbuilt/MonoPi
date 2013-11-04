@@ -31,6 +31,11 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 	public interface ITemperatureSensor : IComponent
 	{
 		/// <summary>
+		/// Occurs when temperature changes.
+		/// </summary>
+		event TemperatureChangeEventHandler TemperatureChanged;
+
+		/// <summary>
 		/// Gets the temperature.
 		/// </summary>
 		/// <exception cref="ObjectDisposedException">

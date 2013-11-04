@@ -30,6 +30,11 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 	public interface ISensor : IComponent
 	{
 		/// <summary>
+		/// Occurs when the sensor state changes.
+		/// </summary>
+		event SensorStateChangedEventHandler StateChanged;
+
+		/// <summary>
 		/// Gets a value indicating whether this sensor is open.
 		/// </summary>
 		/// <value>

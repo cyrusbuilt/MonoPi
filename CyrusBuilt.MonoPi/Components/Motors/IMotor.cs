@@ -30,6 +30,11 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 	public interface IMotor : IComponent
 	{
 		/// <summary>
+		/// Occurs when motor state changes.
+		/// </summary>
+		event MotorStateChangeEventHandler StateChanged;
+
+		/// <summary>
 		/// Gets or sets the state of the motor.
 		/// </summary>
 		MotorState State { get; set; }

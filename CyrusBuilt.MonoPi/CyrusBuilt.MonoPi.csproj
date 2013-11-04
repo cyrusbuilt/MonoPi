@@ -144,6 +144,24 @@
     <Compile Include="Devices\Sprinkler\SprinklerControllerBase.cs" />
     <Compile Include="Devices\Sprinkler\ZoneStateChangeEventArgs.cs" />
     <Compile Include="Devices\Sprinkler\SprinklerControllerEventDelegates.cs" />
+    <Compile Include="Devices\Access\IOpener.cs" />
+    <Compile Include="Devices\Access\OpenerLockedException.cs" />
+    <Compile Include="Devices\Access\OpenerState.cs" />
+    <Compile Include="Devices\Access\OpenerBase.cs" />
+    <Compile Include="Devices\Access\OpenerLockChangeEventArgs.cs" />
+    <Compile Include="Devices\Access\OpenerEventHandlerDelegates.cs" />
+    <Compile Include="Devices\Access\OpenerStateChangeEventArgs.cs" />
+    <Compile Include="Devices\Access\OpenerDevice.cs" />
+    <Compile Include="Devices\Garage\IGarageDoorOpener.cs" />
+    <Compile Include="Devices\Garage\GarageDoorOpenerBase.cs" />
+    <Compile Include="Devices\Garage\GarageDoorOpenerDevice.cs" />
+    <Compile Include="Devices\Gate\IGateOpener.cs" />
+    <Compile Include="Devices\Gate\GateOpenerBase.cs" />
+    <Compile Include="Devices\Gate\GateOpenerDevice.cs" />
+    <Compile Include="Devices\PiFace\IPiFace.cs" />
+    <Compile Include="Devices\PiFace\PiFaceSwitch.cs" />
+    <Compile Include="Devices\PiFace\PiFaceRelay.cs" />
+    <Compile Include="Devices\PiFace\PiFaceLED.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -166,6 +184,10 @@
     <Folder Include="Components\Lights\" />
     <Folder Include="Devices\" />
     <Folder Include="Devices\Sprinkler\" />
+    <Folder Include="Devices\Access\" />
+    <Folder Include="Devices\Garage\" />
+    <Folder Include="Devices\Gate\" />
+    <Folder Include="Devices\PiFace\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

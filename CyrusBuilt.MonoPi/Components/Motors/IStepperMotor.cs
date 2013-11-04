@@ -30,6 +30,16 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 	public interface IStepperMotor : IMotor
 	{
 		/// <summary>
+		/// Occurs when rotation starts.
+		/// </summary>
+		event MotorRotationStartEventHandler RotationStarted;
+
+		/// <summary>
+		/// Occurs when rotation stops.
+		/// </summary>
+		event MotorRotationStopEventHandler RotationStopped;
+
+		/// <summary>
 		/// Gets or sets the steps per revolution.
 		/// </summary>
 		Int32 StepsPerRevolution { get; set; }

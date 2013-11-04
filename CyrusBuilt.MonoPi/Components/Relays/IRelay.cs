@@ -30,6 +30,21 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 	public interface IRelay : IComponent
 	{
 		/// <summary>
+		/// Occurs when relay state changes.
+		/// </summary>
+		event RelayStateChangeEventHandler StateChanged;
+
+		/// <summary>
+		/// Occurs when a relay pulse starts.
+		/// </summary>
+		event RelayPulseEventHandler PulseStart;
+
+		/// <summary>
+		/// Occurs when a relay pulse stops.
+		/// </summary>
+		event RelayPulseEventHandler PulseStop;
+
+		/// <summary>
 		/// Gets or sets the state of the relay.
 		/// </summary>
 		RelayState State { get; set; }

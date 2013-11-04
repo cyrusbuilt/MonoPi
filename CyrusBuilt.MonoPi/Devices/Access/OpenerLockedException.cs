@@ -1,5 +1,5 @@
 //
-//  ILight.cs
+//  OpenerLockedException.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -22,37 +22,24 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.Components.Lights
+namespace CyrusBuilt.MonoPi.Devices.Access
 {
 	/// <summary>
-	/// An interface for light abstraction components.
+	/// The exception that is thrown when an attempt is made to open
+	/// a locked opener.
 	/// </summary>
-	public interface ILight : IComponent
+	public class OpenerLockedException : Exception
 	{
 		/// <summary>
-		/// Occurs when light state changed.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Devices.Access.OpenerLockedException"/>
+		/// class with the name of the opener.
 		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
-
-		/// <summary>
-		/// Gets a value indicating whether this light is on.
-		/// </summary>
-		Boolean IsOn { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether this light is off.
-		/// </summary>
-		Boolean IsOff { get; }
-
-		/// <summary>
-		/// Switches the light on.
-		/// </summary>
-		void On();
-
-		/// <summary>
-		/// Switches the light off.
-		/// </summary>
-		void Off();
+		/// <param name="name">
+		/// The name of the opener.
+		/// </param>
+		public OpenerLockedException(String name)
+			: base("This opener '" + name + "' is currently in the locked state.") {
+		}
 	}
 }
 

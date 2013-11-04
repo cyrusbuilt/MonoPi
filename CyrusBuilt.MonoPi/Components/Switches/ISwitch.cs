@@ -30,6 +30,11 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 	public interface ISwitch : IDisposable
 	{
 		/// <summary>
+		/// Occurs when state changed.
+		/// </summary>
+		event SwitchStateChangeEventHandler StateChanged;
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is on.
 		/// </summary>
 		/// <value>

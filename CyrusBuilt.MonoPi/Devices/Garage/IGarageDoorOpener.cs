@@ -1,5 +1,5 @@
 //
-//  ILight.cs
+//  IGarageDoorOpener.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -21,38 +21,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 using System;
+using CyrusBuilt.MonoPi.Devices.Access;
 
-namespace CyrusBuilt.MonoPi.Components.Lights
+namespace CyrusBuilt.MonoPi.Devices.Garage
 {
 	/// <summary>
-	/// An interface for light abstraction components.
+	/// Garage door opener abstraction interface.
 	/// </summary>
-	public interface ILight : IComponent
+	public interface IGarageDoorOpener : IOpener
 	{
-		/// <summary>
-		/// Occurs when light state changed.
-		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
-
-		/// <summary>
-		/// Gets a value indicating whether this light is on.
-		/// </summary>
-		Boolean IsOn { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether this light is off.
-		/// </summary>
-		Boolean IsOff { get; }
-
-		/// <summary>
-		/// Switches the light on.
-		/// </summary>
-		void On();
-
-		/// <summary>
-		/// Switches the light off.
-		/// </summary>
-		void Off();
 	}
 }
 

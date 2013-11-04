@@ -1,5 +1,5 @@
 //
-//  ILight.cs
+//  OpenerState.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -22,37 +22,32 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.Components.Lights
+namespace CyrusBuilt.MonoPi.Devices.Access
 {
 	/// <summary>
-	/// An interface for light abstraction components.
+	/// The state of the opener.
 	/// </summary>
-	public interface ILight : IComponent
+	public enum OpenerState
 	{
 		/// <summary>
-		/// Occurs when light state changed.
+		/// The opener is open.
 		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
+		Open,
 
 		/// <summary>
-		/// Gets a value indicating whether this light is on.
+		/// The opener is closed.
 		/// </summary>
-		Boolean IsOn { get; }
+		Closed,
 
 		/// <summary>
-		/// Gets a value indicating whether this light is off.
+		/// The opener is opening.
 		/// </summary>
-		Boolean IsOff { get; }
+		Opening,
 
 		/// <summary>
-		/// Switches the light on.
+		/// The opener is closing.
 		/// </summary>
-		void On();
-
-		/// <summary>
-		/// Switches the light off.
-		/// </summary>
-		void Off();
+		Closing
 	}
 }
 

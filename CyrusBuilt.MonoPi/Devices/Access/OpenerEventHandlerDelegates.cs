@@ -1,5 +1,5 @@
 //
-//  ILight.cs
+//  OpenerEventHandlerDelegates.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -22,37 +22,28 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.Components.Lights
+namespace CyrusBuilt.MonoPi.Devices.Access
 {
 	/// <summary>
-	/// An interface for light abstraction components.
+	/// Opener lock chang event handler delegate.
 	/// </summary>
-	public interface ILight : IComponent
-	{
-		/// <summary>
-		/// Occurs when light state changed.
-		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
+	/// <param name="sender">
+	/// The object firing the event.
+	/// </param>
+	/// <param name="e">
+	/// The event arguments.
+	/// </param>
+	public delegate void OpenerLockChangEventHandler(Object sender, OpenerLockChangeEventArgs e);
 
-		/// <summary>
-		/// Gets a value indicating whether this light is on.
-		/// </summary>
-		Boolean IsOn { get; }
-
-		/// <summary>
-		/// Gets a value indicating whether this light is off.
-		/// </summary>
-		Boolean IsOff { get; }
-
-		/// <summary>
-		/// Switches the light on.
-		/// </summary>
-		void On();
-
-		/// <summary>
-		/// Switches the light off.
-		/// </summary>
-		void Off();
-	}
+	/// <summary>
+	/// Opener state change event handler delegate.
+	/// </summary>
+	/// <param name="sender">
+	/// The object firing the event.
+	/// </param>
+	/// <param name="e">
+	/// The event arguments.
+	/// </param>
+	public delegate void OpenerStateChangeEventHandler(Object sener, OpenerStateChangeEventArgs e);
 }
 

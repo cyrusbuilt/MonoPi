@@ -1,5 +1,5 @@
 //
-//  ILight.cs
+//  OpenerLockChangeEventArgs.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
@@ -22,37 +22,36 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.Components.Lights
+namespace CyrusBuilt.MonoPi.Devices.Access
 {
 	/// <summary>
-	/// An interface for light abstraction components.
+	/// Opener lock change event arguments class.
 	/// </summary>
-	public interface ILight : IComponent
+	public class OpenerLockChangeEventArgs : EventArgs
 	{
-		/// <summary>
-		/// Occurs when light state changed.
-		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
+		private Boolean _isLocked = false;
 
 		/// <summary>
-		/// Gets a value indicating whether this light is on.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Devices.Access.OpenerLockChangeEventArgs"/>
+		/// class with the lock state.
 		/// </summary>
-		Boolean IsOn { get; }
+		/// <param name="locked">
+		/// Set true if locked.
+		/// </param>
+		public OpenerLockChangeEventArgs(Boolean locked)
+			: base() {
+			this._isLocked = locked;
+		}
 
 		/// <summary>
-		/// Gets a value indicating whether this light is off.
+		/// Gets a value indicating whether the opener is locked.
 		/// </summary>
-		Boolean IsOff { get; }
-
-		/// <summary>
-		/// Switches the light on.
-		/// </summary>
-		void On();
-
-		/// <summary>
-		/// Switches the light off.
-		/// </summary>
-		void Off();
+		/// <value>
+		/// <c>true</c> if the opener is locked; otherwise, <c>false</c>.
+		/// </value>
+		public Boolean IsLocked {
+			get { return this._isLocked; }
+		}
 	}
 }
 
