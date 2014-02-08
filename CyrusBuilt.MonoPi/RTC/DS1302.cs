@@ -30,12 +30,12 @@ namespace CyrusBuilt.MonoPi.RTC
 	/// DS1302 RTC. This wraps the ds1302 module in wiringPi, and thus requires
 	/// the wiringPi.so lib.
 	/// </summary>
-	public class DS1302 : IDisposable
+	public class DS1302 : IDS1302
 	{
 		#region Fields
-		private GpioBase _clockPin = null;
-		private GpioBase _dataPin = null;
-		private GpioBase _csPin = null;
+		private IRaspiGpio _clockPin = null;
+		private IRaspiGpio _dataPin = null;
+		private IRaspiGpio _csPin = null;
 		private Boolean _isDisposed = false;
 		#endregion
 
@@ -53,7 +53,7 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <param name="csPin">
 		/// The GPIO pin to use for chip-select.
 		/// </param>
-		public DS1302(GpioBase clockPin, GpioBase dataPin, GpioBase csPin) {
+		public DS1302(IRaspiGpio clockPin, IRaspiGpio dataPin, IRaspiGpio csPin) {
 			this._clockPin = clockPin;
 			this._dataPin = dataPin;
 			this._csPin = csPin;
@@ -67,21 +67,21 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// <summary>
 		/// Gets the pin being used for clock.
 		/// </summary>
-		public GpioBase Clock {
+		public IRaspiGpio Clock {
 			get { return this._clockPin; }
 		}
 
 		/// <summary>
 		/// Gets the GPIO pin being used for data.
 		/// </summary>
-		public GpioBase Data {
+		public IRaspiGpio Data {
 			get { return this._dataPin; }
 		}
 
 		/// <summary>
 		/// Gets the GPIO pin being used for chip-select.
 		/// </summary>
-		public GpioBase ChipSelect {
+		public IRaspiGpio ChipSelect {
 			get { return this._csPin; }
 		}
 

@@ -56,7 +56,7 @@ namespace CyrusBuilt.MonoPi.LED
 		/// <param name="intensity">
 		/// The display intensity (brightness).
 		/// </param>
-		public TM1638(GpioBase data, GpioBase clock, GpioBase strobe, Boolean active, Byte intensity)
+		public TM1638(IRaspiGpio data, IRaspiGpio clock, IRaspiGpio strobe, Boolean active, Byte intensity)
 			: base(data, clock, strobe, 8, active, intensity) {
 		}
 		#endregion

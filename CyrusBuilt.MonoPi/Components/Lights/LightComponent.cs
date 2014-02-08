@@ -31,7 +31,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 	public class LightComponent : LightBase
 	{
 		#region Fields
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private const PinState ON_STATE = PinState.High;
 		private const PinState OFF_STATE = PinState.Low;
 		#endregion

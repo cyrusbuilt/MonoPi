@@ -1,10 +1,10 @@
 //
-//  GpioMem.cs
+//  PiFaceDigitalGPIO.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,95 +20,71 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-//  Derived from https://github.com/cypherkey/RaspberryPi.Net
-//  by Aaron Anderson <aanderson@netopia.ca>
-//
 using System;
 using System.Diagnostics;
 
 namespace CyrusBuilt.MonoPi.IO
 {
 	/// <summary>
-	/// Raspberry Pi GPIO using the direct memory access method.
-	/// This requires the bcm2835 GPIO library provided by 
-	/// Mike McCauley (mikem@open.com.au) at http://www.open.com.au/mikem/bcm2835/index.html.
-	/// 
-	/// To create the shared object, download the source code from the link above.
-	/// The standard Makefile compiles a statically linked library. To build a
-	/// shared object, do:
-	///    tar -zxf bcm2835-1.3.tar.gz
-	///    cd bcm2835-1.3/src
-	///    make libbcm2835.a
-	///    cc -shared bcm2835.o -o libbcm2835.so
-	/// Place the shared object in the same directory as the executable and
-	/// other assemblies.
+	/// PiFace GPIO pin implementing DMA.
 	/// </summary>
-	public class GpioMem : GpioBase
+	public class PiFaceDigitalGPIO : PiFaceGpioBase
 	{
 		#region Fields
-		private Boolean _isPWM = false;
-		private Int32 _pwm = 0;
 		private PinState _lastState = PinState.Low;
 		private static Boolean _initialized = false;
 		#endregion
 
-		#region Constructors
+		#region Constructors and Destructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
-		/// class with the pin to initialize, the I/O direction, and the initial
-		/// value to write to the pin.
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>
+		/// class with the PiFace pin to control.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the board to access.
+		/// The PiFace pin to control.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		public PiFaceDigitalGPIO(PiFacePins pin)
+			: base(pin) {
+			ExportPin(pin, base.Direction);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>
+		/// class with the PiFace pin to control and the initial value to write.
+		/// </summary>
+		/// <param name="pin">
+		/// The PiFace pin to control.
 		/// </param>
 		/// <param name="initialValue">
-		/// The pin's initial value.
+		/// The initial value to write.
 		/// </param>
-		/// <remarks>
-		/// Access to the specified GPIO setup with the specified direction
-		/// with the specified initial value.
-		/// </remarks>			
-		public GpioMem(GpioPins pin, PinDirection direction, Boolean initialValue)
-			: base(pin, direction, initialValue) {
-			ExportPin(pin, direction);
+		public PiFaceDigitalGPIO(PiFacePins pin, Boolean initialValue)
+			: base(pin) {
+			ExportPin(pin, base.Direction);
 			Write(pin, initialValue);
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
-		/// class with the pin to initialize and the I/O direction.
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>
+		/// object.
 		/// </summary>
-		/// <param name="pin">
-		/// The pin on the board to access.
-		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
-		/// </param>
 		/// <remarks>
-		/// Access to the specified GPIO setup with the specified direction
-		/// with an initial value of false (0).
-		/// </remarks>			
-		public GpioMem(GpioPins pin, PinDirection direction)
-			: base(pin, direction, false) {
-			ExportPin(pin, direction);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
-		/// class with the pin to initialize.
-		/// </summary>
-		/// <param name="pin">
-		/// The pin on the board to access.
-		/// </param>
-		/// <remarks>
-		/// Access to the specified GPIO setup as an output port with an initial
-		/// value of false (0).
-		/// </remarks>			
-		public GpioMem(GpioPins pin)
-			: base(pin, PinDirection.OUT, false) {
+		/// Call <see cref="Dispose"/> when you are finished using the
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>. The <see cref="Dispose"/>
+		/// method leaves the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/> in an unusable
+		/// state. After calling <see cref="Dispose"/>, you must release all references to the
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/> so the garbage collector can
+		/// reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>
+		/// was occupying.
+		/// </remarks>
+		protected override void Dispose() {
+			if (base.IsDisposed) {
+				return;
+			}
+			UnexportPin(base.InnerPin);
+			Destroy();
+			base.Write(false);
+			base.Dispose();
 		}
 		#endregion
 
@@ -118,32 +94,6 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public static Boolean Initialized {
 			get { return _initialized; }
-		}
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
-		/// </summary>
-		/// <value>
-		/// The PWM value.
-		/// </value>
-		/// <exception cref="InvalidOperationException">
-		/// The pin is configured as in input pin instead of output.
-		/// </exception>
-		public override int PWM {
-			get { return this._pwm; }
-			set {
-				if (base.Direction == PinDirection.IN) {
-					throw new InvalidOperationException("Cannot set PWM value on an input pin.");
-				}
-
-				if (this._pwm != value) {
-					this._pwm = value;
-					if (!this._isPWM) {
-						//UnsafeNativeMethods.bcm2835_gpio_fsel((uint)base.InnerPin, )
-						// TODO Finish this out.
-					}
-				}
-			}
 		}
 		#endregion
 
@@ -203,12 +153,12 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Exports the pin setting the direction.
 		/// </summary>
 		/// <param name="pin">
-		/// The pin on the board to export.
+		/// The pin on the PiFace to export.
 		/// </param>
 		/// <param name="direction">
 		/// The I/0 direction of the pin.
 		/// </param>
-		private static void ExportPin(GpioPins pin, PinDirection direction) {
+		private static void ExportPin(PiFacePins pin, PinDirection direction) {
 			internal_ExportPin((Int32)pin, direction);
 		}
 
@@ -235,7 +185,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin to unexport.
 		/// </param>
-		private static void UnexportPin(GpioPins pin) {
+		private static void UnexportPin(PiFacePins pin) {
 			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
@@ -252,7 +202,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The name of the GPIO associated with the pin.
 		/// </param>
 		private static void internal_Write(Int32 pin, Boolean value, String pinname) {
-			if (pin == (Int32)GpioPins.GPIO_NONE) {
+			if (pin == (Int32)PiFacePins.None) {
 				return;
 			}
 
@@ -271,8 +221,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The value to write.
 		/// </param>
-		public static void Write(GpioPins pin, Boolean value) {
-			String name = Enum.GetName(typeof(GpioPins), pin);
+		public static void Write(PiFacePins pin, Boolean value) {
+			String name = Enum.GetName(typeof(PiFacePins), pin);
 			internal_Write((Int32)pin, value, name);
 		}
 
@@ -283,7 +233,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The pin to read.
 		/// </param>
 		/// <param name="pinname">
-		/// The name of the GPIO associated with the pin.
+		/// The name of the PiFace associated with the pin.
 		/// </param>
 		/// <returns>
 		/// The value read from the pin.
@@ -305,8 +255,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>			
-		public static Boolean Read(GpioPins pin) {
-			String name = Enum.GetName(typeof(GpioPins), pin);
+		public static Boolean Read(PiFacePins pin) {
+			String name = Enum.GetName(typeof(PiFacePins), pin);
 			return internal_Read((Int32)pin, name);
 		}
 
@@ -385,23 +335,15 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> object.
+		/// Returns a <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>.
 		/// </summary>
-		/// <remarks>
-		/// Call <see cref="Dispose"/> when you are finished using the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>. The
-		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> in an unusable state. After
-		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/>
-		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> was occupying.
-		/// </remarks>
-		public override void Dispose() {
-			UnexportPin(base.InnerPin);
-			Destroy();
-			if (this._isPWM) {
-				String cmd = "gpio unexport " + GetGpioPinNumber(base.InnerPin);
-				Process.Start(cmd);
-			}
-			base.Write(false);
-			base.Dispose();
+		/// <returns>
+		/// A <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>.
+		/// </returns>
+		public override String ToString() {
+			return base.Name;
 		}
 		#endregion
 	}

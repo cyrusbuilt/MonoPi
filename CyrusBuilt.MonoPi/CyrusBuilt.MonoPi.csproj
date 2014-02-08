@@ -21,7 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
-    <GenerateDocumentation>true</GenerateDocumentation>
+    <DocumentationFile>bin\Debug\CyrusBuilt.MonoPi.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -162,6 +162,16 @@
     <Compile Include="Devices\PiFace\PiFaceSwitch.cs" />
     <Compile Include="Devices\PiFace\PiFaceRelay.cs" />
     <Compile Include="Devices\PiFace\PiFaceLED.cs" />
+    <Compile Include="Devices\PiFace\PiFaceBase.cs" />
+    <Compile Include="IO\IPiFaceGPIO.cs" />
+    <Compile Include="IO\PiFacePins.cs" />
+    <Compile Include="IO\PiFaceGpioBase.cs" />
+    <Compile Include="IO\PiFaceDigitalGPIO.cs" />
+    <Compile Include="IO\PiFaceGpioProvider.cs" />
+    <Compile Include="IO\IPin.cs" />
+    <Compile Include="IO\IRaspiGpio.cs" />
+    <Compile Include="RTC\IDS1302.cs" />
+    <Compile Include="Sensors\IDS1620.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

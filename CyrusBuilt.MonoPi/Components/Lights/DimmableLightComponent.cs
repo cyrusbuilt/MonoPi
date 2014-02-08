@@ -31,7 +31,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 	public class DimmableLightComponent : DimmableLightBase
 	{
 		#region Fields
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private Int32 _min = 0;
 		private Int32 _max = 0;
 		#endregion
@@ -54,7 +54,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 		/// <exception cref="ArgumentNullException">
 		/// The pin cannot be null.
 		/// </exception>
-		public DimmableLightComponent(GpioBase pin, Int32 min, Int32 max)
+		public DimmableLightComponent(IGpio pin, Int32 min, Int32 max)
 			: base() {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");

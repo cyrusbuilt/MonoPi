@@ -58,7 +58,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		protected TemperatureSensorBase(GpioBase clock, GpioBase data, GpioBase reset)
+		protected TemperatureSensorBase(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
 			: base() {
 			if (clock == null) {
 				throw new ArgumentNullException("clock");

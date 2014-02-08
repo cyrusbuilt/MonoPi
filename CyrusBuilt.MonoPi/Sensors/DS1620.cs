@@ -35,12 +35,13 @@ namespace CyrusBuilt.MonoPi.Sensors
 	/// <summary>
 	/// This is a simple driver class for the Dallas Semiconductor DS1620 digital thermometer IC.
 	/// </summary>
-	public class DS1620 : IDisposable
+	public class DS1620 : IDS1620
 	{
 		#region Fields
-		private GpioBase _clock = null;
-		private GpioBase _data = null;
-		private GpioBase _reset = null;
+		private IRaspiGpio _clock = null;
+		private IRaspiGpio _data = null;
+		private IRaspiGpio _reset = null;
+		private Boolean _isDisposed = false;
 		#endregion
 
 		#region Constructors
@@ -57,7 +58,7 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// <param name="reset">
 		/// The reset pin.
 		/// </param>
-		public DS1620(GpioBase clock, GpioBase data, GpioBase reset) {
+		public DS1620(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset) {
 			this._clock = clock;
 			this._data = data;
 			this._reset = reset;
@@ -66,23 +67,33 @@ namespace CyrusBuilt.MonoPi.Sensors
 
 		#region Properties
 		/// <summary>
+		/// Gets a value indicating whether this instance is disposed.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+		/// </value>
+		public Boolean IsDisposed {
+			get { return this._isDisposed; }
+		}
+
+		/// <summary>
 		/// Gets the clock pin.
 		/// </summary>
-		public GpioBase Clock {
+		public IRaspiGpio Clock {
 			get { return this._clock; }
 		}
 
 		/// <summary>
 		/// Gets the data pin.
 		/// </summary>
-		public GpioBase Data {
+		public IRaspiGpio Data {
 			get { return this._data; }
 		}
 
 		/// <summary>
 		/// Gets the reset pin.
 		/// </summary>
-		public GpioBase Reset {
+		public IRaspiGpio Reset {
 			get { return this._reset; }
 		}
 		#endregion
@@ -130,18 +141,27 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// <returns>
 		/// The temperature with half-degree granularity.
 		/// </returns>
+		/// <exception cref="ObjectDisposedException">
+		/// This instance has been disposed and is no longer usable.
+		/// </exception>
 		public Double GetTemperature() {
+			if (this._isDisposed) {
+				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Sensors.DS1620");
+			}
+
 			this._reset.Write(false);
 			this._clock.Write(true);
 			this._reset.Write(true);
 			this.SendCommand(0x0c);    // write config command.
 			this.SendCommand(0x02);    // cpu mode.
 			this._reset.Write(false);
+
 			Thread.Sleep(200);         // wait until the configuration register is written.
 			this._clock.Write(true);
 			this._reset.Write(true);
 			this.SendCommand(0xEE);    // start conversion.
 			this._reset.Write(false);
+
 			Thread.Sleep(200);
 			this._clock.Write(true);
 			this._reset.Write(true);
@@ -161,6 +181,10 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.Sensors.DS1620"/> was occupying.
 		/// </remarks>
 		public void Dispose() {
+			if (this._isDisposed) {
+				return;
+			}
+
 			if (this._clock != null) {
 				this._clock.Dispose();
 				this._clock = null;
@@ -175,6 +199,7 @@ namespace CyrusBuilt.MonoPi.Sensors
 				this._reset.Dispose();
 				this._reset = null;
 			}
+			this._isDisposed = true;
 		}
 		#endregion
 	}

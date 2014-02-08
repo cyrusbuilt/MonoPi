@@ -58,21 +58,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot null.
 		/// </exception>
-		public MotionSensorComponent(GpioMem pin)
-			: base(pin) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Sensors.MotionSensorComponent"/>
-		/// class with the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </summary>
-		/// <param name="pin">
-		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </param>
-		/// <exception cref="ArgumentNullException">
-		/// <paramref name="pin"/> cannot null.
-		/// </exception>
-		public MotionSensorComponent(GpioFile pin)
+		public MotionSensorComponent(IRaspiGpio pin)
 			: base(pin) {
 		}
 

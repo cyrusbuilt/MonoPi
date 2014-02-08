@@ -80,28 +80,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		public TemperatureSensorComponent(GpioMem clock, GpioMem data, GpioMem reset)
-			: base(clock, data, reset) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the
-		/// <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorComponent"/>
-		/// class with the clock, data, and reset pins needed for the sensor.
-		/// </summary>
-		/// <param name="clock">
-		/// The GPIO pin used for the clock.
-		/// </param>
-		/// <param name="data">
-		/// The GPIO pin used for data.
-		/// </param>
-		/// <param name="reset">
-		/// The GPIO pin used to trigger reset.
-		/// </param>
-		/// <exception cref="ArgumentNullException">
-		/// Pins cannot be null.
-		/// </exception>
-		public TemperatureSensorComponent(GpioFile clock, GpioFile data, GpioFile reset)
+		public TemperatureSensorComponent(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
 			: base(clock, data, reset) {
 		}
 
@@ -126,33 +105,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		public TemperatureSensorComponent(TemperatureScale scale, GpioMem clock, GpioMem data, GpioMem reset)
-			: base(clock, data, reset) {
-			this._scale = scale;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the
-		/// <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorComponent"/>
-		/// class with the clock, data, and reset pins needed for the sensor,
-		/// as well as the scale to get the temperature readings in.
-		/// </summary>
-		/// <param name="scale">
-		/// The scale to get the temperature readings in.
-		/// </param>
-		/// <param name="clock">
-		/// The GPIO pin used for the clock.
-		/// </param>
-		/// <param name="data">
-		/// The GPIO pin used for data.
-		/// </param>
-		/// <param name="reset">
-		/// The GPIO pin used to trigger reset.
-		/// </param>
-		/// <exception cref="ArgumentNullException">
-		/// Pins cannot be null.
-		/// </exception>
-		public TemperatureSensorComponent(TemperatureScale scale, GpioFile clock, GpioFile data, GpioFile reset)
+		public TemperatureSensorComponent(TemperatureScale scale, IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
 			: base(clock, data, reset) {
 			this._scale = scale;
 		}

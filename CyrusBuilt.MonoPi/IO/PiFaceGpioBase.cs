@@ -1,10 +1,10 @@
 //
-//  GpioBase.cs
+//  PiFaceGpioBase.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,9 +20,6 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-//  Derived from https://github.com/cypherkey/RaspberryPi.Net
-//  by Aaron Anderson <aanderson@netopia.ca>
-//
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -30,65 +27,18 @@ using System.Threading;
 namespace CyrusBuilt.MonoPi.IO
 {
 	/// <summary>
-	/// Abstract base class for the GPIO connector on the Pi (P1) (as found
-	/// next to the yellow RCA video socket on the Rpi circuit board).
+	/// Base class for the GPIO pins on the PiFace.
 	/// </summary>
-	public abstract class GpioBase : IRaspiGpio
+	public abstract class PiFaceGpioBase : IPiFaceGPIO
 	{
 		#region Fields
 		private Boolean _isDisposed = false;
-		private BoardRevision _revision = BoardRevision.Rev2;
-		private GpioPins _pin = GpioPins.GPIO_NONE;
+		private String _name = String.Empty;
+		private Object _tag = null;
 		private PinState _state = PinState.Low;
-		private PinDirection _direction = PinDirection.OUT;
+		private PinDirection _direction = PinDirection.IN;
+		private PiFacePins _innerPin = PiFacePins.None;
 		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
-		#endregion
-
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
-		/// class with a board Revision 1.0 GPIO pin, the pin direction, and
-		/// the initial pin value.
-		/// </summary>
-		/// <param name="pin">
-		/// The GPIO pin.
-		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
-		/// </param>
-		/// <param name="value">
-		/// The initial pin value.
-		/// </param>
-		protected GpioBase(GpioPins pin, PinDirection direction, Boolean value) {
-			this._pin = pin;
-			this._direction = direction;
-			this._revision = BoardRevision.Rev2;
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
-		/// class with a board Revision 1.0 pin and the pin direction.
-		/// </summary>
-		/// <param name="pin">
-		/// The GPIO pin.
-		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
-		/// </param>
-		protected GpioBase(GpioPins pin, PinDirection direction)
-			: this(pin, direction, false) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
-		/// class with a board Revision 1.0 pin.
-		/// </summary>
-		/// <param name="pin">
-		/// The GPIO pin.
-		/// </param>
-		protected GpioBase(GpioPins pin)
-			: this(pin, PinDirection.OUT, false) {
-		}
 		#endregion
 
 		#region Events
@@ -98,19 +48,104 @@ namespace CyrusBuilt.MonoPi.IO
 		public event PinStateChangeEventHandler StateChanged;
 		#endregion
 
+		#region Constructors and Destructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>
+		/// class with the physical pin represented by this class.
+		/// </summary>
+		/// <param name="pin">
+		/// The physical pin being wrapped by this class.
+		/// </param>
+		protected PiFaceGpioBase(PiFacePins pin) {
+			this._innerPin = pin;
+			switch (pin) {
+				case PiFacePins.Input00:
+				case PiFacePins.Input01:
+				case PiFacePins.Input02:
+				case PiFacePins.Input03:
+				case PiFacePins.Input04:
+				case PiFacePins.Input05:
+				case PiFacePins.Input06:
+				case PiFacePins.Input07:
+					this._direction = PinDirection.IN;
+					break;
+				case PiFacePins.Output00:
+				case PiFacePins.Output01:
+				case PiFacePins.Output02:
+				case PiFacePins.Output03:
+				case PiFacePins.Output04:
+				case PiFacePins.Output05:
+				case PiFacePins.Output06:
+				case PiFacePins.Output07:
+					this._direction = PinDirection.OUT;
+					break;
+				case PiFacePins.None:
+				default:
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>
+		/// object.
+		/// </summary>
+		/// <remarks>
+		/// Call <see cref="Dispose"/> when you are finished using the
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>
+		/// in an unusable state. After calling <see cref="Dispose"/>, you must
+		/// release all references to the <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>
+		/// so the garbage collector can reclaim the memory that the
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/> was occupying.
+		/// </remarks>
+		protected virtual void Dispose() {
+			if (this._isDisposed) {
+				return;
+			}
+
+			_exportedPins.Clear();
+			_exportedPins = null;
+			this.StateChanged = null;
+			this._innerPin = PiFacePins.None;
+			this._direction = PinDirection.IN;
+			this._isDisposed = true;
+			this._name = null;
+			this._tag = null;
+			GC.SuppressFinalize(this);
+		}
+		#endregion
+
 		#region Properties
 		/// <summary>
 		/// Gets a value indicating whether this instance is disposed.
 		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+		/// </value>
 		public Boolean IsDisposed {
 			get { return this._isDisposed; }
 		}
 
 		/// <summary>
-		/// Gets the board revision.
+		/// Gets or sets the name.
 		/// </summary>
-		public BoardRevision Revision {
-			get { return this._revision; }
+		/// <value>
+		/// The name of the GPIO.
+		/// </value>
+		public String Name {
+			get { return this._name; }
+			set { this._name = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>
+		/// The object to tag the GPIO with.
+		/// </value>
+		public Object Tag {
+			get { return this._tag; }
+			set { this._tag = value; }
 		}
 
 		/// <summary>
@@ -126,8 +161,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// Gets the physical pin being represented by this class.
 		/// </summary>
-		public GpioPins InnerPin {
-			get { return this._pin; }
+		public PiFacePins InnerPin {
+			get { return this._innerPin; }
 		}
 
 		/// <summary>
@@ -143,14 +178,6 @@ namespace CyrusBuilt.MonoPi.IO
 		protected static Dictionary<Int32, PinDirection> ExportedPins {
 			get { return _exportedPins; }
 		}
-
-		/// <summary>
-		/// Gets or sets the PWM (Pulse Width Modulation) value.
-		/// </summary>
-		/// <value>
-		/// The PWM value.
-		/// </value>
-		public abstract Int32 PWM { get; set; }
 		#endregion
 
 		#region Methods
@@ -164,16 +191,6 @@ namespace CyrusBuilt.MonoPi.IO
 			if (this.StateChanged != null) {
 				this.StateChanged(this, e);
 			}
-		}
-
-		/// <summary>
-		/// Changes the board revision.
-		/// </summary>
-		/// <param name="revision">
-		/// The board revision. Default is <see cref="BoardRevision.Rev2"/>.
-		/// </param>
-		public void ChangeBoardRevision(BoardRevision revision) {
-			this._revision = revision;
 		}
 
 		/// <summary>
@@ -220,27 +237,15 @@ namespace CyrusBuilt.MonoPi.IO
 		public abstract Boolean Read();
 
 		/// <summary>
-		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
-		/// object.
+		/// Returns a <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>.
 		/// </summary>
-		/// <remarks>
-		/// Call <see cref="Dispose"/> when you are finished using the
-		/// <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>.The <see cref="Dispose"/>
-		/// method leaves the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> in an
-		/// unusable state. After calling <see cref="Dispose"/>, you must release
-		/// all references to the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> so
-		/// the garbage collector can reclaim the memory that the
-		/// <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/> was occupying.
-		/// </remarks>
-		public virtual void Dispose() {
-			if (this._isDisposed) {
-				return;
-			}
-			_exportedPins.Clear();
-			_exportedPins = null;
-			this.StateChanged = null;
-			this._pin = GpioPins.GPIO_NONE;
-			this._isDisposed = true;
+		/// <returns>
+		/// A <see cref="System.String"/> that represents the current
+		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>.
+		/// </returns>
+		public override string ToString() {
+			return this._name;
 		}
 		#endregion
 	}

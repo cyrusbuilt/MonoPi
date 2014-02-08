@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		private Boolean _isDisposed = false;
 		private String _name = String.Empty;
 		private Object _tag = null;
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private Dictionary<String, String> _props = null;
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot null.
 		/// </exception>
-		protected RelayBase(GpioBase pin) {
+		protected RelayBase(IGpio pin) {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");
 			}

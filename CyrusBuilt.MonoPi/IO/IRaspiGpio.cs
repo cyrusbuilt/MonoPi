@@ -1,10 +1,10 @@
 //
-//  IGpio.cs
+//  IRaspiGpio.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -25,54 +25,19 @@ using System;
 namespace CyrusBuilt.MonoPi.IO
 {
 	/// <summary>
-	/// Implemented by classes that represent GPIO pins on the Raspberry Pi.
+	/// A Raspberry Pi GPIO interface.
 	/// </summary>
-	public interface IGpio : IPin
+	public interface IRaspiGpio : IGpio
 	{
 		/// <summary>
-		/// Occurs when the pin state changes.
+		/// Gets the board revision.
 		/// </summary>
-		event PinStateChangeEventHandler StateChanged;
+		BoardRevision Revision { get; }
 
 		/// <summary>
-		/// Gets or sets the name.
+		/// Gets the physical pin being represented by this class.
 		/// </summary>
-		/// <value>
-		/// The name of the GPIO.
-		/// </value>
-		String Name { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		/// <value>
-		/// The object to tag the GPIO with.
-		/// </value>
-		Object Tag { get; set; }
-
-		/// <summary>
-		/// Write a value to the pin.
-		/// </summary>
-		/// <param name="value">
-		/// The value to write to the pin.
-		/// </param>
-		void Write(Boolean value);
-
-		/// <summary>
-		/// Pulse the pin output for the specified number of milliseconds.
-		/// </summary>
-		/// <param name="millis">
-		/// The number of milliseconds to wait between states.
-		/// </param>
-		void Pulse(Int32 millis);
-
-		/// <summary>
-		/// Read a value from the pin.
-		/// </summary>
-		/// <returns>
-		/// The value read from the pin.
-		/// </returns>			
-		Boolean Read();
+		GpioPins InnerPin { get; }
 
 		/// <summary>
 		/// Gets or sets the PWM (Pulse Width Modulation) value.

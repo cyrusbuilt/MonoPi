@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 using System;
+using System.IO;
 
 namespace CyrusBuilt.MonoPi.SPI
 {
@@ -31,6 +32,10 @@ namespace CyrusBuilt.MonoPi.SPI
 	public static class SimpleSPI
 	{
 		private static Boolean _initialized = false;
+		private const Byte DEFAULT_ADDRESS = 0x40;
+		private const Byte WRITE_FLAG = 0x00;
+		private const Byte READ_FLAG = 0x01;
+		private const Int32 DEFAULT_SPEED = 1000000;
 
 		/// <summary>
 		/// Gets a value indicating whether <see cref="CyrusBuilt.MonoPi.SPI.SimpleSPI"/>
@@ -65,6 +70,16 @@ namespace CyrusBuilt.MonoPi.SPI
 		}
 
 		/// <summary>
+		/// Open the SPI device and set it up, etc, at the default speed (1000000).
+		/// </summary>
+		/// <param name="channel">
+		/// The channel to open.
+		/// </param>
+		public static Boolean Init(AdcChannels channel) {
+			Init(channel, DEFAULT_SPEED);
+		}
+
+		/// <summary>
 		/// Gets the file descriptor for the given channel.
 		/// </summary>
 		/// <returns>
@@ -82,6 +97,57 @@ namespace CyrusBuilt.MonoPi.SPI
 				}
 			}
 			return descriptor;
+		}
+
+		/// <summary>
+		/// Write the specified data to the specified register on the specified
+		/// channel.
+		/// </summary>
+		/// <param name="channel">
+		/// The channel to communicate with the target on.
+		/// </param>
+		/// <param name="register">
+		/// The register to write the data to.
+		/// </param>
+		/// <param name="data">
+		/// The data to write.
+		/// </param>
+		public static void Write(AdcChannels channel, Byte register, Byte data) {
+			// Create packet in data buffer.
+			Byte[] packet = new Byte[3];
+			packet[0] = (Byte)(DEFAULT_ADDRESS | WRITE_FLAG);
+			packet[1] = register;
+			packet[2] = data;
+			UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packet, packet.Length);
+		}
+
+		/// <summary>
+		/// Reads a packet from the specified register over the specified channel.
+		/// </summary>
+		/// <param name="channel">
+		/// The channel to comunicate with the target on.
+		/// </param>
+		/// <param name="register">
+		/// The register to read the packet from.
+		/// </param>
+		/// <exception cref="IOException">
+		/// Failed to read from register.
+		/// </exception>
+		public static Byte Read(AdcChannels channel, Byte register) {
+			Byte[] packet = new Byte[3];
+			packet[0] = (Byte)(DEFAULT_ADDRESS | READ_FLAG);
+			packet[1] = register;
+			packet[2] = 0x00;  // We init null and then wiringPiSPIDataRW will assign.
+
+			Int32 result = UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packet, packet.Length);
+			if (result >= 0) {
+				// Success. wiringPiSPIDataRW will have assigned the
+				// the value read on the packet buffer.
+				return result[2];
+			}
+
+			String chstr = Enum.GetName(typeof(AdcChannels), channel);
+			throw new IOException("Failed to read SPI bus on channel " + chstr, result);
 		}
 
 		/// <summary>

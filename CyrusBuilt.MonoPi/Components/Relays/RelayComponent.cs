@@ -44,26 +44,12 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// class with the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> I/O pin to use.
 		/// </summary>
 		/// <param name="pin">
-		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> I/O pin to use.
+		/// The <see cref="CyrusBuilt.MonoPi.IO.IGpio"/> I/O pin to use.
 		/// </param>
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot null.
 		/// </exception>
-		public RelayComponent(GpioMem pin)
-			: base(pin) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Relays.RelayComponent"/>
-		/// class with the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </summary>
-		/// <param name="pin">
-		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </param>
-		/// <exception cref="ArgumentNullException">
-		/// <paramref name="pin"/> cannot null.
-		/// </exception>
-		public RelayComponent(GpioFile pin)
+		public RelayComponent(IGpio pin)
 			: base(pin) {
 		}
 		#endregion

@@ -32,7 +32,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 	public class LEDComponent : LEDBase
 	{
 		#region Fields
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private const PinState ON_STATE = PinState.High;
 		private const PinState OFF_STATE = PinState.Low;
 		#endregion
@@ -48,7 +48,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 		/// <exception cref="ArgumentNullException">
 		/// The pin cannot be null.
 		/// </exception>
-		public LEDComponent(GpioBase pin)
+		public LEDComponent(IGpio pin)
 			: base() {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");

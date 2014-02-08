@@ -33,7 +33,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 	public class ToggleSwitchComponent : ToggleSwitchBase
 	{
 		#region Fields
-		private GpioBase _pin = null;
+		private IRaspiGpio _pin = null;
 		private Boolean _isPolling = false;
 		private Thread _pollThread = null;
 		private const PinState OFF_STATE = PinState.Low;
@@ -48,7 +48,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 		/// <param name="pin">
 		/// The input pin to check switch state on.
 		/// </param>
-		public ToggleSwitchComponent(GpioBase pin)
+		public ToggleSwitchComponent(IRaspiGpio pin)
 			: base() {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");

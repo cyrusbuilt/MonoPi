@@ -40,11 +40,12 @@ namespace CyrusBuilt.MonoPi.SPI
 	public class MCP3008 : IDisposable
 	{
 		#region Fields
+		private Boolean _isDisposed = false;
 		private AdcChannels _channel = AdcChannels.None;
-		private GpioBase _clock = null;
-		private GpioBase _masterOutSlaveIn = null;
-		private GpioBase _masterInSlaveOut = null;
-		private GpioBase _chipSelect = null;
+		private IRaspiGpio _clock = null;
+		private IRaspiGpio _masterOutSlaveIn = null;
+		private IRaspiGpio _masterInSlaveOut = null;
+		private IRaspiGpio _chipSelect = null;
 		#endregion
 
 		#region Constructors
@@ -69,7 +70,7 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// <param name="cs">
 		/// Chip Select pin.
 		/// </param>
-		public MCP3008(AdcChannels channel, GpioBase spiclk, GpioBase mosi, GpioBase miso, GpioBase cs) {
+		public MCP3008(AdcChannels channel, IRaspiGpio spiclk, IRaspiGpio mosi, IRaspiGpio miso, IRaspiGpio cs) {
 			this._channel = channel;
 			this._clock = spiclk;
 			this._masterOutSlaveIn = mosi;
@@ -80,6 +81,16 @@ namespace CyrusBuilt.MonoPi.SPI
 
 		#region Properties
 		/// <summary>
+		/// Gets a value indicating whether this instance is disposed.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+		/// </value>
+		public Boolean IsDisposed {
+			get { return this._isDisposed; }
+		}
+
+		/// <summary>
 		/// Gets the channel.
 		/// </summary>
 		public AdcChannels Channel {
@@ -89,28 +100,28 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// <summary>
 		/// Gets the SPI clock pin.
 		/// </summary>
-		public GpioBase SpiClock {
+		public IRaspiGpio SpiClock {
 			get { return this._clock; }
 		}
 
 		/// <summary>
 		/// Gets the master out, slave in (MOSI) pin.
 		/// </summary>
-		public GpioBase MasterOutSlaveIn {
+		public IRaspiGpio MasterOutSlaveIn {
 			get { return this._masterOutSlaveIn; }
 		}
 
 		/// <summary>
 		/// Gets the master in, slave out (MISO) pin.
 		/// </summary>
-		public GpioBase MasterInSlaveOut {
+		public IRaspiGpio MasterInSlaveOut {
 			get { return this._masterInSlaveOut; }
 		}
 
 		/// <summary>
 		/// Gets the chip select.
 		/// </summary>
-		public GpioBase ChipSelect {
+		public IRaspiGpio ChipSelect {
 			get { return this._chipSelect; }
 		}
 		#endregion
@@ -122,7 +133,14 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// <returns>
 		/// The converted value.
 		/// </returns>
+		/// <exception cref="ObjectDisposedException">
+		/// This instance has been disposed and is no longer usable.
+		/// </exception>
 		public Int32 ReadADC() {
+			if (this._isDisposed) {
+				throw new ObjectDisposedException("CyrusBuilt.MonoPi.SPI.MCP3008");
+			}
+
 			if (this._channel == AdcChannels.None) {
 				return -1;
 			}
@@ -173,6 +191,10 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.SPI.MCP3008"/> was occupying.
 		/// </remarks>
 		public void Dispose() {
+			if (this._isDisposed) {
+				return;
+			}
+
 			this._channel = AdcChannels.None;
 			if (this._chipSelect != null) {
 				this._chipSelect.Dispose();
@@ -193,6 +215,7 @@ namespace CyrusBuilt.MonoPi.SPI
 				this._masterOutSlaveIn.Dispose();
 				this._masterOutSlaveIn = null;
 			}
+			this._isDisposed = true;
 		}
 		#endregion
 	}

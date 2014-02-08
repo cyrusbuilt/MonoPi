@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		private MotorState _state = MotorState.Stop;
 		private Int32 _sequenceIndex = 0;
 		private Thread _controlThread = null;
-		private GpioMem[] _pins = null;
+		private IRaspiGpio[] _pins = null;
 		#endregion
 
 		#region Constructors and Destructors
@@ -46,7 +46,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// <param name="pins">
 		/// The output pins for each controller in the stepper motor.
 		/// </param>
-		public StepperMotorComponent(GpioMem[] pins)
+		public StepperMotorComponent(IRaspiGpio[] pins)
 			: base() {
 			this._pins = pins;
 		}
@@ -74,11 +74,12 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 				}
 
 				if (this._pins != null) {
-					foreach (GpioMem pin in this._pins) {
-						pin.Dispose();
+					if (this._pins.Length > 0) {
+						foreach (IRaspiGpio pin in this._pins) {
+							pin.Dispose();
+						}
+						Array.Clear(this._pins, 0, this._pins.Length);
 					}
-
-					Array.Clear(this._pins, 0, this._pins.Length);
 					this._pins = null;
 				}
 			}
@@ -180,7 +181,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 			}
 
 			// Turn all GPIO pins off.
-			foreach (GpioMem pin in this._pins) {
+			foreach (IRaspiGpio pin in this._pins) {
 				pin.Write(false);
 			}
 		}
@@ -193,7 +194,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		private void ExecuteMovement() {
 			lock (this) {
 				if (this.State == MotorState.Stop) {
-					foreach (GpioMem pin in this._pins) {
+					foreach (IRaspiGpio pin in this._pins) {
 						pin.Write(false);
 					}
 					return;
