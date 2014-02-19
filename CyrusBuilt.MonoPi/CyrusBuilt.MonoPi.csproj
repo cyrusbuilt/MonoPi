@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.Posix" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -172,6 +173,14 @@
     <Compile Include="IO\IRaspiGpio.cs" />
     <Compile Include="RTC\IDS1302.cs" />
     <Compile Include="Sensors\IDS1620.cs" />
+    <Compile Include="Devices\PiCamera\StillCaptureSettings.cs" />
+    <Compile Include="Devices\PiCamera\ImageEncoding.cs" />
+    <Compile Include="Devices\PiCamera\PiCameraDevice.cs" />
+    <Compile Include="Devices\PiCamera\CaptureUtils.cs" />
+    <Compile Include="Devices\PiCamera\CaptureStartEventArgs.cs" />
+    <Compile Include="Devices\PiCamera\CaptureEventDelegates.cs" />
+    <Compile Include="Devices\PiCamera\CaptureOutputEventArgs.cs" />
+    <Compile Include="Devices\PiCamera\CaptureDoneEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -198,6 +207,7 @@
     <Folder Include="Devices\Garage\" />
     <Folder Include="Devices\Gate\" />
     <Folder Include="Devices\PiFace\" />
+    <Folder Include="Devices\PiCamera\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
