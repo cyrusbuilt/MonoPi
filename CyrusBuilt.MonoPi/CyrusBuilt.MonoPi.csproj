@@ -181,6 +181,7 @@
     <Compile Include="Devices\PiCamera\CaptureEventDelegates.cs" />
     <Compile Include="Devices\PiCamera\CaptureOutputEventArgs.cs" />
     <Compile Include="Devices\PiCamera\CaptureDoneEventArgs.cs" />
+    <Compile Include="Devices\PiFace\PiFaceDevice.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

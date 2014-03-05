@@ -29,6 +29,9 @@ using CyrusBuilt.MonoPi.SPI;
 
 namespace CyrusBuilt.MonoPi.Devices.PiFace
 {
+	/// <summary>
+	/// Base class for PiFace device abstractions.
+	/// </summary>
 	public abstract class PiFaceBase : DeviceBase, IPiFace
 	{
 		#region Fields
@@ -40,16 +43,38 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 		#endregion
 
 		#region Constructors and Destructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceBase"/>
+		/// class wtih the SPI channel and speed used to communicate with the PiFace.
+		/// </summary>
+		/// <param name="channel">
+		/// The SPI channel.
+		/// </param>
+		/// <param name="speed">
+		/// The SPI speed.
+		/// </param>
 		protected PiFaceBase(AdcChannels channel, Int32 speed)
 			: base() {
 			SimpleSPI.Init(channel, speed);
 
 			this._inputPins = new IPiFaceGPIO[] {
-
+				new PiFaceDigitalGPIO(PiFacePins.Input00, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input01, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input02, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input03, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input04, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input05, false),
+				new PiFaceDigitalGPIO(PiFacePins.Input06, false)
 			};
 
 			this._outputPins = new IPiFaceGPIO[] {
-
+				new PiFaceDigitalGPIO(PiFacePins.Output00, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output01, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output02, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output03, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output04, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output05, false),
+				new PiFaceDigitalGPIO(PiFacePins.Output06, false)
 			};
 
 			this._relays = new IRelay[] {
@@ -85,7 +110,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 		/// <see cref="Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceBase"/> so the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceBase"/> was occupying.</remarks>
-		public override void Dispose() {
+		protected override void Dispose() {
 			if (base.IsDisposed) {
 				return;
 			}
@@ -138,7 +163,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 				}
 				this._leds = null;
 			}
-
+				
 			base.Dispose();
 		}
 		#endregion
