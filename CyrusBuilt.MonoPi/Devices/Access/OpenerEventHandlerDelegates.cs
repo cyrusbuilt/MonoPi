@@ -44,6 +44,6 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 	/// <param name="e">
 	/// The event arguments.
 	/// </param>
-	public delegate void OpenerStateChangeEventHandler(Object sener, OpenerStateChangeEventArgs e);
+	public delegate void OpenerStateChangeEventHandler(Object sender, OpenerStateChangeEventArgs e);
 }
 

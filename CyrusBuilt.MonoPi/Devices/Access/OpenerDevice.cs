@@ -29,7 +29,7 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 {
 	/// <summary>
 	/// A device that is an abstraction of a door opener (such as a garage door opener).
-	/// This is an implementation of the <see cref="CyrusBuilt.MonoPi.Devices.OpenerBase"/>.
+	/// This is an implementation of the <see cref="CyrusBuilt.MonoPi.Devices.Access.OpenerBase"/>.
 	/// </summary>
 	public class OpenerDevice : OpenerBase
 	{

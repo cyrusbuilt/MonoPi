@@ -110,7 +110,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 		/// <see cref="Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceBase"/> so the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceBase"/> was occupying.</remarks>
-		protected override void Dispose() {
+		public override void Dispose() {
 			if (base.IsDisposed) {
 				return;
 			}

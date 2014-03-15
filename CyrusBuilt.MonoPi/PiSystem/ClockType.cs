@@ -1,10 +1,10 @@
-//
-//  IRaspiGpio.cs
+﻿//
+//  ClockType.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
+//  Copyright (c) 2014 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,22 +22,72 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.PiSystem
 {
 	/// <summary>
-	/// A Raspberry Pi GPIO interface.
+	/// The various on-board clock types.
 	/// </summary>
-	public interface IRaspiGpio : IGpio
+	public enum ClockType
 	{
 		/// <summary>
-		/// Gets the board revision.
+		/// The ARM clock.
 		/// </summary>
-		BoardRevision Revision { get; }
+		ARM,
 
 		/// <summary>
-		/// Gets the physical pin being represented by this class.
+		/// The core clock.
 		/// </summary>
-		GpioPins InnerPin { get; }
+		Core,
+
+		/// <summary>
+		/// The H264 clock.
+		/// </summary>
+		H264,
+
+		/// <summary>
+		/// The ISP clock.
+		/// </summary>
+		ISP,
+
+		/// <summary>
+		/// The V3D clock.
+		/// </summary>
+		V3D,
+
+		/// <summary>
+		/// The UART clock.
+		/// </summary>
+		UART,
+
+		/// <summary>
+		/// The PWM clock.
+		/// </summary>
+		PWM,
+
+		/// <summary>
+		/// The EMMC clock.
+		/// </summary>
+		EMMC,
+
+		/// <summary>
+		/// The pixel clock.
+		/// </summary>
+		Pixel,
+
+		/// <summary>
+		/// The VEC clock.
+		/// </summary>
+		VEC,
+
+		/// <summary>
+		/// The HDMI clock.
+		/// </summary>
+		HDMI,
+
+		/// <summary>
+		/// The DPI clock.
+		/// </summary>
+		DPI
 	}
 }
 

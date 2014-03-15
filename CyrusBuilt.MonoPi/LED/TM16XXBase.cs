@@ -37,9 +37,9 @@ namespace CyrusBuilt.MonoPi.LED
 	public abstract class TM16XXBase : IDisposable
 	{
 		#region Fields
-		private GpioBase _data = null;
-		private GpioBase _clock = null;
-		private GpioBase _strobe = null;
+		private IRaspiGpio _data = null;
+		private IRaspiGpio _clock = null;
+		private IRaspiGpio _strobe = null;
 		private Int32 _displays = 0;
 		private Boolean _isActive = false;
 		#endregion
@@ -179,7 +179,7 @@ namespace CyrusBuilt.MonoPi.LED
 		/// <param name="intensity">
 		/// The display intensity (brightness) level.
 		/// </param>
-		public TM16XXBase(GpioBase data, GpioBase clock, GpioBase strobe, Int32 displays, Boolean activate, Int32 intensity) {
+		public TM16XXBase(IRaspiGpio data, IRaspiGpio clock, IRaspiGpio strobe, Int32 displays, Boolean activate, Int32 intensity) {
 			this._data = data;
 			this._clock = clock;
 			this._strobe = strobe;
@@ -222,7 +222,7 @@ namespace CyrusBuilt.MonoPi.LED
 		/// <summary>
 		/// Gets the strobe pin.
 		/// </summary>
-		protected GpioBase Strobe {
+		protected IRaspiGpio Strobe {
 			get { return this._strobe; }
 		}
 		#endregion

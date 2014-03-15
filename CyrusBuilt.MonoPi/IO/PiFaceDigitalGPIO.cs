@@ -77,7 +77,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>
 		/// was occupying.
 		/// </remarks>
-		protected override void Dispose() {
+		public override void Dispose() {
 			if (base.IsDisposed) {
 				return;
 			}
@@ -168,10 +168,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin to unexport.
 		/// </param>
-		/// <param name="gpionum">
-		/// The GPIO number.
-		/// </param>
-		private static void internal_UnexportPin(Int32 pin, String gpionum) {
+		private static void internal_UnexportPin(Int32 pin) {
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
@@ -186,7 +183,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The pin to unexport.
 		/// </param>
 		private static void UnexportPin(PiFacePins pin) {
-			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
+			internal_UnexportPin((Int32)pin);
 		}
 
 		/// <summary>
@@ -267,7 +264,7 @@ namespace CyrusBuilt.MonoPi.IO
 			if (ExportedPins != null) {
 				if (ExportedPins.Count > 0) {
 					foreach (Int32 pin in ExportedPins.Keys) {
-						internal_UnexportPin(pin, pin.ToString());
+						internal_UnexportPin(pin);
 					}
 					ExportedPins.Clear();
 				}
@@ -335,11 +332,11 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current
+		/// Returns a <see cref="String"/> that represents the current
 		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="System.String"/> that represents the current
+		/// A <see cref="String"/> that represents the current
 		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceDigitalGPIO"/>.
 		/// </returns>
 		public override String ToString() {

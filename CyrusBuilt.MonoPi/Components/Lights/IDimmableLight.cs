@@ -30,11 +30,6 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 	public interface IDimmableLight : ILight
 	{
 		/// <summary>
-		/// Occurs when the light state changed.
-		/// </summary>
-		event LightStateChangeEventHandler StateChanged;
-
-		/// <summary>
 		/// Occurs when the light level changed.
 		/// </summary>
 		event LightLevelChangeEventHandler LevelChanged;

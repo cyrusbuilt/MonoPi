@@ -58,7 +58,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 		/// <summary>
 		/// Occurs when capture output is recieved.
 		/// </summary>
-		public event CaptureOutputEventHandler CaptureOutputRecieved;
+		public event CaptureOutputEventHandler CaptureOutputReceived;
 
 		/// <summary>
 		/// Occurs when capture done.
@@ -173,7 +173,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 
 		#region Methods
 		/// <summary>
-		/// Raises the <see cref="CaptureStarted"/> event.
+		/// Raises the <see cref="CyrusBuilt.MonoPi.Devices.PiCamera.PiCameraDevice.CaptureStarted"/> event.
 		/// </summary>
 		/// <param name="e">
 		/// The event arguments.
@@ -185,19 +185,19 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 		}
 
 		/// <summary>
-		/// Raises the <see cref="CaptureOutputReceived"/> event.
+		/// Raises the <see cref="CyrusBuilt.MonoPi.Devices.PiCamera.PiCameraDevice.CaptureOutputReceived"/> event.
 		/// </summary>
 		/// <param name="e">
 		/// The event arguments.
 		/// </param>
 		protected virtual void OnCaptureOutputRecieved(CaptureOutputEventArgs e) {
-			if (this.CaptureOutputRecieved != null) {
-				this.CaptureOutputRecieved(this, e);
+			if (this.CaptureOutputReceived != null) {
+				this.CaptureOutputReceived(this, e);
 			}
 		}
 
 		/// <summary>
-		/// Raises the <see cref="CaptureDone"/> event.
+		/// Raises the <see cref="CyrusBuilt.MonoPi.Devices.PiCamera.PiCameraDevice.CaptureDone"/> event.
 		/// </summary>
 		/// <param name="e">
 		/// The event arguments.

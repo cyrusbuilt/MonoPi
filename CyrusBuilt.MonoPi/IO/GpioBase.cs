@@ -41,6 +41,8 @@ namespace CyrusBuilt.MonoPi.IO
 		private GpioPins _pin = GpioPins.GPIO_NONE;
 		private PinState _state = PinState.Low;
 		private PinDirection _direction = PinDirection.OUT;
+		private String _name = String.Empty;
+		private Object _tag = null;
 		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
 		#endregion
 
@@ -104,6 +106,22 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public Boolean IsDisposed {
 			get { return this._isDisposed; }
+		}
+
+		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		public String Name {
+			get { return this._name; }
+			set { this._name = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		public Object Tag {
+			get { return this._tag; }
+			set { this._tag = value; }
 		}
 
 		/// <summary>

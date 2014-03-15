@@ -45,7 +45,7 @@ namespace CyrusBuilt.MonoPi.Devices.Gate
 		/// <param name="gateSensor">
 		/// The sensor that indicates the state of the gate.
 		/// </param>
-		/// <param name="doorSensorOpenState">
+		/// <param name="gateSensorOpenState">
 		/// The sensor state that indicates the gate is open.
 		/// </param>
 		public GateOpenerDevice(IRelay relay, ISensor gateSensor, SensorState gateSensorOpenState)
@@ -60,10 +60,10 @@ namespace CyrusBuilt.MonoPi.Devices.Gate
 		/// <param name="relay">
 		/// The relay that controls the gate.
 		/// </param>
-		/// <param name="doorSensor">
+		/// <param name="gateSensor">
 		/// The sensor that indicates the state of the gate.
 		/// </param>
-		/// <param name="doorSensorOpenState">
+		/// <param name="gateSensorOpenState">
 		/// The sensor state that indicates the gate is open.
 		/// </param>
 		/// <param name="lok">

@@ -198,7 +198,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		/// <summary>
 		/// Gets or sets the pin.
 		/// </summary>
-		protected GpioBase Pin {
+		protected IGpio Pin {
 			get { return this._pin; }
 			set { this._pin = value; }
 		}
@@ -329,11 +329,11 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 		}
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current 
+		/// Returns a <see cref="String"/> that represents the current 
 		/// <see cref="CyrusBuilt.MonoPi.Components.Relays.RelayBase"/>.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="System.String"/> that represents the current
+		/// A <see cref="String"/> that represents the current
 		/// <see cref="CyrusBuilt.MonoPi.Components.Relays.RelayBase"/>.
 		/// </returns>
 		public override string ToString() {

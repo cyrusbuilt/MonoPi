@@ -52,7 +52,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 		/// <see cref="Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceDevice"/> so the garbage collector can reclaim the memory that
 		/// the <see cref="CyrusBuilt.MonoPi.Devices.PiFace.PiFaceDevice"/> was occupying.</remarks>
-		protected override void Dispose() {
+		public override void Dispose() {
 			base.Dispose();
 			GC.SuppressFinalize(this);
 		}

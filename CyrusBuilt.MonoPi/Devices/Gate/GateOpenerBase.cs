@@ -41,10 +41,10 @@ namespace CyrusBuilt.MonoPi.Devices.Gate
 		/// <param name="relay">
 		/// The relay that controls the opener.
 		/// </param>
-		/// <param name="sensor">
+		/// <param name="doorSensor">
 		/// The reading the state of the opener.
 		/// </param>
-		/// <param name="openState">
+		/// <param name="doorSensorOpenState">
 		/// The sensor state that indicates the opener has opened.
 		/// </param>
 		protected GateOpenerBase(IRelay relay, ISensor doorSensor, SensorState doorSensorOpenState)
@@ -59,10 +59,10 @@ namespace CyrusBuilt.MonoPi.Devices.Gate
 		/// <param name="relay">
 		/// The relay that controls the opener.
 		/// </param>
-		/// <param name="sensor">
+		/// <param name="doorSensor">
 		/// The reading the state of the opener.
 		/// </param>
-		/// <param name="openState">
+		/// <param name="doorSensorOpenState">
 		/// The sensor state that indicates the opener has opened.
 		/// </param>
 		/// <param name="lok">

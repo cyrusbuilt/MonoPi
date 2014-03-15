@@ -1,10 +1,10 @@
-//
-//  PiFaceGpioProvider.cs
+﻿//
+//  BoardType.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2013 Copyright (c) 2013 CyrusBuilt
+//  Copyright (c) 2014 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,12 +22,32 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi.IO
+namespace CyrusBuilt.MonoPi.PiSystem
 {
-	public class PiFaceGpioProvider
+	/// <summary>
+	/// Defines possible Raspberry Pi board types.
+	/// </summary>
+	public enum BoardType
 	{
-		public PiFaceGpioProvider() {
-		}
+		/// <summary>
+		/// Model B, Revision 1.
+		/// </summary>
+		ModelB_Rev1,
+
+		/// <summary>
+		/// Model B, Revision 2.
+		/// </summary>
+		ModelB_Rev2,
+
+		/// <summary>
+		/// Model A, Revision 0.
+		/// </summary>
+		ModelA_Rev0,
+
+		/// <summary>
+		/// Unknown board revision.
+		/// </summary>
+		Unknown
 	}
 }
 

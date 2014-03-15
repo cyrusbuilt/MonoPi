@@ -35,6 +35,7 @@
     <Reference Include="System" />
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -168,7 +169,6 @@
     <Compile Include="IO\PiFacePins.cs" />
     <Compile Include="IO\PiFaceGpioBase.cs" />
     <Compile Include="IO\PiFaceDigitalGPIO.cs" />
-    <Compile Include="IO\PiFaceGpioProvider.cs" />
     <Compile Include="IO\IPin.cs" />
     <Compile Include="IO\IRaspiGpio.cs" />
     <Compile Include="RTC\IDS1302.cs" />
@@ -182,6 +182,11 @@
     <Compile Include="Devices\PiCamera\CaptureOutputEventArgs.cs" />
     <Compile Include="Devices\PiCamera\CaptureDoneEventArgs.cs" />
     <Compile Include="Devices\PiFace\PiFaceDevice.cs" />
+    <Compile Include="ExecUtil.cs" />
+    <Compile Include="PiSystem\SystemInfo.cs" />
+    <Compile Include="PiSystem\BoardType.cs" />
+    <Compile Include="PiSystem\ClockType.cs" />
+    <Compile Include="PiSystem\NetworkInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -209,6 +214,7 @@
     <Folder Include="Devices\Gate\" />
     <Folder Include="Devices\PiFace\" />
     <Folder Include="Devices\PiCamera\" />
+    <Folder Include="PiSystem\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

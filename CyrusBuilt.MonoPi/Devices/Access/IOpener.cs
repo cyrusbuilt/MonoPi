@@ -33,8 +33,8 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 		/// Gets a value indicating whether this opener is open.
 		/// </summary>
 		/// <value>
-		/// <c>true</c> if this opener is open; otherwise, <c>false</c>.<
-		/// /value>
+		/// <c>true</c> if this opener is open; otherwise, <c>false</c>.
+		/// </value>
 		Boolean IsOpen { get; }
 
 		/// <summary>

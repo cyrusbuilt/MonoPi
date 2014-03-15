@@ -58,7 +58,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// Gets a value indicating whether this <see cref="CyrusBuilt.MonoPi.Components.Sensors.MotionDetectedEventArgs"/>
 		/// detected motion.
 		/// </summary>
-		/// <value><
+		/// <value>
 		/// <c>true</c> if motion detected; otherwise, <c>false</c>.
 		/// </value>
 		public Boolean MotionDetected {

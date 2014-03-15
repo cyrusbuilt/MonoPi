@@ -297,6 +297,9 @@ namespace CyrusBuilt.MonoPi.Components.LcdDisplay
 		/// <param name="row">
 		/// The row to position the data in.
 		/// </param>
+		/// <param name="data">
+		/// The data to write.
+		/// </param>
 		/// <param name="alignment">
 		/// The text alignment within the row.
 		/// </param>

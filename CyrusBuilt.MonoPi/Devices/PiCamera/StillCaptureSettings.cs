@@ -33,9 +33,14 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 	{
 		#region Constants
 		/// <summary>
-		/// The default image size (640 x 480).
+		/// The default image size width (640).
 		/// </summary>
-		public const Size DEFAULT_IMAGE_SIZE = new Size(640, 480);
+		public const Int32 DEFAULT_IMAGE_SIZE_W = 640;
+
+		/// <summary>
+		/// The default image size height (480).
+		/// </summary>
+		public const Int32 DEFAULT_IMAGE_SIZE_H = 480;
 
 		/// <summary>
 		/// The minimum quality value (0).
@@ -61,7 +66,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 		#endregion
 
 		#region Fields
-		private Size _imageSize = DEFAULT_IMAGE_SIZE;
+		private Size _imageSize = new Size(DEFAULT_IMAGE_SIZE_W, DEFAULT_IMAGE_SIZE_W);
 		private Int32 _quality = QUALITY_DEFAULT;
 		private Int32 _timeout = TIMEOUT_DEFAULT;
 		private Int32 _timeLapse = 0;

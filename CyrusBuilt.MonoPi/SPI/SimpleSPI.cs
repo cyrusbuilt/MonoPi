@@ -76,7 +76,7 @@ namespace CyrusBuilt.MonoPi.SPI
 		/// The channel to open.
 		/// </param>
 		public static Boolean Init(AdcChannels channel) {
-			Init(channel, DEFAULT_SPEED);
+			return Init(channel, DEFAULT_SPEED);
 		}
 
 		/// <summary>
@@ -118,7 +118,17 @@ namespace CyrusBuilt.MonoPi.SPI
 			packet[0] = (Byte)(DEFAULT_ADDRESS | WRITE_FLAG);
 			packet[1] = register;
 			packet[2] = data;
-			UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packet, packet.Length);
+
+			// Convert the byte array into a char array to make wiringPiSPIDataRW happy.
+			Char[] packetData = new Char[packet.Length];
+			for (Int32 i = 0; i <= (packetData.Length - 1); i++) {
+				packetData[i] = (Char)packet[i];
+			}
+
+			// Write the packet then clear both.
+			UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packetData, packetData.Length);
+			Array.Clear(packetData, 0, packetData.Length);
+			Array.Clear(packet, 0, packet.Length);
 		}
 
 		/// <summary>
@@ -139,11 +149,18 @@ namespace CyrusBuilt.MonoPi.SPI
 			packet[1] = register;
 			packet[2] = 0x00;  // We init null and then wiringPiSPIDataRW will assign.
 
-			Int32 result = UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packet, packet.Length);
+			// Convert byte array to char array to make wiringPiSPIDataRW happy.
+			Char[] packetData = new Char[packet.Length];
+			for (Int32 i = 0; i <= (packetData.Length - 1); i++) {
+				packetData[i] = (Char)packet[i];
+			}
+
+			Array.Clear(packet, 0, packet.Length);
+			Int32 result = UnsafeNativeMethods.wiringPiSPIDataRW((Int32)channel, packetData, packetData.Length);
 			if (result >= 0) {
 				// Success. wiringPiSPIDataRW will have assigned the
 				// the value read on the packet buffer.
-				return result[2];
+				return (Byte)packet[2];
 			}
 
 			String chstr = Enum.GetName(typeof(AdcChannels), channel);

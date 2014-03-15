@@ -38,6 +38,7 @@ namespace CyrusBuilt.MonoPi.IO
 		private PinState _state = PinState.Low;
 		private PinDirection _direction = PinDirection.IN;
 		private PiFacePins _innerPin = PiFacePins.None;
+		private Int32 _pwm = 0;
 		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
 		#endregion
 
@@ -98,7 +99,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// so the garbage collector can reclaim the memory that the
 		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/> was occupying.
 		/// </remarks>
-		protected virtual void Dispose() {
+		public virtual void Dispose() {
 			if (this._isDisposed) {
 				return;
 			}
@@ -173,6 +174,17 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+		/// Gets or sets the PWM (Pulse Width Modulation) value.
+		/// </summary>
+		/// <value>
+		/// The PWM value.
+		/// </value>
+		public Int32 PWM {
+			get { return this._pwm; }
+			set { this._pwm = value; }
+		}
+
+		/// <summary>
 		/// Gets the exported pins.
 		/// </summary>
 		protected static Dictionary<Int32, PinDirection> ExportedPins {
@@ -237,11 +249,11 @@ namespace CyrusBuilt.MonoPi.IO
 		public abstract Boolean Read();
 
 		/// <summary>
-		/// Returns a <see cref="System.String"/> that represents the current
+		/// Returns a <see cref="String"/> that represents the current
 		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="System.String"/> that represents the current
+		/// A <see cref="String"/> that represents the current
 		/// <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>.
 		/// </returns>
 		public override string ToString() {
