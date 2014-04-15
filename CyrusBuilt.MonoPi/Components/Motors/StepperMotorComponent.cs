@@ -32,10 +32,11 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 	public class StepperMotorComponent : StepperMotorBase
 	{
 		#region Fields
-		private MotorState _state = MotorState.Stop;
+		private volatile MotorState _state = MotorState.Stop;
 		private Int32 _sequenceIndex = 0;
 		private Thread _controlThread = null;
 		private IRaspiGpio[] _pins = null;
+		private static readonly Object _syncLock = new Object();
 		#endregion
 
 		#region Constructors and Destructors
@@ -64,9 +65,11 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 
 				if ((this._controlThread != null) && (this._controlThread.IsAlive)) {
 					try {
+						Thread.Sleep(50);
 						this._controlThread.Abort();
 					}
 					catch (ThreadAbortException) {
+						Thread.ResetAbort();
 					}
 					finally {
 						this._controlThread = null;
@@ -177,7 +180,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		private void BackgroundExecuteMovement() {
 			// Continuous loop until stopped.
 			while (this.State != MotorState.Stop) {
-				this.DoStep((this.State == MotorState.Forward));
+				this.DoStep(this.State == MotorState.Forward);
 			}
 
 			// Turn all GPIO pins off.
@@ -192,7 +195,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// or reverse movent is executed in a background thread.
 		/// </summary>
 		private void ExecuteMovement() {
-			lock (this) {
+			lock (_syncLock) {
 				if (this.State == MotorState.Stop) {
 					foreach (IRaspiGpio pin in this._pins) {
 						pin.Write(false);

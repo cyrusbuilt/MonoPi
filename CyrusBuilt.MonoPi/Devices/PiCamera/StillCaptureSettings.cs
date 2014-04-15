@@ -66,7 +66,7 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 		#endregion
 
 		#region Fields
-		private Size _imageSize = new Size(DEFAULT_IMAGE_SIZE_W, DEFAULT_IMAGE_SIZE_W);
+		private Size _imageSize = new Size(DEFAULT_IMAGE_SIZE_W, DEFAULT_IMAGE_SIZE_H);
 		private Int32 _quality = QUALITY_DEFAULT;
 		private Int32 _timeout = TIMEOUT_DEFAULT;
 		private Int32 _timeLapse = 0;

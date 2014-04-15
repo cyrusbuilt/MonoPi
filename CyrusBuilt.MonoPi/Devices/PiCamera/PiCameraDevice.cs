@@ -109,12 +109,18 @@ namespace CyrusBuilt.MonoPi.Devices.PiCamera
 				}
 			}
 
+			lock (_syncLock) {
+				this._isRunning = false;
+			}
+
 			if (this._captureMonitor != null) {
 				if (this._captureMonitor.IsAlive) {
 					try {
+						Thread.Sleep(50);
 						this._captureMonitor.Abort();
 					}
 					catch (ThreadAbortException) {
+						Thread.ResetAbort();
 					}
 				}
 				this._captureMonitor = null;

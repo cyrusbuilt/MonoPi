@@ -34,8 +34,9 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 	{
 		#region Fields
 		private IGpio _pin = null;
-		private Boolean _isPolling = false;
+		private volatile Boolean _isPolling = false;
 		private Thread _pollThread = null;
+		private static readonly Object _syncLock = new Object();
 		private const PinState OFF_STATE = PinState.Low;
 		private const PinState ON_STATE = PinState.High;
 		#endregion
@@ -74,6 +75,23 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 		/// was occupying.
 		/// </remarks>
 		public override void Dispose() {
+			lock (_syncLock) {
+				_isPolling = false;
+			}
+
+			if ((this._pollThread != null) && (this._pollThread.IsAlive)) {
+				try {
+					Thread.Sleep(50);
+					this._pollThread.Abort();
+				}
+				catch (ThreadAbortException) {
+					Thread.ResetAbort();
+				}
+				finally {
+					this._pollThread = null;
+				}
+			}
+
 			if (this._pin != null) {
 				this._pin.Dispose();
 				this._pin = null;
@@ -137,7 +155,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 		/// Executes the poll cycle on a background thread.
 		/// </summary>
 		private void BackgroundExecutePoll() {
-			lock (this) {
+			lock (_syncLock) {
 				this._isPolling = true;
 			}
 
@@ -168,7 +186,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 				                                    " which cannot be used to read switch states.");
 			}
 
-			lock (this) {
+			lock (_syncLock) {
 				if (this._isPolling) {
 					return;
 				}
@@ -180,7 +198,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 		/// Interrupts the poll cycle.
 		/// </summary>
 		public void InterruptPoll() {
-			lock (this) {
+			lock (_syncLock) {
 				if (!this._isPolling) {
 					return;
 				}

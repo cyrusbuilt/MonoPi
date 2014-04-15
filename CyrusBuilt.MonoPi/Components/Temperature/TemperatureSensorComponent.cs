@@ -35,9 +35,10 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 	{
 		#region Fields
 		private Thread _pollThread = null;
-		private Boolean _isPolling = false;
+		private volatile Boolean _isPolling = false;
 		private TemperatureScale _scale = TemperatureScale.Celcius;
 		private static Double _lastTemp = 0;
+		private static readonly Object _syncLock = new Object();
 		#endregion
 
 		#region Constructors and Destructors
@@ -118,15 +119,19 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// </param>
 		protected override void Dispose(Boolean disposing) {
 			if (disposing) {
+				lock(_syncLock) {
+					this._isPolling = false;
+				}
+
 				if ((this._pollThread != null) && (this._pollThread.IsAlive)) {
 					try {
+						Thread.Sleep(50);
 						this._pollThread.Abort();
 					}
 					catch {
 					}
 					finally {
 						this._pollThread = null;
-						this._isPolling = false;
 					}
 				}
 			}
@@ -200,7 +205,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// The scale to change to.
 		/// </param>
 		public void ChangeScale(TemperatureScale scale) {
-			lock (this) {
+			lock (_syncLock) {
 				this._scale = scale;
 			}
 		}
@@ -228,7 +233,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// Executes the poll cycle on a background thread.
 		/// </summary>
 		private void BackgroundExecutePoll() {
-			lock (this) {
+			lock (_syncLock) {
 				this._isPolling = true;
 			}
 
@@ -251,7 +256,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorComponent");
 			}
 
-			lock (this) {
+			lock (_syncLock) {
 				if (this._isPolling) {
 					return;
 				}
@@ -263,7 +268,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// Interrupts the poll cycle.
 		/// </summary>
 		public void InterruptPoll() {
-			lock (this) {
+			lock (_syncLock) {
 				if (!this._isPolling) {
 					return;
 				}

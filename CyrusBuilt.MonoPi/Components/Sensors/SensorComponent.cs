@@ -34,8 +34,9 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 	{
 		#region Fields
 		private Thread _pollThread = null;
-		private Boolean _isPolling = false;
+		private volatile Boolean _isPolling = false;
 		private static SensorState _lastState = SensorState.Open;
+		private static readonly Object _syncLock = new Object();
 		private const PinState OPEN_STATE = PinState.Low;
 		#endregion
 
@@ -84,15 +85,20 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// </param>
 		protected override void Dispose(bool disposing) {
 			if (disposing) {
+				lock (_syncLock) {
+					this._isPolling = false;
+				}
+
+				Thread.Sleep(50);
 				if ((this._pollThread != null) && (this._pollThread.IsAlive)) {
 					try {
 						this._pollThread.Abort();
 					}
 					catch (ThreadAbortException) {
+						Thread.ResetAbort();
 					}
 					finally {
 						this._pollThread = null;
-						this._isPolling = false;
 					}
 				}
 			}
@@ -107,7 +113,8 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/> in an unusable state. After calling
 		/// <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent.Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/> so the garbage collector can reclaim the memory
-		/// that the <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/> was occupying.</remarks>
+		/// that the <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/> was occupying.
+		/// </remarks>
 		public override void Dispose() {
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
@@ -159,7 +166,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// Executes the poll cycle on a background thread.
 		/// </summary>
 		private void BackgroundExecutePoll() {
-			lock (this) {
+			lock (_syncLock) {
 				this._isPolling = true;
 			}
 
@@ -190,7 +197,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 					" which cannot be used to read sensor data.");
 			}
 
-			lock (this) {
+			lock (_syncLock) {
 				if (this._isPolling) {
 					return;
 				}
@@ -202,7 +209,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// Interrupts the poll cycle.
 		/// </summary>
 		public void InterruptPoll() {
-			lock (this) {
+			lock (_syncLock) {
 				if (!this._isPolling) {
 					return;
 				}
