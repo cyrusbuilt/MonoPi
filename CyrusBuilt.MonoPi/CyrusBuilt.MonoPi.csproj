@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C4C2C2C6-2835-498D-91F3-BCFCD27F0549}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -187,6 +187,12 @@
     <Compile Include="PiSystem\BoardType.cs" />
     <Compile Include="PiSystem\ClockType.cs" />
     <Compile Include="PiSystem\NetworkInfo.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\CFCommand.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\GraphIndices.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\GraphStyle.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\DisplayType.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\CrystalFontz63xSerial.cs" />
+    <Compile Include="Devices\CrystalFontzSerialLCD\CFCursorType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -215,20 +221,6 @@
     <Folder Include="Devices\PiFace\" />
     <Folder Include="Devices\PiCamera\" />
     <Folder Include="PiSystem\" />
+    <Folder Include="Devices\CrystalFontzSerialLCD\" />
   </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
-          <BuildFilesVar Sync="True" Name="FILES" />
-          <DeployFilesVar />
-          <ResourcesVar Sync="True" Name="RESOURCES" />
-          <OthersVar />
-          <GacRefVar Sync="True" Name="REFERENCES" />
-          <AsmRefVar Sync="True" Name="REFERENCES" />
-          <ProjectRefVar Sync="True" Name="REFERENCES" />
-        </MonoDevelop.Autotools.MakefileInfo>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
 </Project>

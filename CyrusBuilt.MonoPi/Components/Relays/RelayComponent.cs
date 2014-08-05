@@ -30,6 +30,8 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 	/// </summary>
 	public class RelayComponent : RelayBase
 	{
+		private static readonly Object _stateLock = new Object();
+
 		#region Constructors and Destructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Relays.RelayComponent"/>
@@ -68,7 +70,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 			set {
  				RelayState oldState = this.State;
 				if (this.State != value) {
-					lock (this) {
+					lock (_stateLock) {
 						switch (value) {
 							case RelayState.Open:
 								if (!base.IsOpen) {

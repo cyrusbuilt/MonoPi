@@ -128,7 +128,8 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 						Thread.Sleep(50);
 						this._pollThread.Abort();
 					}
-					catch {
+					catch (ThreadAbortException) {
+						Thread.ResetAbort();
 					}
 					finally {
 						this._pollThread = null;

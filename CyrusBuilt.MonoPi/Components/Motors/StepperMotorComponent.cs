@@ -124,7 +124,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 
 				MotorState oldState = this._state;
  				if (this._state != value) {
- 					lock (this) {
+ 					lock (_syncLock) {
 						this._state = value;
 					}
 					base.OnMotorStateChanged(new MotorStateChangeEventArgs(oldState, this._state));

@@ -200,6 +200,29 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		}
 
 		/// <summary>
+		/// Writes a single byte to the port.
+		/// </summary>
+		/// <param name="val">
+		/// The byte to write.
+		/// </param>
+		/// <exception cref="ObjectDisposedException">
+		/// This instance has been disposed and is no longer usable.
+		/// </exception>
+		/// <exception cref="InvalidOperationException">
+		/// The port is closed.
+		/// </exception>
+		public void Write(Byte val) {
+			if (this._isDisposed) {
+				throw new ObjectDisposedException("Rs232SerialPort");
+			}
+
+			if (!this.IsOpen) {
+				throw new InvalidOperationException("Cannot send char to a closed port.");
+			}
+			UnsafeNativeMethods.serialPutChar(this._id, val);
+		}
+
+		/// <summary>
 		/// Sends a single character to the port.
 		/// </summary>
 		/// <param name="c">
@@ -212,14 +235,7 @@ namespace CyrusBuilt.MonoPi.IO.Serial
 		/// The port is closed.
 		/// </exception>
 		public void PutChar(Char c) {
-			if (this._isDisposed) {
-				throw new ObjectDisposedException("Rs232SerialPort");
-			}
-
-			if (!this.IsOpen) {
-				throw new InvalidOperationException("Cannot send char to a closed port.");
-			}
-			UnsafeNativeMethods.serialPutChar(this._id, Convert.ToByte(c));
+			this.Write(Convert.ToByte(c));
 		}
 
 		/// <summary>

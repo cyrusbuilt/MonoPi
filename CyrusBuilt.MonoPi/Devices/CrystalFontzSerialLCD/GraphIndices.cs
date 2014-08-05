@@ -1,10 +1,10 @@
-//
-//  BaudRates.cs
+﻿//
+//  GraphIndices.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2014 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,57 +22,32 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi
+namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 {
 	/// <summary>
-	/// Baud rates.
+	/// Indices for the horizontal bar graph.
 	/// </summary>
-	public enum BaudRates : int
+	public enum GraphIndices : int
 	{
 		/// <summary>
-		/// 1200 BAUD.
+		/// Graph index 1.
 		/// </summary>
-		Baud1200 = 1200,
+		GraphIndex1 = 0,
 
 		/// <summary>
-		/// 2400 BAUD.
+		/// Graph index 2.
 		/// </summary>
-		Baud2400 = 2400,
+		GraphIndex2 = 1,
 
 		/// <summary>
-		/// 4800 BAUD.
+		/// Graph index 3.
 		/// </summary>
-		Baud4800 = 4800,
+		GraphIndex3 = 2,
 
 		/// <summary>
-		/// 9600 BAUD.
+		/// Graph index 4.
 		/// </summary>
-		Baud9600 = 9600,
-
-		/// <summary>
-		/// 19200 BAUD.
-		/// </summary>
-		Baud19200 = 19200,
-
-		/// <summary>
-		/// 38400 BAUD.
-		/// </summary>
-		Baud38400 = 38400,
-
-		/// <summary>
-		/// 57600 BAUD (56k).
-		/// </summary>
-		Baud57600 = 57600,
-
-		/// <summary>
-		/// 115200 BAUD.
-		/// </summary>
-		Baud115200 = 115200,
-
-		/// <summary>
-		/// 230400 BAUD.
-		/// </summary>
-		Baud230400 = 230400
+		GraphIndex4 = 3
 	}
 }
 

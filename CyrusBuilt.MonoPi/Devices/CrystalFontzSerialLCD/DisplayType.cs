@@ -1,10 +1,10 @@
-//
-//  BaudRates.cs
+﻿//
+//  DisplayType.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2014 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,57 +22,22 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi
+namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 {
 	/// <summary>
-	/// Baud rates.
+	/// CrystalFontz 630x Serial display types.
 	/// </summary>
-	public enum BaudRates : int
+	public enum DisplayType
 	{
 		/// <summary>
-		/// 1200 BAUD.
+		/// 16 Column, 2 row.
 		/// </summary>
-		Baud1200 = 1200,
+		SixteenByTwo,
 
 		/// <summary>
-		/// 2400 BAUD.
+		/// 20 column, 4 row.
 		/// </summary>
-		Baud2400 = 2400,
-
-		/// <summary>
-		/// 4800 BAUD.
-		/// </summary>
-		Baud4800 = 4800,
-
-		/// <summary>
-		/// 9600 BAUD.
-		/// </summary>
-		Baud9600 = 9600,
-
-		/// <summary>
-		/// 19200 BAUD.
-		/// </summary>
-		Baud19200 = 19200,
-
-		/// <summary>
-		/// 38400 BAUD.
-		/// </summary>
-		Baud38400 = 38400,
-
-		/// <summary>
-		/// 57600 BAUD (56k).
-		/// </summary>
-		Baud57600 = 57600,
-
-		/// <summary>
-		/// 115200 BAUD.
-		/// </summary>
-		Baud115200 = 115200,
-
-		/// <summary>
-		/// 230400 BAUD.
-		/// </summary>
-		Baud230400 = 230400
+		TwentyByFour
 	}
 }
 

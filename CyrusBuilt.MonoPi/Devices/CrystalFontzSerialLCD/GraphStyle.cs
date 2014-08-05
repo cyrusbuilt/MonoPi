@@ -1,10 +1,10 @@
-//
-//  BaudRates.cs
+﻿//
+//  GraphStyle.cs
 //
 //  Author:
 //       Chris Brunner <cyrusbuilt at gmail dot com>
 //
-//  Copyright (c) 2012 CyrusBuilt
+//  Copyright (c) 2014 Copyright (c) 2013 CyrusBuilt
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,57 +22,42 @@
 //
 using System;
 
-namespace CyrusBuilt.MonoPi
+namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 {
 	/// <summary>
-	/// Baud rates.
+	/// Horizontal bar graph styles.
 	/// </summary>
-	public enum BaudRates : int
+	public enum GraphStyle : int
 	{
 		/// <summary>
-		/// 1200 BAUD.
+		/// A thick bar.
 		/// </summary>
-		Baud1200 = 1200,
+		Thick = 255,
 
 		/// <summary>
-		/// 2400 BAUD.
+		/// Will not be visible (all pixels off).
 		/// </summary>
-		Baud2400 = 2400,
+		Invisible = 0,
 
 		/// <summary>
-		/// 4800 BAUD.
+		/// A striped bar.
 		/// </summary>
-		Baud4800 = 4800,
+		Striped = 85,
 
 		/// <summary>
-		/// 9600 BAUD.
+		/// Medium-width bar, centered.
 		/// </summary>
-		Baud9600 = 9600,
+		MediumCenter = 60,
 
 		/// <summary>
-		/// 19200 BAUD.
+		/// Medium-width bar, low in the row.
 		/// </summary>
-		Baud19200 = 19200,
+		MediumLow = 15,
 
 		/// <summary>
-		/// 38400 BAUD.
+		/// Medium-width bar, high in the row.
 		/// </summary>
-		Baud38400 = 38400,
-
-		/// <summary>
-		/// 57600 BAUD (56k).
-		/// </summary>
-		Baud57600 = 57600,
-
-		/// <summary>
-		/// 115200 BAUD.
-		/// </summary>
-		Baud115200 = 115200,
-
-		/// <summary>
-		/// 230400 BAUD.
-		/// </summary>
-		Baud230400 = 230400
+		MediumHigh = 240
 	}
 }
 
