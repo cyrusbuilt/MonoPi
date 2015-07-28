@@ -41,17 +41,17 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// <summary>
 		/// Gets the clock pin.
 		/// </summary>
-		IRaspiGpio Clock { get; }
+		IGpio Clock { get; }
 
 		/// <summary>
 		/// Gets the data pin.
 		/// </summary>
-		IRaspiGpio Data { get; }
+		IGpio Data { get; }
 
 		/// <summary>
 		/// Gets the reset pin.
 		/// </summary>
-		IRaspiGpio Reset { get; }
+		IGpio Reset { get; }
 
 		/// <summary>
 		/// Sends the commands to get the temperature from the sensor.

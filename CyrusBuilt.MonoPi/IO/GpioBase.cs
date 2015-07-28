@@ -20,9 +20,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-//  Derived from https://github.com/cypherkey/RaspberryPi.Net
-//  by Aaron Anderson <aanderson@netopia.ca>
-//
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -40,30 +38,34 @@ namespace CyrusBuilt.MonoPi.IO
 		private BoardRevision _revision = BoardRevision.Rev2;
 		private GpioPins _pin = GpioPins.GPIO_NONE;
 		private PinState _state = PinState.Low;
-		private PinDirection _direction = PinDirection.OUT;
 		private String _name = String.Empty;
 		private Object _tag = null;
-		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
+		#pragma warning disable 1591
+		protected PinMode _mode = PinMode.OUT;
+		protected PinState _initValue = PinState.Low;
+		#pragma warning restore 1591
+		private static Dictionary<Int32, PinMode> _exportedPins = new Dictionary<Int32, PinMode>();
 		#endregion
 
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
-		/// class with a board Revision 1.0 GPIO pin, the pin direction, and
+		/// class with a board Revision 1.0 GPIO pin, the pin mode, and
 		/// the initial pin value.
 		/// </summary>
 		/// <param name="pin">
 		/// The GPIO pin.
 		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
+		/// <param name="mode">
+		/// The I/O pin mode.
 		/// </param>
 		/// <param name="value">
 		/// The initial pin value.
 		/// </param>
-		protected GpioBase(GpioPins pin, PinDirection direction, Boolean value) {
+		protected GpioBase(GpioPins pin, PinMode mode, PinState value) {
 			this._pin = pin;
-			this._direction = direction;
+			this._mode = mode;
+			this._initValue = value;
 			this._revision = BoardRevision.Rev2;
 		}
 
@@ -74,11 +76,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The GPIO pin.
 		/// </param>
-		/// <param name="direction">
-		/// The I/O pin direction.
+		/// <param name="mode">
+		/// The I/O pin mode.
 		/// </param>
-		protected GpioBase(GpioPins pin, PinDirection direction)
-			: this(pin, direction, false) {
+		protected GpioBase(GpioPins pin, PinMode mode)
+			: this(pin, mode, PinState.Low) {
 		}
 
 		/// <summary>
@@ -89,7 +91,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The GPIO pin.
 		/// </param>
 		protected GpioBase(GpioPins pin)
-			: this(pin, PinDirection.OUT, false) {
+			: this(pin, PinMode.OUT, PinState.Low) {
 		}
 		#endregion
 
@@ -136,7 +138,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public PinState State {
 			get {
-				this._state = this.Read() ? PinState.High : PinState.Low;
+				this._state = this.Read();
 				return this._state;
 			}
 		}
@@ -149,16 +151,23 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
-		/// Gets the direction (mode) for the pin (Input or Output).
+		/// Gets the mode for the pin (Input or Output).
 		/// </summary>
-		public PinDirection Direction {
-			get { return this._direction; }
+		public PinMode Mode {
+			get { return this._mode; }
+			protected set {
+				if (this._mode != value) {
+					this._mode = value;
+					// If we're changing modes, we'll need to reprovision the pin.
+					this.Provision();
+				}
+			}
 		}
 
 		/// <summary>
 		/// Gets the exported pins.
 		/// </summary>
-		protected static Dictionary<Int32, PinDirection> ExportedPins {
+		protected static Dictionary<Int32, PinMode> ExportedPins {
 			get { return _exportedPins; }
 		}
 
@@ -168,7 +177,25 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <value>
 		/// The PWM value.
 		/// </value>
-		public abstract Int32 PWM { get; set; }
+		public abstract UInt32 PWM { get; set; }
+
+		/// <summary>
+		/// Gets or sets the PWM range.
+		/// </summary>
+		/// <value>
+		/// The PWM range. Default is 1024. See <a href="http://wiringpi.com/reference/raspberry-pi-specifics/">http://wiringpi.com/reference/raspberry-pi-specifics/</a>
+		/// </value>
+		public abstract UInt32 PWMRange { get; set; }
+
+		/// <summary>
+		/// Gets the pin address.
+		/// </summary>
+		/// <value>
+		/// The address.
+		/// </value>
+		public Int32 Address {
+			get { return (Int32)this._pin; }
+		}
 		#endregion
 
 		#region Methods
@@ -208,13 +235,18 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+		/// Provisions the pin (initialize to specified mode and make active).
+		/// </summary>
+		public abstract void Provision();
+
+		/// <summary>
 		/// Write the specified value to the pin.
 		/// </summary>
 		/// <param name="value">
 		/// If set to <c>true</c> value.
 		/// </param>
-		public virtual void Write(Boolean value) {
-			this._state = value ? PinState.High : PinState.Low;
+		public virtual void Write(PinState value) {
+			this._state = value;
 		}
 
 		/// <summary>
@@ -224,9 +256,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The number of milliseconds to wait between states.
 		/// </param>
 		public virtual void Pulse(Int32 millis) {
-			this.Write(true);
+			this.Write(PinState.High);
 			Thread.Sleep(millis);
-			this.Write(false);
+			this.Write(PinState.Low);
 		}
 
 		/// <summary>
@@ -235,7 +267,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns> 
-		public abstract Boolean Read();
+		public abstract PinState Read();
 
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.IO.GpioBase"/>
@@ -257,6 +289,8 @@ namespace CyrusBuilt.MonoPi.IO
 			_exportedPins.Clear();
 			_exportedPins = null;
 			this.StateChanged = null;
+			this._state = PinState.Low;
+			this._mode = PinMode.TRI;
 			this._pin = GpioPins.GPIO_NONE;
 			this._isDisposed = true;
 		}

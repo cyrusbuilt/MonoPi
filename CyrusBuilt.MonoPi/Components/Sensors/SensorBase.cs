@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		private Boolean _isDisposed = false;
 		private String _name = String.Empty;
 		private Object _tag = null;
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private Dictionary<String, String> _props = null;
 		#endregion
 
@@ -58,11 +58,12 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot be null.
 		/// </exception>
-		protected SensorBase(GpioBase pin) {
+		protected SensorBase(IGpio pin) {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 			this._props = new Dictionary<String, String>();
 		}
 
@@ -95,6 +96,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorBase"/> object.
 		/// </summary>
@@ -108,6 +110,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Events
@@ -175,7 +178,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// value cannot be null.
 		/// </exception>
-		public GpioBase Pin {
+		public IGpio Pin {
 			get { return this._pin; }
 			set {
 				if (value == null) {

@@ -45,7 +45,6 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </param>
 		public PiFaceDigitalGPIO(PiFacePins pin)
 			: base(pin) {
-			ExportPin(pin, base.Direction);
 		}
 
 		/// <summary>
@@ -58,10 +57,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="initialValue">
 		/// The initial value to write.
 		/// </param>
-		public PiFaceDigitalGPIO(PiFacePins pin, Boolean initialValue)
-			: base(pin) {
-			ExportPin(pin, base.Direction);
-			Write(pin, initialValue);
+		public PiFaceDigitalGPIO(PiFacePins pin, PinState initialValue)
+			: base(pin, initialValue) {
 		}
 
 		/// <summary>
@@ -81,9 +78,9 @@ namespace CyrusBuilt.MonoPi.IO
 			if (base.IsDisposed) {
 				return;
 			}
+			base.Write(PinState.Low);
 			UnexportPin(base.InnerPin);
 			Destroy();
-			base.Write(false);
 			base.Dispose();
 		}
 		#endregion
@@ -120,17 +117,17 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin to export.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
-		private static void internal_ExportPin(Int32 pin, PinDirection direction) {
+		private static void internal_ExportPin(Int32 pin, PinMode mode) {
 			Initialize();
 
 			// If the pin is already exported, check it's in the proper direction.
 			if (ExportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
-				if (ExportedPins[pin] == direction) {
+				if (ExportedPins[pin] == mode) {
 					return;
 				}
 			}
@@ -138,15 +135,15 @@ namespace CyrusBuilt.MonoPi.IO
 			// Set the direction on the pin and update the exported list.
 			// BCM2835_GPIO_FSEL_INPT = 0
 			// BCM2835_GPIO_FSEL_OUTP = 1
-			uint pindir = (direction == PinDirection.IN) ? (uint)0 : (uint)1;
+			uint pindir = (mode == PinMode.IN) ? (uint)0 : (uint)1;
 			UnsafeNativeMethods.bcm2835_gpio_fsel((uint)pin, pindir);
-			if (direction == PinDirection.IN) {
+			if (mode == PinMode.IN) {
 				// BCM2835_GPIO_PUD_OFF = 0b00 = 0
 				// BCM2835_GPIO_PUD_DOWN = 0b01 = 1
 				// BCM2835_GPIO_PUD_UP = 0b10 = 2
 				UnsafeNativeMethods.bcm2835_gpio_set_pud((uint)pin, 0);
 			}
-			ExportedPins[pin] = direction;
+			ExportedPins[pin] = mode;
 		}
 
 		/// <summary>
@@ -155,11 +152,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the PiFace to export.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
-		private static void ExportPin(PiFacePins pin, PinDirection direction) {
-			internal_ExportPin((Int32)pin, direction);
+		private static void ExportPin(PiFacePins pin, PinMode mode) {
+			internal_ExportPin((Int32)pin, mode);
 		}
 
 		/// <summary>
@@ -172,7 +169,8 @@ namespace CyrusBuilt.MonoPi.IO
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
-			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, 0);
+			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, (uint)PinState.Low);
+			UnsafeNativeMethods.bcm2835_gpio_fsel((uint)pin, (uint)PinMode.TRI);
 			ExportedPins.Remove(pin);
 		}
 
@@ -198,15 +196,14 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pinname">
 		/// The name of the GPIO associated with the pin.
 		/// </param>
-		private static void internal_Write(Int32 pin, Boolean value, String pinname) {
+		private static void internal_Write(Int32 pin, PinState value, String pinname) {
 			if (pin == (Int32)PiFacePins.None) {
 				return;
 			}
-
-			uint val = value ? (uint)1 : (uint)0;
-			internal_ExportPin(pin, PinDirection.OUT);
-			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, val);
-			Debug.WriteLine("Output to pin " + pinname + "/gpio" + pin.ToString() + ", value was " + value.ToString());
+				
+			internal_ExportPin(pin, PinMode.OUT);
+			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, (uint)value);
+			Debug.WriteLine("Output to pin " + pinname + "/gpio" + pin.ToString() + ", value was " + ((uint)value).ToString());
 		}
 
 		/// <summary>
@@ -218,7 +215,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The value to write.
 		/// </param>
-		public static void Write(PiFacePins pin, Boolean value) {
+		public static void Write(PiFacePins pin, PinState value) {
 			String name = Enum.GetName(typeof(PiFacePins), pin);
 			internal_Write((Int32)pin, value, name);
 		}
@@ -235,11 +232,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>
-		private static Boolean internal_Read(Int32 pin, String pinname) {
-			internal_ExportPin(pin, PinDirection.IN);
+		private static PinState internal_Read(Int32 pin, String pinname) {
+			internal_ExportPin(pin, PinMode.IN);
 			uint value = UnsafeNativeMethods.bcm2835_gpio_lev((uint)pin);
-			Boolean returnValue = (value == 0) ? false : true;
-			Debug.WriteLine("Input from pin " + pinname + "/gpio" + pin.ToString() + ", value was " + returnValue.ToString());
+			PinState returnValue = (value == 0) ? PinState.High : PinState.Low;
+			Debug.WriteLine("Input from pin " + pinname + "/gpio" + pin.ToString() + ", value was " + ((uint)returnValue).ToString());
 			return returnValue;
 		}
 
@@ -252,7 +249,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>			
-		public static Boolean Read(PiFacePins pin) {
+		public static PinState Read(PiFacePins pin) {
 			String name = Enum.GetName(typeof(PiFacePins), pin);
 			return internal_Read((Int32)pin, name);
 		}
@@ -275,17 +272,24 @@ namespace CyrusBuilt.MonoPi.IO
 
 		#region Instance Methods
 		/// <summary>
+		/// Provisions the pin (initialize to specified mode and make active).
+		/// </summary>
+		public override void Provision() {
+			ExportPin(base.InnerPin, base.Mode);
+			Write(base.InnerPin, base._initValue);
+		}
+
+		/// <summary>
 		/// Write the specified value to the pin.
 		/// </summary>
 		/// <param name="value">
 		/// The value to write to the pin.
 		/// </param>
-		public override void Write(Boolean value) {
+		public override void Write(PinState value) {
 			Write(base.InnerPin, value);
 			base.Write(value);
-			PinState val = value ? PinState.High : PinState.Low;
-			if (this._lastState != val) {
-				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+			if (this._lastState != value) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, value));
 			}
 		}
 
@@ -299,13 +303,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// An attempt was made to pulse an input pin.
 		/// </exception>
 		public override void Pulse(Int32 millis) {
-			if (base.Direction == PinDirection.IN) {
+			if (base.Mode == PinMode.IN) {
 				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
-			Write(base.InnerPin, true);
+			Write(base.InnerPin, PinState.High);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.High));
 			base.Pulse(millis);
-			Write(base.InnerPin, false);
+			Write(base.InnerPin, PinState.Low);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.Low));
 		}
 
@@ -322,11 +326,10 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>
-		public override Boolean Read() {
-			Boolean newState = Read(base.InnerPin);
-			PinState val = newState ? PinState.High : PinState.Low;
-			if (this._lastState != val) {
-				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+		public override PinState Read() {
+			PinState newState = Read(base.InnerPin);
+			if (this._lastState != newState) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, newState));
 			}
 			return newState;
 		}

@@ -171,16 +171,19 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 			if (disposing) {
 				if (this._lcd != null) {
 					this._lcd.Dispose();
+					this._lcd = null;
 				}
 
 				if (this._backlightPin != null) {
 					this._backlightPin.Dispose();
+					this._backlightPin = null;
 				}
 			}
 
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the
 		/// <see cref="CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD.CrystalFontz63xSerial"/> object.
@@ -201,6 +204,7 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 
 		/// <summary>
 		/// Releases unmanaged resources and performs other cleanup operations before the
@@ -228,7 +232,7 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 						// If user provided a backlight pin, then turn it on.
 						// Otherwise, just set the brighness all the way up.
 						if (this._backlightPin != null) {
-							this._backlightPin.Write(true);
+							this._backlightPin.Write(PinState.High);
 						}
 						else {
 							Byte[] buf = new Byte[2];
@@ -242,7 +246,7 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 						// If user provided a backlight pin, then turn it off.
 						// Otherwise, just set the brightness all the way down.
 						if (this._backlightPin != null) {
-							this._backlightPin.Write(false);
+							this._backlightPin.Write(PinState.Low);
 						}
 						else {
 							Byte[] buf = new Byte[2];
@@ -455,7 +459,7 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 
 			this._lcd.Open();
 			if (this._backlightPin != null) {
-				if (this._backlightPin.Direction == PinDirection.IN) {
+				if (this._backlightPin.Mode != PinMode.OUT) {
 					throw new InvalidOperationException("Backlight pin MUST be defined as an output, not an input.");
 				}
 			}
@@ -484,8 +488,8 @@ namespace CyrusBuilt.MonoPi.Devices.CrystalFontzSerialLCD
 		public void End() {
 			this._lcd.Close();
 			if (this._backlightPin != null) {
-				if (this._backlightPin.Direction == PinDirection.OUT) {
-					this._backlightPin.Write(false);
+				if (this._backlightPin.Mode == PinMode.OUT) {
+					this._backlightPin.Write(PinState.Low);
 				}
 			}
 		}

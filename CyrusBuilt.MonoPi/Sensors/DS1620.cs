@@ -38,9 +38,9 @@ namespace CyrusBuilt.MonoPi.Sensors
 	public class DS1620 : IDS1620
 	{
 		#region Fields
-		private IRaspiGpio _clock = null;
-		private IRaspiGpio _data = null;
-		private IRaspiGpio _reset = null;
+		private IGpio _clock = null;
+		private IGpio _data = null;
+		private IGpio _reset = null;
 		private Boolean _isDisposed = false;
 		#endregion
 
@@ -58,10 +58,15 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// <param name="reset">
 		/// The reset pin.
 		/// </param>
-		public DS1620(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset) {
+		public DS1620(IGpio clock, IGpio data, IGpio reset) {
 			this._clock = clock;
+			this._clock.Provision();
+
 			this._data = data;
+			this._data.Provision();
+
 			this._reset = reset;
+			this._reset.Provision();
 		}
 		#endregion
 
@@ -79,21 +84,21 @@ namespace CyrusBuilt.MonoPi.Sensors
 		/// <summary>
 		/// Gets the clock pin.
 		/// </summary>
-		public IRaspiGpio Clock {
+		public IGpio Clock {
 			get { return this._clock; }
 		}
 
 		/// <summary>
 		/// Gets the data pin.
 		/// </summary>
-		public IRaspiGpio Data {
+		public IGpio Data {
 			get { return this._data; }
 		}
 
 		/// <summary>
 		/// Gets the reset pin.
 		/// </summary>
-		public IRaspiGpio Reset {
+		public IGpio Reset {
 			get { return this._reset; }
 		}
 		#endregion
@@ -110,9 +115,9 @@ namespace CyrusBuilt.MonoPi.Sensors
 			Int32 bit = 0;
 			for (Int32 n = 0; n < 8; n++) {
 				bit = ((command >> n) & (0x01));
-				this._data.Write(bit == 1);
-				this._clock.Write(false);
-				this._clock.Write(true);
+				this._data.Write((bit == 1) ? PinState.High : PinState.Low);
+				this._clock.Write(PinState.Low);
+				this._clock.Write(PinState.High);
 			}
 		}
 
@@ -126,9 +131,9 @@ namespace CyrusBuilt.MonoPi.Sensors
 			Int32 bit = 0;
 			Int32 raw_data = 0; // Go into input mode.
 			for (Int32 n = 0; n < 9; n++) {
-				this._clock.Write(false);
+				this._clock.Write(PinState.Low);
 				bit = Convert.ToInt32(this._data.Read());
-				this._clock.Write(true);
+				this._clock.Write(PinState.High);
 				raw_data = raw_data | (bit << n);
 			}
 			Debug.WriteLine("bin=" + Convert.ToInt32(raw_data.ToString(), 2));
@@ -149,25 +154,25 @@ namespace CyrusBuilt.MonoPi.Sensors
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Sensors.DS1620");
 			}
 
-			this._reset.Write(false);
-			this._clock.Write(true);
-			this._reset.Write(true);
+			this._reset.Write(PinState.Low);
+			this._clock.Write(PinState.High);
+			this._reset.Write(PinState.High);
 			this.SendCommand(0x0c);    // write config command.
 			this.SendCommand(0x02);    // cpu mode.
-			this._reset.Write(false);
+			this._reset.Write(PinState.Low);
 
 			Thread.Sleep(200);         // wait until the configuration register is written.
-			this._clock.Write(true);
-			this._reset.Write(true);
+			this._clock.Write(PinState.High);
+			this._reset.Write(PinState.High);
 			this.SendCommand(0xEE);    // start conversion.
-			this._reset.Write(false);
+			this._reset.Write(PinState.Low);
 
 			Thread.Sleep(200);
-			this._clock.Write(true);
-			this._reset.Write(true);
+			this._clock.Write(PinState.High);
+			this._reset.Write(PinState.High);
 			this.SendCommand(0xAA);
 			Int32 raw = this.ReadData();
-			this._reset.Write(false);
+			this._reset.Write(PinState.Low);
 			return ((Double)raw / 2.0);
 		}
 

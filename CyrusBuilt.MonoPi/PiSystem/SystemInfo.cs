@@ -710,6 +710,16 @@ namespace CyrusBuilt.MonoPi.PiSystem
 			return ((GetBashVersionInfo().Contains("gnueabihf")) ||
 					(HasReadElfTag("Tag_ABI_HardFP_use")));
 		}
+
+		/// <summary>
+		/// Gets the current system time in milliseconds.
+		/// </summary>
+		/// <returns>
+		/// The current time millis.
+		/// </returns>
+		public static long GetCurrentTimeMillis() {
+			return (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
+		}
 	}
 }
 

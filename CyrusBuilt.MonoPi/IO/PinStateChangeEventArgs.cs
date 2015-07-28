@@ -32,6 +32,7 @@ namespace CyrusBuilt.MonoPi.IO
 		#region Fields
 		private PinState _oldState = PinState.Low;
 		private PinState _newState = PinState.High;
+		private Int32 _pinAddress = -1;
 		#endregion
 
 		#region Constructors
@@ -50,6 +51,25 @@ namespace CyrusBuilt.MonoPi.IO
 			this._oldState = oldState;
 			this._newState = newState;
 		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.PinStateChangeEventArgs"/>
+		/// class with the address of the pin and the old and new pin states.
+		/// </summary>
+		/// <param name="address">
+		/// The pin address.
+		/// </param>
+		/// <param name="oldState">
+		/// The previous state of the pin.
+		/// </param>
+		/// <param name="newState">
+		/// The new state of the pin.
+		/// </param>
+		public PinStateChangeEventArgs(Int32 address, PinState oldState, PinState newState) {
+			this._pinAddress = address;
+			this._oldState = oldState;
+			this._newState = newState;
+		}
 		#endregion
 
 		#region Properties
@@ -65,6 +85,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public PinState NewState {
 			get { return this._newState; }
+		}
+
+		/// <summary>
+		/// Gets the pin address.
+		/// </summary>
+		public Int32 PinAddress {
+			get { return this._pinAddress; }
 		}
 		#endregion
 	}

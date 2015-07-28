@@ -81,7 +81,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		public TemperatureSensorComponent(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
+		public TemperatureSensorComponent(IGpio clock, IGpio data, IGpio reset)
 			: base(clock, data, reset) {
 		}
 
@@ -106,7 +106,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		public TemperatureSensorComponent(TemperatureScale scale, IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
+		public TemperatureSensorComponent(TemperatureScale scale, IGpio clock, IGpio data, IGpio reset)
 			: base(clock, data, reset) {
 			this._scale = scale;
 		}
@@ -139,6 +139,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 			base.Dispose(disposing);
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the
 		/// <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorComponent"/> object.
@@ -153,6 +154,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Properties

@@ -31,11 +31,11 @@ namespace CyrusBuilt.MonoPi.LCD
 	public class GpioFileLcdTransferProvider : ILcdTransferProvider
 	{
 		#region Fields
-		private readonly GpioFile _registerSelectPort = null;
-		private readonly GpioFile _readWritePort = null;
-		private readonly GpioFile _enablePort = null;
-		private readonly GpioFile[] _dataPorts = { };
-		private readonly Boolean _fourBitMode = false;
+		private GpioFile _registerSelectPort = null;
+		private GpioFile _readWritePort = null;
+		private GpioFile _enablePort = null;
+		private GpioFile[] _dataPorts = { };
+		private Boolean _fourBitMode = false;
 		private Boolean _isDisposed = false;
 		#endregion
 
@@ -102,24 +102,29 @@ namespace CyrusBuilt.MonoPi.LCD
 				throw new ArgumentException("rs");
 			}
 
-			this._registerSelectPort = new GpioFile(rs);
+			this._registerSelectPort = new GpioFile(rs, PinMode.OUT);
+			this._registerSelectPort.Provision();
 
 			// We can save 1 pin by not using RW. Indicate this by passing GpioPins.GPIO_NONE
 			// instead of pin #.
 			if (rw != GpioPins.GPIO_NONE) {
-				this._readWritePort = new GpioFile(rw);
+				this._readWritePort = new GpioFile(rw, PinMode.OUT);
+				this._readWritePort.Provision();
 			}
 
 			if (enable == GpioPins.GPIO_NONE) {
 				throw new ArgumentException("enable");
 			}
 
-			this._enablePort = new GpioFile(enable);
+			this._enablePort = new GpioFile(enable, PinMode.OUT);
+			this._enablePort.Provision();
+
 			GpioPins[] dataPins = { d0, d1, d2, d3, d4, d5, d6, d7 };
 			this._dataPorts = new GpioFile[8];
 			for (Int32 i = 0; i < 8; i++) {
 				if (dataPins[i] != GpioPins.GPIO_NONE) {
-					this._dataPorts[i] = new GpioFile(dataPins[i]);
+					this._dataPorts[i] = new GpioFile(dataPins[i], PinMode.OUT);
+					this._dataPorts[i].Provision();
 				}
 			}
 		}
@@ -337,9 +342,9 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// Pulses the enable pin.
 		/// </summary>
 		private void PulseEnable() {
-			this._enablePort.Write(false);
-			this._enablePort.Write(true);   // enable pulse must be > 450ns.
-			this._enablePort.Write(false);  // commands need > 37us to settle.
+			this._enablePort.Write(PinState.Low);
+			this._enablePort.Write(PinState.High);   // enable pulse must be > 450ns.
+			this._enablePort.Write(PinState.Low);  // commands need > 37us to settle.
 		}
 
 		/// <summary>
@@ -350,7 +355,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </param>
 		private void Write4Bits(Byte value) {
 			for (Int32 i = 0; i < 4; i++) {
-				this._dataPorts[i + 4].Write(((value >> i) & 0x01) == 0x01);
+				this._dataPorts[i + 4].Write((((value >> i) & 0x01) == 0x01) ? PinState.High : PinState.Low);
 			}
 			this.PulseEnable();
 		}
@@ -363,7 +368,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// </param>
 		private void Write8Bits(Byte value) {
 			for (Int32 i = 0; i < 8; i++) {
-				this._dataPorts[i].Write(((value >> i) & 0x01) == 0x01);
+				this._dataPorts[i].Write((((value >> i) & 0x01) == 0x01) ? PinState.High : PinState.Low);
 			}
 			this.PulseEnable();
 		}
@@ -375,12 +380,12 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// The data or command to send.
 		/// </param>
 		/// <param name="mode">
-		/// Mode for register-select pin (true = on, false = off).
+		/// Mode for register-select pin (PinState.High = on, PinState.Low = off).
 		/// </param>
 		/// <param name="backlight">
 		/// Turns the backlight on or off.
 		/// </param>
-		public void Send(Byte value, Boolean mode, Boolean backlight) {
+		public void Send(Byte value, PinState mode, Boolean backlight) {
 			if (this._isDisposed) {
 				throw new ObjectDisposedException("GpioFileLcdTransferProvider");
 			}
@@ -391,7 +396,7 @@ namespace CyrusBuilt.MonoPi.LCD
 
 			// If there is a RW pin indicated, set it low to write.
 			if (this._readWritePort != null) {
-				this._readWritePort.Write(false);
+				this._readWritePort.Write(PinState.Low);
 			}
 
 			if (this._fourBitMode) {
@@ -418,14 +423,17 @@ namespace CyrusBuilt.MonoPi.LCD
 
 			if (this._registerSelectPort != null) {
 				this._registerSelectPort.Dispose();
+				this._registerSelectPort = null;
 			}
 
 			if (this._readWritePort != null) {
 				this._readWritePort.Dispose();
+				this._readWritePort = null;
 			}
 
 			if (this._enablePort != null) {
 				this._enablePort.Dispose();
+				this._enablePort = null;
 			}
 
 			if ((this._dataPorts != null) && (this._dataPorts.Length > 0)) {
@@ -452,6 +460,7 @@ namespace CyrusBuilt.MonoPi.LCD
 			this.Dispose(false);
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.LCD.GpioFileLcdTransferProvider"/>
 		/// object.
@@ -469,6 +478,7 @@ namespace CyrusBuilt.MonoPi.LCD
 		public void Dispose() {
 			this.Dispose(true);
 		}
+		#pragma warning restore 419
 		#endregion
 	}
 }

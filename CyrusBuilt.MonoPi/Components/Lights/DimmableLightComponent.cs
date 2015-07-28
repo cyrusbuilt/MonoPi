@@ -60,6 +60,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 			this._min = min;
 			this._max = max;
 		}
@@ -119,8 +120,8 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 		/// <exception cref="InvalidOperationException">
 		/// The pin is configured as in input pin instead of output.
 		/// </exception>
-		public override int Level {
-			get { return this._pin.PWM; }
+		public override Int32 Level {
+			get { return (Int32)this._pin.PWM; }
 			set {
 				if (value < this._min) {
 					throw new ArgumentOutOfRangeException("Value cannot be less than MinLevel.");
@@ -132,7 +133,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 
 				try {
  					Boolean isOnBeforeChange = base.IsOn;
-					this._pin.PWM = value;
+					this._pin.PWM = (uint)value;
 					Boolean isOnAfterChange = base.IsOn;
 					base.OnLevelChanged(new LightLevelChangeEventArgs(value));
 					if (isOnBeforeChange != isOnAfterChange) {

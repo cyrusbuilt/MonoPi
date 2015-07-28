@@ -27,17 +27,17 @@ namespace CyrusBuilt.MonoPi.IO
 	/// <summary>
 	/// The state of a given pin.
 	/// </summary>
-	public enum PinState
+	public enum PinState : uint
 	{
 		/// <summary>
 		/// The pin is high (on) which means it is outputting > 3.3V (typically 5V).
 		/// </summary>
-		High,
+		High = 1,
 
 		/// <summary>
 		/// The pin is low which means it is outputting 0V.
 		/// </summary>
-		Low
+		Low = 0
 	}
 }
 

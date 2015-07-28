@@ -47,8 +47,12 @@ namespace CyrusBuilt.MonoPi.IO
 	{
 		#region Fields
 		private Boolean _isPWM = false;
-		private Int32 _pwm = 0;
+		private UInt32 _pwm = 0;
 		private PinState _lastState = PinState.Low;
+		private PwmChannel _pwmChannel = PwmChannel.Channel0;
+		private PwmMode _pwmMode = PwmMode.Balanced;
+		private PwmClockDivider _divisor = PwmClockDivider.Divisor1;
+		private UInt32 _pwmRange = 0;
 		private static Boolean _initialized = false;
 		#endregion
 
@@ -61,8 +65,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the board to access.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
 		/// <param name="initialValue">
 		/// The pin's initial value.
@@ -71,10 +75,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// Access to the specified GPIO setup with the specified direction
 		/// with the specified initial value.
 		/// </remarks>			
-		public GpioMem(GpioPins pin, PinDirection direction, Boolean initialValue)
-			: base(pin, direction, initialValue) {
-			ExportPin(pin, direction);
-			Write(pin, initialValue);
+		public GpioMem(GpioPins pin, PinMode mode, PinState initialValue)
+			: base(pin, mode, initialValue) {
+			base._initValue = initialValue;
 		}
 
 		/// <summary>
@@ -84,16 +87,15 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the board to access.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
 		/// <remarks>
 		/// Access to the specified GPIO setup with the specified direction
-		/// with an initial value of false (0).
+		/// with an initial value of LOW (0).
 		/// </remarks>			
-		public GpioMem(GpioPins pin, PinDirection direction)
-			: base(pin, direction, false) {
-			ExportPin(pin, direction);
+		public GpioMem(GpioPins pin, PinMode mode)
+			: base(pin, mode, PinState.Low) {
 		}
 
 		/// <summary>
@@ -108,7 +110,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// value of false (0).
 		/// </remarks>			
 		public GpioMem(GpioPins pin)
-			: base(pin, PinDirection.OUT, false) {
+			: base(pin, PinMode.OUT, PinState.Low) {
 		}
 		#endregion
 
@@ -121,6 +123,51 @@ namespace CyrusBuilt.MonoPi.IO
 		}
 
 		/// <summary>
+		/// Gets or sets the selected PWM channel.
+		/// </summary>
+		/// <value>
+		/// The selected PWM channel. Default is <see cref="CyrusBuilt.MonoPi.IO.PwmChannel.Channel0"/>.
+		/// </value>
+		public PwmChannel SelectedPwmChannel {
+			get { return this._pwmChannel; }
+			set { this._pwmChannel = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the selected PWM mode.
+		/// </summary>
+		/// <value>
+		/// The selected PWM mode.
+		/// </value>
+		public PwmMode SelectedPwmMode {
+			get { return this._pwmMode; }
+			set { this._pwmMode = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the PWM range.
+		/// </summary>
+		/// <value>
+		/// The PWM range. Default is 1024.
+		/// </value>
+		/// <remarks>>
+		/// See <a href="http://wiringpi.com/reference/raspberry-pi-specifics/">http://wiringpi.com/reference/raspberry-pi-specifics/</a>
+		/// </remarks>
+		public override UInt32 PWMRange {
+			get { return this._pwmRange; }
+			set {
+				if (value < 0) {
+					value = 0;
+				}
+
+				if (value > 1024) {
+					value = 1024;
+				}
+				this._pwmRange = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the PWM (Pulse Width Modulation) value.
 		/// </summary>
 		/// <value>
@@ -129,19 +176,29 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <exception cref="InvalidOperationException">
 		/// The pin is configured as in input pin instead of output.
 		/// </exception>
-		public override int PWM {
+		public override UInt32 PWM {
 			get { return this._pwm; }
 			set {
-				if (base.Direction == PinDirection.IN) {
+				if (base.Mode == PinMode.IN) {
 					throw new InvalidOperationException("Cannot set PWM value on an input pin.");
+				}
+
+				if (value < 0) {
+					value = 0;
+				}
+
+				if (value > this._pwmRange) {
+					value = this._pwmRange;
 				}
 
 				if (this._pwm != value) {
 					this._pwm = value;
 					if (!this._isPWM) {
-						//UnsafeNativeMethods.bcm2835_gpio_fsel((uint)base.InnerPin, )
-						// TODO Finish this out.
+						base._mode = PinMode.PWM;
+						this._isPWM = true;
+						this.Provision();
 					}
+					UnsafeNativeMethods.bcm2835_pwm_set_data((uint)this._pwmChannel, value);
 				}
 			}
 		}
@@ -170,17 +227,17 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin to export.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
-		private static void internal_ExportPin(Int32 pin, PinDirection direction) {
+		private static void internal_ExportPin(Int32 pin, PinMode mode) {
 			Initialize();
 
 			// If the pin is already exported, check it's in the proper direction.
 			if (ExportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
-				if (ExportedPins[pin] == direction) {
+				if (ExportedPins[pin] == mode) {
 					return;
 				}
 			}
@@ -188,15 +245,14 @@ namespace CyrusBuilt.MonoPi.IO
 			// Set the direction on the pin and update the exported list.
 			// BCM2835_GPIO_FSEL_INPT = 0
 			// BCM2835_GPIO_FSEL_OUTP = 1
-			uint pindir = (direction == PinDirection.IN) ? (uint)0 : (uint)1;
-			UnsafeNativeMethods.bcm2835_gpio_fsel((uint)pin, pindir);
-			if (direction == PinDirection.IN) {
+			UnsafeNativeMethods.bcm2835_gpio_fsel((uint)pin, (uint)mode);
+			if (mode == PinMode.IN) {
 				// BCM2835_GPIO_PUD_OFF = 0b00 = 0
 				// BCM2835_GPIO_PUD_DOWN = 0b01 = 1
 				// BCM2835_GPIO_PUD_UP = 0b10 = 2
 				UnsafeNativeMethods.bcm2835_gpio_set_pud((uint)pin, 0);
 			}
-			ExportedPins[pin] = direction;
+			ExportedPins[pin] = mode;
 		}
 
 		/// <summary>
@@ -205,11 +261,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the board to export.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
-		private static void ExportPin(GpioPins pin, PinDirection direction) {
-			internal_ExportPin((Int32)pin, direction);
+		private static void ExportPin(GpioPins pin, PinMode mode) {
+			internal_ExportPin((Int32)pin, mode);
 		}
 
 		/// <summary>
@@ -225,7 +281,8 @@ namespace CyrusBuilt.MonoPi.IO
 			Debug.WriteLine("Unexporting pin " + pin.ToString());
 			// TODO Somehow reverse what we did in internal_ExportPin? Is there
 			// a way to "free" the pin in the libbcm2835 library?
-			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, 0);
+			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, (uint)PinState.Low);
+			UnsafeNativeMethods.bcm2835_gpio_fsel((uint)pin, (uint)PinMode.TRI);
 			ExportedPins.Remove(pin);
 		}
 
@@ -251,15 +308,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pinname">
 		/// The name of the GPIO associated with the pin.
 		/// </param>
-		private static void internal_Write(Int32 pin, Boolean value, String pinname) {
+		private static void internal_Write(Int32 pin, PinState value, String pinname) {
 			if (pin == (Int32)GpioPins.GPIO_NONE) {
 				return;
 			}
-
-			uint val = value ? (uint)1 : (uint)0;
-			internal_ExportPin(pin, PinDirection.OUT);
-			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, val);
-			Debug.WriteLine("Output to pin " + pinname + "/gpio" + pin.ToString() + ", value was " + value.ToString());
+				
+			UnsafeNativeMethods.bcm2835_gpio_write((uint)pin, (uint)value);
+			Debug.WriteLine("Output to pin " + pinname + "/gpio" + pin.ToString() + ", value was " + ((Int32)value).ToString());
 		}
 
 		/// <summary>
@@ -271,7 +326,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The value to write.
 		/// </param>
-		public static void Write(GpioPins pin, Boolean value) {
+		public static void Write(GpioPins pin, PinState value) {
 			String name = Enum.GetName(typeof(GpioPins), pin);
 			internal_Write((Int32)pin, value, name);
 		}
@@ -288,11 +343,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>
-		private static Boolean internal_Read(Int32 pin, String pinname) {
-			internal_ExportPin(pin, PinDirection.IN);
+		private static PinState internal_Read(Int32 pin, String pinname) {
+			internal_ExportPin(pin, PinMode.IN);
 			uint value = UnsafeNativeMethods.bcm2835_gpio_lev((uint)pin);
-			Boolean returnValue = (value == 0) ? false : true;
-			Debug.WriteLine("Input from pin " + pinname + "/gpio" + pin.ToString() + ", value was " + returnValue.ToString());
+			PinState returnValue = (value == 0) ? PinState.High : PinState.Low;
+			Debug.WriteLine("Input from pin " + pinname + "/gpio" + pin.ToString() + ", value was " + ((Int32)returnValue).ToString());
 			return returnValue;
 		}
 
@@ -305,7 +360,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>			
-		public static Boolean Read(GpioPins pin) {
+		public static PinState Read(GpioPins pin) {
 			String name = Enum.GetName(typeof(GpioPins), pin);
 			return internal_Read((Int32)pin, name);
 		}
@@ -328,17 +383,29 @@ namespace CyrusBuilt.MonoPi.IO
 
 		#region Instance Methods
 		/// <summary>
+		/// Provisions the pin (initialize to specified mode and make active).
+		/// </summary>
+		public override void Provision() {
+			ExportPin(base.InnerPin, base.Mode);
+			Write(base.InnerPin, base._initValue);
+			if (base.Mode == PinMode.PWM) {
+				UnsafeNativeMethods.bcm2835_pwm_set_clock((uint)this._divisor);
+				UnsafeNativeMethods.bcm2835_pwm_set_mode((uint)this._pwmChannel, (uint)this._pwmMode, 1);
+				UnsafeNativeMethods.bcm2835_pwm_set_range((uint)this._pwmChannel, (uint)this._pwmRange);
+			}
+		}
+
+		/// <summary>
 		/// Write the specified value to the pin.
 		/// </summary>
 		/// <param name="value">
 		/// The value to write to the pin.
 		/// </param>
-		public override void Write(Boolean value) {
+		public override void Write(PinState value) {
 			Write(base.InnerPin, value);
 			base.Write(value);
-			PinState val = value ? PinState.High : PinState.Low;
-			if (this._lastState != val) {
-				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+			if (this._lastState != value) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, value));
 			}
 		}
 
@@ -352,13 +419,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// An attempt was made to pulse an input pin.
 		/// </exception>
 		public override void Pulse(Int32 millis) {
-			if (base.Direction == PinDirection.IN) {
+			if (base.Mode == PinMode.IN) {
 				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
-			Write(base.InnerPin, true);
+			Write(base.InnerPin, PinState.High);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.High));
 			base.Pulse(millis);
-			Write(base.InnerPin, false);
+			Write(base.InnerPin, PinState.Low);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.Low));
 		}
 
@@ -375,11 +442,10 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>
-		public override Boolean Read() {
-			Boolean newState = Read(base.InnerPin);
-			PinState val = newState ? PinState.High : PinState.Low;
-			if (this._lastState != val) {
-				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
+		public override PinState Read() {
+			PinState newState = Read(base.InnerPin);
+			if (this._lastState != newState) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, newState));
 			}
 			return newState;
 		}
@@ -394,13 +460,21 @@ namespace CyrusBuilt.MonoPi.IO
 		/// so the garbage collector can reclaim the memory that the <see cref="CyrusBuilt.MonoPi.IO.GpioMem"/> was occupying.
 		/// </remarks>
 		public override void Dispose() {
+			if (base.IsDisposed) {
+				return;
+			}
+
+			this.Write(PinState.Low);
+			if (this.Mode == PinMode.PWM) {
+				UnsafeNativeMethods.bcm2835_pwm_set_mode((uint)this._pwmChannel, (uint)this._pwmMode, 0);
+			}
+
 			UnexportPin(base.InnerPin);
 			Destroy();
 			if (this._isPWM) {
 				String cmd = "gpio unexport " + GetGpioPinNumber(base.InnerPin);
 				Process.Start(cmd);
 			}
-			base.Write(false);
 			base.Dispose();
 		}
 		#endregion

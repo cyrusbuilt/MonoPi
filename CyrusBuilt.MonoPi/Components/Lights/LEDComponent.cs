@@ -54,6 +54,7 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 		}
 
 		/// <summary>
@@ -103,12 +104,12 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 		/// The pin is configured for input instead of output.
 		/// </exception>
 		public override void On() {
-			if (this._pin.Direction == PinDirection.IN) {
+			if (this._pin.Mode == PinMode.IN) {
 				throw new InvalidOperationException("Pin is not configured as an output pin.");
 			}
 
 			if (this._pin.State != ON_STATE) {
-				this._pin.Write(true);
+				this._pin.Write(PinState.High);
 				base.OnStateChanged(new LightStateChangeEventArgs(true));
 			}
 		}
@@ -120,12 +121,12 @@ namespace CyrusBuilt.MonoPi.Components.Lights
 		/// The pin is configured for input instead of output.
 		/// </exception>
 		public override void Off() {
-			if (this._pin.Direction == PinDirection.IN) {
+			if (this._pin.Mode == PinMode.IN) {
 				throw new InvalidOperationException("Pin is not configured as an output pin.");
 			}
 
 			if (this._pin.State != OFF_STATE) {
-				this._pin.Write(false);
+				this._pin.Write(PinState.Low);
 				base.OnStateChanged(new LightStateChangeEventArgs(false));
 			}
 		}

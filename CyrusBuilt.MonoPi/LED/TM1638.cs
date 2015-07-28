@@ -223,13 +223,13 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </returns>
 		public Byte GetPushButtons() {
 			Byte keys = Byte.MinValue;
-			base.Strobe.Write(false);
+			base.Strobe.Write(PinState.High);
 			base.Send(0x42);
 			for (Byte i = 0; i < 4; i++) {
 				keys |= (Byte)(base.Receive() << i);
 			}
 
-			base.Strobe.Write(true);
+			base.Strobe.Write(PinState.Low);
 			return keys;
 		}
 		#endregion

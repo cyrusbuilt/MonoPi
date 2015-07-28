@@ -62,7 +62,7 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 			this._relay = relay;
 			this._sensor = sensor;
 			this._openState = openState;
-			this._sensor.StateChanged += this.HandleSensorStateChanged;
+			this._sensor.StateChanged += this.OnSensorStateChanged;
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 		public OpenerDevice(IRelay relay, ISensor sensor, SensorState openState, ISwitch lok)
 			: this(relay, sensor, openState) {
 			this._lock = lok;
-			this._lock.StateChanged += this.HandleLockStateChanged;
+			this._lock.StateChanged += this.OnLockStateChanged;
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 		/// <param name="e">
 		/// The event arguments.
 		/// </param>
-		private void HandleSensorStateChanged(Object sender, SensorStateChangedEventArgs e) {
+		private void OnSensorStateChanged(Object sender, SensorStateChangedEventArgs e) {
 			OpenerState oldState = this.GetOpenerState(e.OldState);
 			OpenerState newState = this.GetOpenerState(e.NewState);
 			base.OnStateChanged(new OpenerStateChangeEventArgs(oldState, newState));
@@ -186,7 +186,7 @@ namespace CyrusBuilt.MonoPi.Devices.Access
 		/// <param name="e">
 		/// The event arguments.
 		/// </param>
-		private void HandleLockStateChanged(Object sender, SwitchStateChangeEventArgs e) {
+		private void OnLockStateChanged(Object sender, SwitchStateChangeEventArgs e) {
 			base.OnLockChanged(new OpenerLockChangeEventArgs(((ISwitch)sender).IsOn));
 		}
 

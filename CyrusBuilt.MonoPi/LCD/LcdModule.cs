@@ -23,6 +23,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using CyrusBuilt.MonoPi.IO;
 
 namespace CyrusBuilt.MonoPi.LCD
 {
@@ -42,11 +43,11 @@ namespace CyrusBuilt.MonoPi.LCD
 		private Boolean _showCursor = true;
 		private Boolean _blinkCursor = true;
 		private Boolean _visible = true;
-		private Boolean _autoScroll = false;
+		// private Boolean _autoScroll = false;         // TODO Implement this?
 		private Boolean _backLight = true;
 		private Byte _numLines = Byte.MinValue;
 		private Byte _numColumns = Byte.MinValue;
-		private Byte _currLine = Byte.MinValue;
+		// private Byte _currLine = Byte.MinValue;      // TODO Implement this?
 		private Byte _displayFunction = Byte.MinValue;
 		private Encoding _encoding = Encoding.UTF8;
 		#endregion
@@ -183,7 +184,7 @@ namespace CyrusBuilt.MonoPi.LCD
 			if (this._provider == null) {
 				throw new InvalidOperationException("LCD provider not defined.");
 			}
-			this._provider.Send(data, false, this._backLight);
+			this._provider.Send(data, PinState.Low, this._backLight);
 		}
 
 		/// <summary>
@@ -199,7 +200,7 @@ namespace CyrusBuilt.MonoPi.LCD
 			if (this._provider == null) {
 				throw new InvalidOperationException("LCD provider not defined.");
 			}
-			this._provider.Send(data, true, this._backLight);
+			this._provider.Send(data, PinState.High, this._backLight);
 		}
 
 		/// <summary>
@@ -380,7 +381,7 @@ namespace CyrusBuilt.MonoPi.LCD
 				this._displayFunction |= (Byte)FunctionSetFlags.TwoLine;
 			}
 
-			this._currLine = 0;
+			//this._currLine = 0;
 			this._numLines = Convert.ToByte(lines);
 			this._numColumns = Convert.ToByte(columns);
 

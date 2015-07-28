@@ -181,26 +181,31 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </param>
 		public TM16XXBase(IRaspiGpio data, IRaspiGpio clock, IRaspiGpio strobe, Int32 displays, Boolean activate, Int32 intensity) {
 			this._data = data;
+			this._data.Provision();
+
 			this._clock = clock;
+			this._clock.Provision();
+
 			this._strobe = strobe;
+			this._strobe.Provision();
 
 			// TODO What is the acceptable range?
 			this._displays = displays;
 
-			this._strobe.Write(true);
-			this._clock.Write(true);
+			this._strobe.Write(PinState.High);
+			this._clock.Write(PinState.High);
 
 			// TODO What is the acceptable range of "intensity"?
 			this.SendCommand(0x40);
 			this.SendCommand((Byte)(0x80 | (activate ? 0x08 : 0x00) | Math.Min(7, intensity)));
 
-			this._strobe.Write(false);
+			this._strobe.Write(PinState.Low);
 			this.Send(0xC0);
 			for (Int32 i = 0; i < 16; i++) {
 				this.Send(0x00);
 			}
 
-			this._strobe.Write(true);
+			this._strobe.Write(PinState.High);
 		}
 		#endregion
 
@@ -236,10 +241,10 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </param>
 		public void Send(Byte data) {
 			for (Int32 i = 0; i < 8; i++) {
-				this._clock.Write(false);
-				this._data.Write((data & 1) > 0 ? true : false);
+				this._clock.Write(PinState.Low);
+				this._data.Write((data & 1) > 0 ? PinState.High : PinState.Low);
 				data >>= 1;
-				this._clock.Write(true);
+				this._clock.Write(PinState.High);
 			}
 		}
 
@@ -249,18 +254,18 @@ namespace CyrusBuilt.MonoPi.LED
 		public Byte Receive() {
 			// Pull up on.
 			Byte temp = 0;
-			this._data.Write(true);
+			this._data.Write(PinState.High);
 
 			for (Int32 i = 0; i < 8; i++) {
 				temp >>= 1;
-				this._clock.Write(false);
-				if (this._data.Read()) {
+				this._clock.Write(PinState.Low);
+				if (this._data.Read() == PinState.High) {
 					temp |= 0x80;
 				}
-				this._clock.Write(true);
+				this._clock.Write(PinState.High);
 			}
 
-			this._data.Write(false);
+			this._data.Write(PinState.Low);
 			return temp;
 		}
 
@@ -271,9 +276,9 @@ namespace CyrusBuilt.MonoPi.LED
 		/// A byte representing the command.
 		/// </param>
 		public void SendCommand(Byte cmd) {
-			this._strobe.Write(false);
+			this._strobe.Write(PinState.Low);
 			this.Send(cmd);
-			this._strobe.Write(true);
+			this._strobe.Write(PinState.High);
 		}
 
 		/// <summary>
@@ -287,10 +292,10 @@ namespace CyrusBuilt.MonoPi.LED
 		/// </param>
 		public void SendData(Byte address, Byte data) {
 			this.SendCommand(0x44);
-			this._strobe.Write(false);
+			this._strobe.Write(PinState.Low);
 			this.Send((Byte)(0xC0 | address));
 			this.Send(data);
-			this._strobe.Write(true);
+			this._strobe.Write(PinState.High);
 		}
 
 		/// <summary>
@@ -441,10 +446,10 @@ namespace CyrusBuilt.MonoPi.LED
 			this.SendCommand((Byte)(0x80 | (active ? 8 : 0) | Math.Min(7, intensity)));
 
 			// Necessary for the TM1640.
-			this._strobe.Write(false);
-			this._clock.Write(false);
-			this._clock.Write(true);
-			this._strobe.Write(true);
+			this._strobe.Write(PinState.Low);
+			this._clock.Write(PinState.Low);
+			this._clock.Write(PinState.High);
+			this._strobe.Write(PinState.High);
 		}
 
 		/// <summary>

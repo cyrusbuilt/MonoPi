@@ -69,6 +69,7 @@ namespace CyrusBuilt.MonoPi.Devices
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Devices.DeviceBase"/>
 		/// object.
@@ -86,6 +87,7 @@ namespace CyrusBuilt.MonoPi.Devices
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning disable 419
 		#endregion
 
 		#region Properties

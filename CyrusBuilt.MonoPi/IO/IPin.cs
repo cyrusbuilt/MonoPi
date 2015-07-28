@@ -30,6 +30,22 @@ namespace CyrusBuilt.MonoPi.IO
 	public interface IPin : IDisposable
 	{
 		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		/// <value>
+		/// The name of the GPIO.
+		/// </value>
+		String Name { get; set; }
+
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>
+		/// The object to tag the GPIO with.
+		/// </value>
+		Object Tag { get; set; }
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is disposed.
 		/// </summary>
 		/// <value>
@@ -43,9 +59,17 @@ namespace CyrusBuilt.MonoPi.IO
 		PinState State { get; }
 
 		/// <summary>
-		/// Gets the pin direction.
+		/// Gets the pin mode.
 		/// </summary>
-		PinDirection Direction { get; }
+		PinMode Mode { get; }
+
+		/// <summary>
+		/// Gets the pin address.
+		/// </summary>
+		/// <value>
+		/// The address.
+		/// </value>
+		Int32 Address { get; }
 	}
 }
 

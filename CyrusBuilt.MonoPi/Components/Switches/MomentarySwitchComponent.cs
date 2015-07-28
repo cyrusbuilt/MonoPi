@@ -33,7 +33,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 	public class MomentarySwitchComponent : MomentarySwitchBase
 	{
 		#region Fields
-		private GpioBase _pin = null;
+		private IGpio _pin = null;
 		private volatile Boolean _isPolling = false;
 		private Thread _pollThread = null;
 		private static readonly Object _syncLock = new Object();
@@ -49,12 +49,13 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 		/// <param name="pin">
 		/// The input pin to check switch state on.
 		/// </param>
-		public MomentarySwitchComponent(GpioBase pin)
+		public MomentarySwitchComponent(IGpio pin)
 			: base() {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 			this._pin.StateChanged += this.OnStateChanged;
 		}
 
@@ -179,7 +180,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Switches.MomentarySwitchComponent");
 			}
 
-			if (this._pin.Direction == PinDirection.OUT) {
+			if (this._pin.Mode == PinMode.OUT) {
 				throw new InvalidOperationException("The specified pin is configured as an output pin," +
 				                                    " which cannot be used to read switch states.");
 			}

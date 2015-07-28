@@ -58,7 +58,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <exception cref="ArgumentNullException">
 		/// Pins cannot be null.
 		/// </exception>
-		protected TemperatureSensorBase(IRaspiGpio clock, IRaspiGpio data, IRaspiGpio reset)
+		protected TemperatureSensorBase(IGpio clock, IGpio data, IGpio reset)
 			: base() {
 			if (clock == null) {
 				throw new ArgumentNullException("clock");
@@ -81,7 +81,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// <param name="disposing">
 		/// Set true if disposing managed resources in addition to unmanaged.
 		/// </param>
-		protected virtual void Dispose(Boolean disposing) {
+		protected override void Dispose(Boolean disposing) {
 			if (base.IsDisposed) {
 				return;
 			}
@@ -97,6 +97,7 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 			base.Dispose(true);
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase"/> object.
 		/// </summary>
@@ -106,10 +107,11 @@ namespace CyrusBuilt.MonoPi.Components.Temperature
 		/// After calling <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase.Dispose"/>, you must release all references to the
 		/// <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase"/> so the garbage collector can reclaim
 		/// the memory that the <see cref="CyrusBuilt.MonoPi.Components.Temperature.TemperatureSensorBase"/> was occupying.</remarks>
-		public virtual void Dispose() {
+		public override void Dispose() {
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Events

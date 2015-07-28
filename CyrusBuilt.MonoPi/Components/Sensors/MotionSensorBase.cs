@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		private Boolean _isDisposed = false;
 		private String _name = String.Empty;
 		private Object _tag = null;
-		private IRaspiGpio _pin = null;
+		private IGpio _pin = null;
 		private DateTime _lastMotion = DateTime.MinValue;
 		private DateTime _lastInactive = DateTime.MinValue;
 		private Dictionary<String, String> _props = null;
@@ -60,7 +60,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot be null.
 		/// </exception>
-		protected MotionSensorBase(IRaspiGpio pin) {
+		protected MotionSensorBase(IGpio pin) {
 			if (pin == null) {
 				throw new ArgumentNullException("pin");
 			}
@@ -97,6 +97,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Sensors.MotionSensorBase"/> object.
 		/// </summary>
@@ -110,6 +111,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Events
@@ -174,7 +176,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// value cannot be null.
 		/// </exception>
-		public IRaspiGpio Pin {
+		public IGpio Pin {
 			get { return this._pin; }
 			set {
 				if (value == null) {

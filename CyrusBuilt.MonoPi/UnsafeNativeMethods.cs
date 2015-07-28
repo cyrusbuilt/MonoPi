@@ -89,7 +89,7 @@ namespace CyrusBuilt.MonoPi
 		/// GPIO number.
 		/// </param>
 		/// <returns>
-		/// the current level either HIGH or LOW.
+		/// The current level either HIGH (1) or LOW (0).
 		/// </returns>
 		[DllImport("libbcm2835.so", EntryPoint = "bcm2835_gpio_lev")]
 		public static extern uint bcm2835_gpio_lev(uint pin);

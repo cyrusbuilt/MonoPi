@@ -35,7 +35,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		private volatile MotorState _state = MotorState.Stop;
 		private Int32 _sequenceIndex = 0;
 		private Thread _controlThread = null;
-		private IRaspiGpio[] _pins = null;
+		private IGpio[] _pins = null;
 		private static readonly Object _syncLock = new Object();
 		#endregion
 
@@ -47,9 +47,12 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		/// <param name="pins">
 		/// The output pins for each controller in the stepper motor.
 		/// </param>
-		public StepperMotorComponent(IRaspiGpio[] pins)
+		public StepperMotorComponent(IGpio[] pins)
 			: base() {
 			this._pins = pins;
+			foreach (IGpio p in pins) {
+				p.Provision();
+			}
 		}
 
 		/// <summary>
@@ -78,7 +81,7 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 
 				if (this._pins != null) {
 					if (this._pins.Length > 0) {
-						foreach (IRaspiGpio pin in this._pins) {
+						foreach (IGpio pin in this._pins) {
 							pin.Dispose();
 						}
 						Array.Clear(this._pins, 0, this._pins.Length);
@@ -163,10 +166,10 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 				// Apply step sequence.
 				Double nib = Math.Pow(2, i);
 				if ((base.StepSequence[this._sequenceIndex] & (Int32)nib) > 0) {
-					this._pins[i].Write(true);
+					this._pins[i].Write(PinState.High);
 				}
 				else {
-					this._pins[i].Write(false);
+					this._pins[i].Write(PinState.Low);
 				}
 			}
 
@@ -184,8 +187,8 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 			}
 
 			// Turn all GPIO pins off.
-			foreach (IRaspiGpio pin in this._pins) {
-				pin.Write(false);
+			foreach (IGpio pin in this._pins) {
+				pin.Write(PinState.Low);
 			}
 		}
 
@@ -197,8 +200,8 @@ namespace CyrusBuilt.MonoPi.Components.Motors
 		private void ExecuteMovement() {
 			lock (_syncLock) {
 				if (this.State == MotorState.Stop) {
-					foreach (IRaspiGpio pin in this._pins) {
-						pin.Write(false);
+					foreach (IGpio pin in this._pins) {
+						pin.Write(PinState.Low);
 					}
 					return;
 				}

@@ -35,28 +35,12 @@ namespace CyrusBuilt.MonoPi.IO
 		event PinStateChangeEventHandler StateChanged;
 
 		/// <summary>
-		/// Gets or sets the name.
-		/// </summary>
-		/// <value>
-		/// The name of the GPIO.
-		/// </value>
-		String Name { get; set; }
-
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		/// <value>
-		/// The object to tag the GPIO with.
-		/// </value>
-		Object Tag { get; set; }
-
-		/// <summary>
 		/// Write a value to the pin.
 		/// </summary>
 		/// <param name="value">
 		/// The value to write to the pin.
 		/// </param>
-		void Write(Boolean value);
+		void Write(PinState value);
 
 		/// <summary>
 		/// Pulse the pin output for the specified number of milliseconds.
@@ -72,7 +56,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns>			
-		Boolean Read();
+		PinState Read();
 
 		/// <summary>
 		/// Gets or sets the PWM (Pulse Width Modulation) value.
@@ -80,7 +64,23 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <value>
 		/// The PWM value.
 		/// </value>
-		Int32 PWM { get; set; }
+		UInt32 PWM { get; set; }
+
+		/// <summary>
+		/// Gets or sets the PWM range.
+		/// </summary>
+		/// <value>
+		/// The PWM range. Default is 1024.
+		/// </value>
+		/// <remarks>
+		/// See <a href="http://wiringpi.com/reference/raspberry-pi-specifics/">http://wiringpi.com/reference/raspberry-pi-specifics/</a>
+		/// </remarks>
+		UInt32 PWMRange { get; set; }
+
+		/// <summary>
+		/// Provisions the I/O pin.
+		/// </summary>
+		void Provision();
 	}
 }
 

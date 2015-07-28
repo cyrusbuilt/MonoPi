@@ -74,12 +74,12 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 						switch (value) {
 							case RelayState.Open:
 								if (!base.IsOpen) {
-									base.Pin.Write(false);
+									base.Pin.Write(PinState.Low);
 								}
 								break;
 							case RelayState.Closed:
 								if (!base.IsClosed) {
-									base.Pin.Write(true);
+									base.Pin.Write(PinState.High);
 								}
 								break;
 							default:

@@ -78,6 +78,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 			this._props = new Dictionary<String, String>();
 		}
 
@@ -111,6 +112,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Relays.RelayBase"/> object.
 		/// </summary>
@@ -124,6 +126,7 @@ namespace CyrusBuilt.MonoPi.Components.Relays
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Events

@@ -59,7 +59,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot null.
 		/// </exception>
-		public MotionSensorComponent(IRaspiGpio pin)
+		public MotionSensorComponent(IGpio pin)
 			: base(pin) {
 		}
 
@@ -91,6 +91,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			base.Dispose(disposing);
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Sensors.MotionSensorComponent"/> object.
 		/// </summary>
@@ -105,6 +106,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Properties
@@ -176,7 +178,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Sensors.SensorComponent");
 			}
 
-			if (base.Pin.Direction == PinDirection.OUT) {
+			if (base.Pin.Mode == PinMode.OUT) {
 				throw new InvalidOperationException("The specified pin is configured as an output pin," +
 				                                    " which cannot be used to read sensor data.");
 			}

@@ -25,6 +25,7 @@
 //  Appache License Version 2.0
 //
 using System;
+using CyrusBuilt.MonoPi.IO;
 
 namespace CyrusBuilt.MonoPi.LCD
 {
@@ -40,12 +41,12 @@ namespace CyrusBuilt.MonoPi.LCD
 		/// The data to send.
 		/// </param>
 		/// <param name="mode">
-		/// Mode for register-select pin (true = on, false = off).
+		/// Mode for register-select pin (PinState.High = on, PinState.Low = off).
 		/// </param>
 		/// <param name="backlight">
 		/// Turns on the backlight.
 		/// </param>
-		void Send(Byte data, Boolean mode, Boolean backlight);
+		void Send(Byte data, PinState mode, Boolean backlight);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="CyrusBuilt.MonoPi.LCD.ILcdTransferProvider"/>

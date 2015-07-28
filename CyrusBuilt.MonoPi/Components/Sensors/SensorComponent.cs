@@ -59,21 +59,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="pin"/> cannot null.
 		/// </exception>
-		public SensorComponent(GpioMem pin)
-			: base(pin) {
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/>
-		/// class with the <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </summary>
-		/// <param name="pin">
-		/// The <see cref="CyrusBuilt.MonoPi.IO.GpioFile"/> I/O pin to use.
-		/// </param>
-		/// <exception cref="ArgumentNullException">
-		/// <paramref name="pin"/> cannot null.
-		/// </exception>
-		public SensorComponent(GpioFile pin)
+		public SensorComponent(IGpio pin)
 			: base(pin) {
 		}
 
@@ -105,6 +91,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			base.Dispose(disposing);
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resource used by the <see cref="CyrusBuilt.MonoPi.Components.Sensors.SensorComponent"/> object.
 		/// </summary>
@@ -119,6 +106,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Properties
@@ -192,7 +180,7 @@ namespace CyrusBuilt.MonoPi.Components.Sensors
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Sensors.SensorComponent");
 			}
 
-			if (base.Pin.Direction == PinDirection.OUT) {
+			if (base.Pin.Mode == PinMode.OUT) {
 				throw new InvalidOperationException("The specified pin is configured as an output pin," +
 					" which cannot be used to read sensor data.");
 			}

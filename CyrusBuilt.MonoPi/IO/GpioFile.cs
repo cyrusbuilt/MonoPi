@@ -36,7 +36,8 @@ namespace CyrusBuilt.MonoPi.IO
 	{
 		#region Fields
 		private PinState _lastState = PinState.Low;
-		private Int32 _pwm = 0;
+		private UInt32 _pwm = 0;
+		private UInt32 _pwmRange = 1024;
 		private Boolean _isPWM = false;
 
 		/// <summary>
@@ -53,16 +54,14 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the board to access.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
 		/// <param name="initialValue">
 		/// The pin's initial value.
 		/// </param>
-		public GpioFile(GpioPins pin, PinDirection direction, Boolean initialValue)
-			: base(pin, direction, initialValue) {
-			ExportPin(pin, direction);
-			Write(pin, initialValue);
+		public GpioFile(GpioPins pin, PinMode mode, PinState initialValue)
+			: base(pin, mode, initialValue) {
 		}
 
 		/// <summary>
@@ -72,12 +71,11 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin on the board to access.
 		/// </param>
-		/// <param name="direction">
-		/// The I/0 direction of the pin.
+		/// <param name="mode">
+		/// The I/0 mode of the pin.
 		/// </param>
-		public GpioFile(GpioPins pin, PinDirection direction)
-			: base(pin, direction, false) {
-			ExportPin(pin, direction);
+		public GpioFile(GpioPins pin, PinMode mode)
+			: base(pin, mode, PinState.Low) {
 		}
 
 		/// <summary>
@@ -88,7 +86,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The pin on the board to access.
 		/// </param>
 		public GpioFile(GpioPins pin)
-			: base(pin, PinDirection.OUT, false) {
+			: base(pin, PinMode.OUT, PinState.Low) {
 		}
 		#endregion
 
@@ -102,11 +100,19 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <exception cref="InvalidOperationException">
 		/// The pin is configured as in input pin instead of output.
 		/// </exception>
-		public override Int32 PWM {
+		public override UInt32 PWM {
 			get { return this._pwm; }
 			set {
-				if (base.Direction == PinDirection.IN) {
-					throw new InvalidOperationException("Cannot set PWM value on an input pin.");
+				if (base.Mode != PinMode.PWM) {
+					throw new InvalidOperationException("Cannot set PWM value on a pin not configured for PWM.");
+				}
+
+				if (value < 0) {
+					value = 0;
+				}
+
+				if (value > 1023) {
+					value = 1023;
 				}
 
 				if (this._pwm != value) {
@@ -122,6 +128,32 @@ namespace CyrusBuilt.MonoPi.IO
 				}
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets the PWM range.
+		/// </summary>
+		/// <value>
+		/// The PWM range. Default is 1024.
+		/// </value>
+		/// <remarks>
+		/// See <a href="http://wiringpi.com/reference/raspberry-pi-specifics/">http://wiringpi.com/reference/raspberry-pi-specifics/</a>
+		/// </remarks>
+		public override UInt32 PWMRange {
+			get { return this._pwmRange; }
+			set {
+				if (value < 0) {
+					value = 0;
+				}
+
+				if (value > 1024) {
+					value = 1024;
+				}
+
+				if (this._pwmRange != value) {
+					this._pwmRange = value;
+				}
+			}
+		}
 		#endregion
 
 		#region Static Methods
@@ -132,8 +164,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The GPIO pin.
 		/// </param>
-		/// <param name="direction">
-		/// The I/O direction.
+		/// <param name="mode">
+		/// The I/O mode.
 		/// </param>
 		/// <param name="pinnum">
 		/// The pin number.
@@ -141,21 +173,21 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pinname">
 		/// The name of the pin.
 		/// </param>
-		private static void internal_ExportPin(Int32 pin, PinDirection direction, String pinnum, String pinname) {
+		private static void internal_ExportPin(Int32 pin, PinMode mode, String pinnum, String pinname) {
 			String pinpath = GPIO_PATH + "gpio" + pinnum;
-			String dir = Enum.GetName(typeof(PinDirection), direction);
+			String m = Enum.GetName(typeof(PinMode), mode);
 
 			// If the pin is already exported, check it's in the proper direction.
 			if (ExportedPins.ContainsKey(pin)) {
 				// If the direction matches, return out of the function. If not,
 				// change the direction.
-				if (ExportedPins[pin] == direction) {
+				if (ExportedPins[pin] == mode) {
 					return;
 				}
 				else {
 					// Set the direction on the pin and update the exported list.
-					File.WriteAllText(pinpath + "/direction", dir);
-					ExportedPins[pin] = direction;
+					File.WriteAllText(pinpath + "/direction", m);
+					ExportedPins[pin] = mode;
 					return;
 				}
 			}
@@ -167,11 +199,11 @@ namespace CyrusBuilt.MonoPi.IO
 			}
 
 			// Set I/O direction.
-			Debug.WriteLine("Setting direction on pin " + pinname + "/gpio" + pin.ToString() + " as " + dir);
-			File.WriteAllText(pinpath + "/direction", dir);
+			Debug.WriteLine("Setting direction on pin " + pinname + "/gpio" + pin.ToString() + " as " + m);
+			File.WriteAllText(pinpath + "/direction", m);
 
 			// Update the pin.
-			ExportedPins[pin] = direction;
+			ExportedPins[pin] = mode;
 		}
 
 		/// <summary>
@@ -181,12 +213,20 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The GPIO pin on the board.
 		/// </param>
-		/// <param name="direction">
-		/// The I/O direction.
+		/// <param name="mode">
+		/// The I/O mode.
 		/// </param>
-		private static void ExportPin(GpioPins pin, PinDirection direction) {
+		private static void ExportPin(GpioPins pin, PinMode mode) {
 			String name = Enum.GetName(typeof(GpioPins), pin);
-			internal_ExportPin((Int32)pin, direction, GetGpioPinNumber(pin), name);
+			internal_ExportPin((Int32)pin, mode, GetGpioPinNumber(pin), name);
+		}
+
+		/// <summary>
+		/// Provisions the pin (initialize to specified mode and make active).
+		/// </summary>
+		public override void Provision() {
+			ExportPin(base.InnerPin, base.Mode);
+			Write(base.InnerPin, base._initValue);
 		}
 
 		/// <summary>
@@ -211,7 +251,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The GPIO pin to unexport.
 		/// </param>
 		private static void UnexportPin(GpioPins pin) {
-			Write(pin, false);
+			Write(pin, PinState.Low);
 			internal_UnexportPin((Int32)pin, GetGpioPinNumber(pin));
 		}
 
@@ -230,14 +270,14 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pinname">
 		/// The name of the pin.
 		/// </param>
-		private static void internal_Write(Int32 pin, Boolean value, String gpionum, String pinname) {
+		private static void internal_Write(Int32 pin, PinState value, String gpionum, String pinname) {
 			// GPIO_NONE is the same value for both Rev1 and Rev2 boards.
 			if (pin == (Int32)GpioPins.GPIO_NONE) {
 				return;
 			}
 
-			internal_ExportPin(pin, PinDirection.OUT, gpionum, pinname);
-			String val = value ? "1" : "0";
+			internal_ExportPin(pin, PinMode.OUT, gpionum, pinname);
+			String val = ((Int32)value).ToString();
 			String path = GPIO_PATH + "gpio" + gpionum + "/value";
 
 			File.WriteAllText(path, val);
@@ -253,7 +293,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The value to write to the pin.
 		/// </param>
-		public static void Write(GpioPins pin, Boolean value) {
+		public static void Write(GpioPins pin, PinState value) {
 			String num = GetGpioPinNumber(pin);
 			String name = Enum.GetName(typeof(GpioPins), pin);
 			internal_Write((Int32)pin, value, num, name);
@@ -277,21 +317,21 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <exception cref="IOException">
 		/// The specified pin could not be read (device does path does not exist).
 		/// </exception>
-		private static Boolean internal_Read(Int32 pin, String gpionum, String gpioname) {
-			Boolean returnValue = false;
-			internal_ExportPin(pin, PinDirection.IN, gpionum, gpioname);
+		private static PinState internal_Read(Int32 pin, String gpionum, String gpioname) {
+			PinState returnValue = PinState.Low;
+			internal_ExportPin(pin, PinMode.IN, gpionum, gpioname);
 			String filename = GPIO_PATH + "gpio" + gpionum + "/value";
 			if (File.Exists(filename)) {
 				String readvalue = File.ReadAllText(filename);
-				if ((readvalue.Length > 0) && (readvalue[0] == 1)) {
-					returnValue = true;
+				if ((readvalue.Length > 0) && (Int32.Parse(readvalue.Substring(0, 1)) == 1)) {
+					returnValue = PinState.High;
 				}
 			}
 			else {
 				throw new IOException("Cannot read from pin " + gpionum + ". Device does not exist.");
 			}
 
-			Debug.WriteLine("Input from pin " + gpioname + "/gpio" + gpionum + ", value was " + returnValue.ToString());
+			Debug.WriteLine("Input from pin " + gpioname + "/gpio" + gpionum + ", value was " + ((Int32)returnValue).ToString());
 			return returnValue;
 		}
 
@@ -301,10 +341,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="pin">
 		/// The pin to read from.
 		/// </param>
+		/// <returns>
+		/// The value read from the pin (high or low).
+		/// </returns>
 		/// <exception cref="IOException">
 		/// The specified pin could not be read (device does path does not exist).
 		/// </exception>
-		public static Boolean Read(GpioPins pin) {
+		public static PinState Read(GpioPins pin) {
 			String num = GetGpioPinNumber(pin);
 			String name = Enum.GetName(typeof(GpioPins), pin);
 			return internal_Read((Int32)pin, num, name);
@@ -331,7 +374,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// The value to write to the pin.
 		/// </param>
-		public override void Write(Boolean value) {
+		public override void Write(PinState value) {
 			base.Write(value);
 			Write(base.InnerPin, value);
 			if (this._lastState != base.State) {
@@ -349,13 +392,13 @@ namespace CyrusBuilt.MonoPi.IO
 		/// An attempt was made to pulse an input pin.
 		/// </exception>
 		public override void Pulse(Int32 millis) {
-			if (base.Direction == PinDirection.IN) {
+			if (base.Mode == PinMode.IN) {
 				throw new InvalidOperationException("You cannot pulse a pin set as an input.");
 			}
-			Write(base.InnerPin, true);
+			Write(base.InnerPin, PinState.High);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.High));
 			base.Pulse(millis);
-			Write(base.InnerPin, false);
+			Write(base.InnerPin, PinState.Low);
 			this.OnStateChanged(new PinStateChangeEventArgs(base.State, PinState.Low));
 		}
 
@@ -375,11 +418,10 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <exception cref="IOException">
 		/// Cannot read the value from the pin. The path does not exist.
 		/// </exception>
-		public override Boolean Read() {
-			Boolean val = Read(base.InnerPin);
-			PinState state = val ? PinState.High : PinState.Low;
-			if (this._lastState != state) {
-				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, state));
+		public override PinState Read() {
+			PinState val = Read(base.InnerPin);
+			if (this._lastState != val) {
+				this.OnStateChanged(new PinStateChangeEventArgs(this._lastState, val));
 			}
 			return val;
 		}
@@ -400,7 +442,7 @@ namespace CyrusBuilt.MonoPi.IO
 				String cmd = "gpio unexport " + GetGpioPinNumber(base.InnerPin);
 				Process.Start(cmd);
 			}
-			base.Write(false);
+			base.Write(PinState.Low);
 			base.Dispose();
 		}
 		#endregion

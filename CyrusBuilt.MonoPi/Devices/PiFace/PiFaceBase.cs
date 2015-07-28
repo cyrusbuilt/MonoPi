@@ -25,7 +25,7 @@ using CyrusBuilt.MonoPi.Components.Lights;
 using CyrusBuilt.MonoPi.Components.Relays;
 using CyrusBuilt.MonoPi.Components.Switches;
 using CyrusBuilt.MonoPi.IO;
-using CyrusBuilt.MonoPi.SPI;
+using CyrusBuilt.MonoPi.IO.SPI;
 
 namespace CyrusBuilt.MonoPi.Devices.PiFace
 {
@@ -58,23 +58,23 @@ namespace CyrusBuilt.MonoPi.Devices.PiFace
 			SimpleSPI.Init(channel, speed);
 
 			this._inputPins = new IPiFaceGPIO[] {
-				new PiFaceDigitalGPIO(PiFacePins.Input00, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input01, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input02, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input03, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input04, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input05, false),
-				new PiFaceDigitalGPIO(PiFacePins.Input06, false)
+				new PiFaceDigitalGPIO(PiFacePins.Input00, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input01, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input02, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input03, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input04, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input05, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Input06, PinState.Low)
 			};
 
 			this._outputPins = new IPiFaceGPIO[] {
-				new PiFaceDigitalGPIO(PiFacePins.Output00, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output01, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output02, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output03, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output04, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output05, false),
-				new PiFaceDigitalGPIO(PiFacePins.Output06, false)
+				new PiFaceDigitalGPIO(PiFacePins.Output00, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output01, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output02, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output03, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output04, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output05, PinState.Low),
+				new PiFaceDigitalGPIO(PiFacePins.Output06, PinState.Low)
 			};
 
 			this._relays = new IRelay[] {

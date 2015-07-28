@@ -47,6 +47,17 @@ namespace CyrusBuilt.MonoPi.Components
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.Components.ComponentBase"/>
+		/// class with a properties dictionary.
+		/// </summary>
+		/// <param name="props">
+		/// Component properties.
+		/// </param>
+		protected ComponentBase(Dictionary<String, String> props) {
+			this._properties = props;
+		}
+
+		/// <summary>
 		/// Releaseses all resources used this object.
 		/// </summary>
 		/// <param name="disposing">
@@ -69,6 +80,7 @@ namespace CyrusBuilt.MonoPi.Components
 			this._isDisposed = true;
 		}
 
+		#pragma warning disable 419
 		/// <summary>
 		/// Releases all resources used by the <see cref="CyrusBuilt.MonoPi.Components.ComponentBase"/> object.
 		/// </summary>
@@ -82,6 +94,7 @@ namespace CyrusBuilt.MonoPi.Components
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+		#pragma warning restore 419
 		#endregion
 
 		#region Properties
@@ -131,6 +144,25 @@ namespace CyrusBuilt.MonoPi.Components
 		/// </param>
 		public Boolean HasProperty(String key) {
 			return this._properties.ContainsKey(key);
+		}
+
+		/// <summary>
+		/// Sets the value of the specified property. If the property does not already exist
+		/// in the property collection, it will be added.
+		/// </summary>
+		/// <param name="key">
+		/// The property name (key).
+		/// </param>
+		/// <param name="value">
+		/// The value to assign to the property.
+		/// </param>
+		public virtual void SetProperty(String key, String value) {
+			if (this.HasProperty(key)) {
+				this._properties[key] = value;
+			}
+			else {
+				this._properties.Add(key, value);
+			}
 		}
 
 		/// <summary>

@@ -55,8 +55,13 @@ namespace CyrusBuilt.MonoPi.RTC
 		/// </param>
 		public DS1302(IRaspiGpio clockPin, IRaspiGpio dataPin, IRaspiGpio csPin) {
 			this._clockPin = clockPin;
+			this._clockPin.Provision();
+
 			this._dataPin = dataPin;
+			this._dataPin.Provision();
+
 			this._csPin = csPin;
+			this._csPin.Provision();
 			UnsafeNativeMethods.ds1302setup((Int32)this._clockPin.InnerPin,
 			                                (Int32)this._dataPin.InnerPin,
 			                                (Int32)this._csPin.InnerPin);
@@ -232,19 +237,19 @@ namespace CyrusBuilt.MonoPi.RTC
 			}
 
 			if (this._clockPin != null) {
-				this._clockPin.Write(false);
+				this._clockPin.Write(PinState.Low);
 				this._clockPin.Dispose();
 				this._clockPin = null;
 			}
 
 			if (this._dataPin != null) {
-				this._dataPin.Write(false);
+				this._dataPin.Write(PinState.Low);
 				this._dataPin.Dispose();
 				this._dataPin = null;
 			}
 
 			if (this._csPin != null) {
-				this._csPin.Write(false);
+				this._csPin.Write(PinState.Low);
 				this._csPin.Dispose();
 				this._csPin = null;
 			}

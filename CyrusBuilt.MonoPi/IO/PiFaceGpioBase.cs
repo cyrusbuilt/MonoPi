@@ -36,10 +36,14 @@ namespace CyrusBuilt.MonoPi.IO
 		private String _name = String.Empty;
 		private Object _tag = null;
 		private PinState _state = PinState.Low;
-		private PinDirection _direction = PinDirection.IN;
 		private PiFacePins _innerPin = PiFacePins.None;
-		private Int32 _pwm = 0;
-		private static Dictionary<Int32, PinDirection> _exportedPins = new Dictionary<Int32, PinDirection>();
+		private UInt32 _pwm = 0;
+		private UInt32 _pwmRange = 1024;
+		#pragma warning disable 1591
+		protected PinMode _mode = PinMode.IN;
+		protected PinState _initValue = PinState.Low;
+		#pragma warning restore 1591
+		private static Dictionary<Int32, PinMode> _exportedPins = new Dictionary<Int32, PinMode>();
 		#endregion
 
 		#region Events
@@ -68,7 +72,7 @@ namespace CyrusBuilt.MonoPi.IO
 				case PiFacePins.Input05:
 				case PiFacePins.Input06:
 				case PiFacePins.Input07:
-					this._direction = PinDirection.IN;
+					this._mode = PinMode.IN;
 					break;
 				case PiFacePins.Output00:
 				case PiFacePins.Output01:
@@ -78,12 +82,27 @@ namespace CyrusBuilt.MonoPi.IO
 				case PiFacePins.Output05:
 				case PiFacePins.Output06:
 				case PiFacePins.Output07:
-					this._direction = PinDirection.OUT;
+					this._mode = PinMode.OUT;
 					break;
 				case PiFacePins.None:
 				default:
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CyrusBuilt.MonoPi.IO.PiFaceGpioBase"/>
+		/// class with the physical pin represented by this class.
+		/// </summary>
+		/// <param name="pin">
+		/// The physical pin being wrapped by this class.
+		/// </param>
+		/// <param name="initialValue">
+		/// Initial value.
+		/// </param>
+		protected PiFaceGpioBase(PiFacePins pin, PinState initialValue)
+			: this(pin) {
+			this._initValue = initialValue;
 		}
 
 		/// <summary>
@@ -108,7 +127,7 @@ namespace CyrusBuilt.MonoPi.IO
 			_exportedPins = null;
 			this.StateChanged = null;
 			this._innerPin = PiFacePins.None;
-			this._direction = PinDirection.IN;
+			this._mode = PinMode.IN;
 			this._isDisposed = true;
 			this._name = null;
 			this._tag = null;
@@ -154,7 +173,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// </summary>
 		public PinState State {
 			get {
-				this._state = this.Read() ? PinState.High : PinState.Low;
+				this._state = this.Read();
 				return this._state;
 			}
 		}
@@ -169,8 +188,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <summary>
 		/// Gets the direction (mode) for the pin (Input or Output).
 		/// </summary>
-		public PinDirection Direction {
-			get { return this._direction; }
+		public PinMode Mode {
+			get { return this._mode; }
 		}
 
 		/// <summary>
@@ -179,20 +198,49 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <value>
 		/// The PWM value.
 		/// </value>
-		public Int32 PWM {
+		public UInt32 PWM {
 			get { return this._pwm; }
 			set { this._pwm = value; }
 		}
 
 		/// <summary>
+		/// Gets or sets the PWM range.
+		/// </summary>
+		/// <value>
+		/// The PWM range. Default is 1024.
+		/// </value>
+		/// <remarks>>
+		/// See <a href="http://wiringpi.com/reference/raspberry-pi-specifics/">http://wiringpi.com/reference/raspberry-pi-specifics/</a>
+		/// </remarks>
+		public UInt32 PWMRange {
+			get { return this._pwmRange; }
+			set { this._pwmRange = value; }
+		}
+
+		/// <summary>
 		/// Gets the exported pins.
 		/// </summary>
-		protected static Dictionary<Int32, PinDirection> ExportedPins {
+		protected static Dictionary<Int32, PinMode> ExportedPins {
 			get { return _exportedPins; }
+		}
+
+		/// <summary>
+		/// Gets the pin address.
+		/// </summary>
+		/// <value>
+		/// The address.
+		/// </value>
+		public Int32 Address {
+			get { return (Int32)this._innerPin; }
 		}
 		#endregion
 
 		#region Methods
+		/// <summary>
+		/// Provisions the pin (initialize to specified mode and make active).
+		/// </summary>
+		public abstract void Provision();
+
 		/// <summary>
 		/// Raises the state changed event.
 		/// </summary>
@@ -224,8 +272,8 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <param name="value">
 		/// If set to <c>true</c> value.
 		/// </param>
-		public virtual void Write(Boolean value) {
-			this._state = value ? PinState.High : PinState.Low;
+		public virtual void Write(PinState value) {
+			this._state = value;
 		}
 
 		/// <summary>
@@ -235,9 +283,9 @@ namespace CyrusBuilt.MonoPi.IO
 		/// The number of milliseconds to wait between states.
 		/// </param>
 		public virtual void Pulse(Int32 millis) {
-			this.Write(true);
+			this.Write(PinState.High);
 			Thread.Sleep(millis);
-			this.Write(false);
+			this.Write(PinState.Low);
 		}
 
 		/// <summary>
@@ -246,7 +294,7 @@ namespace CyrusBuilt.MonoPi.IO
 		/// <returns>
 		/// The value read from the pin.
 		/// </returns> 
-		public abstract Boolean Read();
+		public abstract PinState Read();
 
 		/// <summary>
 		/// Returns a <see cref="String"/> that represents the current

@@ -55,6 +55,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 				throw new ArgumentNullException("pin");
 			}
 			this._pin = pin;
+			this._pin.Provision();
 			this._pin.StateChanged += this.OnStateChanged;
 		}
 
@@ -179,7 +180,7 @@ namespace CyrusBuilt.MonoPi.Components.Switches
 				throw new ObjectDisposedException("CyrusBuilt.MonoPi.Components.Switches.ToggleSwitchComponent");
 			}
 
-			if (this._pin.Direction == PinDirection.OUT) {
+			if (this._pin.Mode == PinMode.OUT) {
 				throw new InvalidOperationException("The specified pin is configured as an output pin," +
 				                                    " which cannot be used to read switch states.");
 			}
